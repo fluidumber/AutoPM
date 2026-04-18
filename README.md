@@ -4,8 +4,8 @@ AutoPM is an agentic MCP server that transforms raw business ideas into complete
 
 ## Features
 
-- **Dynamic Interactive Interview**: An Interview robot asks targeted context-gathering questions dynamically based on clarity and detail.
-- **Autonomous Analytical Robots**:
+- **The Robot Pipeline**:
+  - **Interview Robot 🎤** - Dynamic, interactive context-gathering interview to lock in the product idea.
   - **Scout Robot 🔭** - Market demand analysis (TAM/SAM/SOM, growth signals, demand validation)
   - **Detective Robot 🔎** - Competitive intelligence (competitors, gaps, moat, positioning)
   - **People Robot 👥** - User personas (segments, pain points, motivations, buying triggers)
