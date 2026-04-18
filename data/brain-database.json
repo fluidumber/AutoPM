@@ -1,0 +1,21 @@
+{
+  "analyses": [],
+  "learnings": [],
+  "feedback": [
+    {
+      "analysisId": "will-get",
+      "robotName": "scout",
+      "rating": 4,
+      "notes": "good",
+      "timestamp": "2026-04-15T19:03:58.361Z"
+    },
+    {
+      "analysisId": "analysis-1776280133411",
+      "robotName": "detective",
+      "rating": 3,
+      "notes": "Need real competitor names",
+      "timestamp": "2026-04-15T19:08:53.434Z"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,4 @@
+node_modules/
+brain-database.json
+plans/
+.DS_Store
