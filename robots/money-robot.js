@@ -80,12 +80,12 @@ class MoneyRobot {
                             "Break-even point"
                         ]
                     },
-                    recommenderFeatureImpact: {
-                        instructions: "Specifically model the financial impact of the package recommender feature being built.",
+                    keyFeatureImpact: {
+                        instructions: "Identify the single most revenue-critical feature from the product context and model its financial impact.",
                         mustQuantify: [
-                            "Estimated conversion rate lift (browse to purchase) — state assumption",
-                            "Estimated AOV increase from right-sized package selection",
-                            "Reduction in support cost from decision clarity",
+                            "Estimated conversion rate lift — state assumption",
+                            "Estimated revenue increase from this feature alone",
+                            "Reduction in churn or support cost, if applicable",
                             "Combined revenue impact in Year 1"
                         ]
                     },

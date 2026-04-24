@@ -10,7 +10,8 @@
     "scripts": {
         "mcp": "node src/mcp-server.js",
         "start": "node src/mcp-server.js",
-        "test": "node run.js"
+        "test": "node tests/workspace.test.js && node tests/persistence.test.js",
+        "demo": "node run.js"
     },
     "keywords": [
         "product-management",

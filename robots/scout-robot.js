@@ -1,4 +1,6 @@
-// scout-robot.js — Full Rewrite
+// scout-robot.js — Full Rewrite + Brand Name Bug Fix
+import { extractDomainKeywords } from "../utils/keywords.js";
+
 class ScoutRobot {
     constructor() {
         this.name = "Scout Robot 🔭";
@@ -122,19 +124,32 @@ class ScoutRobot {
 
     _generateSearchQueries(context) {
         const queries = [];
-        const keywords = this._extractDomainKeywords(context.productIdea || "");
-        const geo = (context.answers?.target_geo || "").split(",")[0].trim() || "India";
+
+        // ── FIX: read brandTerms seeded by interview robot ──────────────
+        const brandTerms = context.brandTerms || [];
+
+        // Derive domain keywords from pain_point first (always descriptive, never branded)
+        // Fall back to productIdea with brand exclusion if pain_point is missing
+        const painPoint = context.answers?.pain_point || "";
+        let keywords = extractDomainKeywords(painPoint, brandTerms);
+
+        // Fallback: if pain_point produced fewer than 2 words, use productIdea minus brand terms
+        if (keywords.split(" ").filter(Boolean).length < 2) {
+            keywords = extractDomainKeywords(context.productIdea || "", brandTerms);
+        }
+
+        const geo = (context.answers?.target_geo || "India").split(/[—,]/)[0].trim();
         const competitors = context.robotHints?.detective?.knownCompetitors || [];
 
-        // Market sizing
-        queries.push(`${keywords} market size ${geo} 2024 2025`);
+        // Market sizing queries — now uses clean domain keywords, not brand names
+        queries.push(`${keywords} market size ${geo} 2025`);
         queries.push(`${keywords} industry TAM CAGR forecast report`);
 
         // Demand signals
         queries.push(`${keywords} startup funding rounds 2024 2025`);
         queries.push(`${keywords} ${geo} growth trends demand`);
 
-        // Competitor funding
+        // Competitor funding — still uses actual competitor names (correct — these are not brand exclusions)
         if (competitors.length > 0) {
             queries.push(`${competitors[0]} funding revenue valuation 2024 2025`);
         }
@@ -151,29 +166,7 @@ class ScoutRobot {
         return queries;
     }
 
-    _extractDomainKeywords(productIdea) {
-        const stopWords = new Set([
-            "a", "an", "the", "and", "or", "for", "to", "of", "in", "is",
-            "are", "with", "that", "this", "we", "our", "it", "as", "on",
-            "build", "create", "platform", "product", "feature", "tool",
-            "users", "based", "using", "help", "helps", "want", "needs",
-            "which", "from", "have", "been", "will", "their", "they"
-        ]);
-
-        const properNouns = productIdea
-            .split(/\s+/)
-            .filter(w => w.length > 3 && w[0] === w[0].toUpperCase() && /[a-zA-Z]/.test(w[0]))
-            .map(w => w.replace(/[^a-zA-Z0-9]/g, ""));
-
-        const words = productIdea
-            .toLowerCase()
-            .replace(/[^a-z0-9\s]/g, "")
-            .split(/\s+/)
-            .filter(w => w.length > 3 && !stopWords.has(w));
-
-        const combined = [...new Set([...properNouns, ...words])];
-        return combined.slice(0, 4).join(" ");
-    }
+    // Keyword extraction moved to utils/keywords.js
 }
 
 export default ScoutRobot;

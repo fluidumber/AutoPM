@@ -4,12 +4,18 @@ import { z } from "zod";
 
 import TeamLeader, { ROBOT_ORDER } from "../leader/team-leader.js";
 import { generatePresentation } from "../utils/presentation-generator.js";
+import { WorkspaceManager } from "./workspace/workspace-manager.js";
+import { PMProfile } from "./workspace/pm-profile.js";
+import { ProductRegistry } from "./workspace/product-registry.js";
 
 // Redirect console.log to stderr — MCP uses stdio for JSON-RPC
 console.log = (...args) => process.stderr.write(args.join(" ") + "\n");
 
 // ── Bootstrap ────────────────────────────────────────────────────────
 const teamLeader = new TeamLeader();
+const workspace = new WorkspaceManager();
+const pmProfile = new PMProfile(workspace);
+const productRegistry = new ProductRegistry(workspace, pmProfile);
 
 const server = new McpServer({
     name: "productflow",
@@ -24,6 +30,8 @@ server.tool(
     `Interactive PM-style interview — ONE question at a time.
 
 FIRST CALL: Pass only 'businessIdea' to start the interview. Returns the first question.
+  - Optional: pass 'productSlug' to tie the interview to an existing product so answers persist to disk.
+  - Optional: pass 'useEarlierResearch: true' (requires productSlug) to reuse fresh prior answers — those questions will be pre-filled and skipped.
 SUBSEQUENT CALLS: Pass 'interviewSessionId' + 'answer' (the user's reply). Returns the next question.
 SKIP: Pass 'interviewSessionId' + 'action' = 'skip' to use the default answer.
 
@@ -33,9 +41,10 @@ The interview robot ANALYSES each answer:
 - Progress dynamically updates as questions are skipped or covered
 
 When all questions are done, returns type="complete" with the enriched context to pass to 'run-robot'.
+The completion payload also includes 'reusedAnswerIds' listing which answers were reused from prior research.
 
 WORKFLOW:
-1. Call with just businessIdea → get first question
+1. Call with just businessIdea (+ optional productSlug / useEarlierResearch) → get first question
 2. Show the question to the user, wait for their reply
 3. Call again with interviewSessionId + answer → get next question
 4. Repeat until type="complete"
@@ -61,13 +70,28 @@ WORKFLOW:
             .describe(
                 "Set to 'skip' to use the default answer and move on. Defaults to 'answer'."
             ),
+        productSlug: z
+            .string()
+            .optional()
+            .describe(
+                "Optional product slug. If provided on the FIRST call, ties the interview to that product so answers persist to disk."
+            ),
+        useEarlierResearch: z
+            .boolean()
+            .optional()
+            .describe(
+                "If true and productSlug is provided, reuse fresh prior answers from the product's context — those questions are pre-filled and skipped in the interview loop."
+            ),
     },
-    async ({ businessIdea, interviewSessionId, answer, action }) => {
+    async ({ businessIdea, interviewSessionId, answer, action, productSlug, useEarlierResearch }) => {
         let result;
 
         if (!interviewSessionId && businessIdea) {
-            // First call — start interview
-            result = teamLeader.startInterview(businessIdea);
+            // First call — start interview (may reuse prior answers)
+            result = await teamLeader.startInterview(businessIdea, {
+                productSlug: productSlug || null,
+                useEarlierResearch: !!useEarlierResearch,
+            });
         } else if (interviewSessionId && action === "skip") {
             // Skip current question
             result = teamLeader.skipInterviewQuestion(interviewSessionId);
@@ -110,6 +134,11 @@ Available robots (in recommended order):
 6. plan      — Product roadmap (phased 12-18 month plan)
 7. priority  — Feature prioritization (RICE scoring)
 
+If 'productSlug' is provided:
+  - Results are persisted to the product's assets/ folder as markdown.
+  - On subsequent calls, fresh results are reused automatically (see freshness windows).
+  - Pass 'forceRerun: true' to re-run and overwrite a still-fresh result.
+
 IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 and suggest improvements. Then call the 'feedback' tool before running the next robot.`,
     {
         analysisId: z
@@ -126,31 +155,83 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
             .describe(
                 "JSON string of enriched context from user interview answers. Must include at minimum: {\"productIdea\": \"...\", \"answers\": {...}, \"summary\": \"...\"}"
             ),
+        productSlug: z
+            .string()
+            .optional()
+            .describe(
+                "Optional product slug. If provided, results persist to the product's assets/ folder and freshness is tracked for automatic reuse."
+            ),
+        forceRerun: z
+            .boolean()
+            .optional()
+            .describe(
+                "If true, re-run the robot even if a fresh cached result exists. Only meaningful when productSlug is provided."
+            ),
     },
-    async ({ analysisId, robotName, enrichedContext }) => {
-        // Parse context
+    async ({ analysisId, robotName, enrichedContext, productSlug, forceRerun }) => {
+        // Parse context safely exactly once
         let context;
-        try {
-            context = JSON.parse(enrichedContext);
-        } catch {
-            context = {
-                productIdea: enrichedContext,
-                answers: {},
-                summary: enrichedContext,
+        if (typeof enrichedContext === "string") {
+            try {
+                context = JSON.parse(enrichedContext);
+            } catch (e) {
+                return {
+                    content: [
+                        { type: "text", text: JSON.stringify({ error: `Invalid enrichedContext JSON: ${e.message}` }, null, 2) }
+                    ]
+                };
+            }
+        } else if (typeof enrichedContext === "object" && enrichedContext !== null) {
+            context = enrichedContext; // Already parsed, use directly
+        } else {
+            return {
+                content: [
+                    { type: "text", text: JSON.stringify({ error: "enrichedContext must be a JSON string or object" }, null, 2) }
+                ]
             };
+        }
+
+        // Validate required fields
+        if (!context.productIdea && !context.summary) {
+            return {
+                content: [
+                    { type: "text", text: JSON.stringify({ error: "enrichedContext must include at least 'productIdea' or 'summary'" }, null, 2) }
+                ]
+            };
+        }
+        if (!context.answers || typeof context.answers !== "object") {
+            return {
+                content: [
+                    { type: "text", text: JSON.stringify({ error: "enrichedContext must include an 'answers' object with interview responses" }, null, 2) }
+                ]
+            };
+        }
+
+        // Validate product slug if provided — product must exist on disk
+        if (productSlug) {
+            const product = await productRegistry.get(productSlug);
+            if (!product) {
+                return {
+                    content: [
+                        { type: "text", text: JSON.stringify({ error: `Unknown product: ${productSlug}. Call 'product-create' first or check 'product-list'.` }, null, 2) }
+                    ]
+                };
+            }
         }
 
         // Start or reuse session
         let sessionId = analysisId;
         if (!sessionId) {
-            sessionId = teamLeader.startAnalysis(context);
+            sessionId = teamLeader.startAnalysis(context, { productSlug: productSlug || null });
         } else if (!teamLeader.sessions.has(sessionId)) {
             // Re-create session if not found (server may have restarted)
-            sessionId = teamLeader.startAnalysis(context);
+            sessionId = teamLeader.startAnalysis(context, { productSlug: productSlug || null });
         }
 
         // Run the robot
-        const result = await teamLeader.runSingleRobot(sessionId, robotName);
+        const result = await teamLeader.runSingleRobot(sessionId, robotName, {
+            forceRerun: !!forceRerun,
+        });
 
         // Get session state
         const state = teamLeader.getAnalysisState(sessionId);
@@ -163,6 +244,8 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
                         {
                             analysisId: sessionId,
                             robotName,
+                            productSlug: productSlug || null,
+                            reused: !!result?._reused,
                             result,
                             progress: {
                                 completed: state.completedRobots,
@@ -189,6 +272,8 @@ server.tool(
 The feedback is stored and used to improve future analyses:
 - Ratings 4-5: recorded as successful patterns
 - Ratings 1-3: recorded as areas to improve
+
+If the analysis session is tied to a product (productSlug was used on run-robot), the feedback is also appended to the robot's asset markdown file on disk.
 
 The learning engine will show improvement hints to robots on future runs.`,
     {
@@ -261,13 +346,15 @@ If the preferences exist, it returns all the analysis data + design preferences 
         }
 
         const prefs = teamLeader.database.getDesignPreferences();
-        
+
         if (!prefs) {
             return {
-                content: [{ type: "text", text: JSON.stringify({
-                    actionRequired: "ask_user_for_preferences",
-                    instructions: "The user has not set their presentation design preferences. Ask them for their preferred logo URL (or skip if none), font families, primary/accent colors, and overall visual theme (e.g., dark mode, corporate, playful). Wait for their reply, then call 'save-design-preferences'. Afterward, call 'generate-presentation' again."
-                }, null, 2) }]
+                content: [{
+                    type: "text", text: JSON.stringify({
+                        actionRequired: "ask_user_for_preferences",
+                        instructions: "The user has not set their presentation design preferences. Ask them for their preferred logo URL (or skip if none), font families, primary/accent colors, and overall visual theme (e.g., dark mode, corporate, playful). Wait for their reply, then call 'save-design-preferences'. Afterward, call 'generate-presentation' again."
+                    }, null, 2)
+                }]
             };
         }
 
@@ -335,12 +422,18 @@ server.tool(
     async ({ filename, htmlContent }) => {
         const fs = await import("fs/promises");
         const path = await import("path");
-        const PLANS_DIR = "./plans";
+        const { fileURLToPath } = await import("url");
+
+        // Resolve absolute path to the project root, not the arbitrary cwd Claude Desktop uses
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        const PLANS_DIR = path.join(__dirname, "..", "plans");
+
         await fs.mkdir(PLANS_DIR, { recursive: true });
-        
+
         const safeName = filename.endsWith(".html") ? filename : `${filename}.html`;
         const filepath = path.join(PLANS_DIR, safeName);
-        
+
         await fs.writeFile(filepath, htmlContent, "utf-8");
         return {
             content: [{ type: "text", text: `Success! Presentation beautifully rendered and saved to ${filepath}` }]
@@ -426,8 +519,396 @@ server.tool(
     }
 );
 
+// ═════════════════════════════════════════════════════════════════════
+// Tool 8: PM-PROFILE — read the PM's identity profile
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "pm-profile",
+    `Retrieve the PM's profile (role, industry focus, preferred frameworks, products owned).
+Returns { exists: false, actionRequired: 'setup' } if no profile exists — in that case, you should interview the PM to collect their details and then call 'pm-profile-save'.
+If a profile exists but is older than 90 days, returns { exists: true, staleness: 'stale' } — ask the PM whether anything has changed before proceeding.`,
+    {},
+    async () => {
+        await workspace.ensureWorkspace();
+        const profile = await pmProfile.load();
+
+        if (!profile) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        exists: false,
+                        actionRequired: "setup",
+                        instructions: "No PM profile found. Interview the user to gather: their name, role/title, industry focus, preferred frameworks (e.g. JTBD, RICE, OKRs), and preferred analysis depth. Then call 'pm-profile-save' with the collected fields.",
+                        workspaceRoot: workspace.getRoot(),
+                    }, null, 2)
+                }]
+            };
+        }
+
+        // Calculate staleness (90 day window for profile refresh check)
+        const updatedAt = profile.updated ? new Date(profile.updated) : null;
+        const ageDays = updatedAt
+            ? Math.floor((Date.now() - updatedAt.getTime()) / (1000 * 60 * 60 * 24))
+            : null;
+        const staleness = ageDays !== null && ageDays > 90 ? "stale" : "fresh";
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    exists: true,
+                    staleness,
+                    ageDays,
+                    profile,
+                    instructions: staleness === "stale"
+                        ? "Profile is older than 90 days — ask the PM to confirm it is still accurate, or collect updates and call 'pm-profile-save'."
+                        : "Profile is fresh. Reference it when running robots to tailor analyses to the PM's style.",
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 9: PM-PROFILE-SAVE — persist a PM profile after interview
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "pm-profile-save",
+    `Save or update the PM's profile. Call this after interviewing the PM on their role, industry focus, and working style. All fields are optional — unspecified fields keep their prior values.`,
+    {
+        name: z.string().optional().describe("PM's name, e.g. 'Anand Shrivastava'"),
+        role: z.string().optional().describe("Title / role, e.g. 'Senior Product Leader'"),
+        industryFocus: z.string().optional().describe("Industry focus, e.g. 'CCaaS, CPaaS, AI-driven CXM'"),
+        preferredFrameworks: z.string().optional().describe("Preferred PM frameworks, e.g. 'JTBD, RICE, OKRs'"),
+        analysisDepth: z.string().optional().describe("Depth preference, e.g. 'Deep' or 'Summary-first'"),
+        productsOwned: z.array(z.string()).optional().describe("Slugs of products the PM owns"),
+    },
+    async (patch) => {
+        const saved = await pmProfile.save(patch);
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    saved: true,
+                    profile: saved,
+                    path: workspace.getPmProfilePath(),
+                    message: "PM profile saved. The file is human-editable — you can always edit it directly.",
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 10: PRODUCT-LIST — list all products the PM owns
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "product-list",
+    `List all products the PM has created in their workspace. Use this to let the PM pick which product they want to work on in the current session.`,
+    {},
+    async () => {
+        const products = await productRegistry.list();
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    count: products.length,
+                    products: products.map(p => ({
+                        slug: p.slug,
+                        name: p.name,
+                        overview: p.overview,
+                        stage: p.stage,
+                        updated: p.updated,
+                    })),
+                    instructions: products.length === 0
+                        ? "No products yet. Ask the PM which product they want to analyse, then call 'product-create'."
+                        : "Ask the PM to pick a product by slug, or to create a new one via 'product-create'.",
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 11: PRODUCT-CREATE — scaffold a new product
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "product-create",
+    `Create a new product in the PM's workspace. Scaffolds the directory structure (context/, assets/, product.md, freshness.json) and adds the product to the PM profile's Products Owned list. Idempotent — creating a product that already exists returns the existing one.`,
+    {
+        name: z.string().describe("Human-readable product name, e.g. 'XpertIN AI'"),
+        overview: z.string().optional().describe("1-2 sentence product description"),
+        stage: z.string().optional().describe("e.g. 'idea', 'pre-seed', 'bootstrapped'"),
+        targetMarket: z.string().optional().describe("Geography + segment, e.g. 'India, B2C + B2B2C'"),
+        competitors: z.array(z.string()).optional().describe("Known competitor names"),
+        tags: z.array(z.string()).optional().describe("Tags for categorisation, e.g. ['edtech', 'b2c']"),
+    },
+    async (input) => {
+        const { slug, alreadyExisted, product } = await productRegistry.create(input);
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    slug,
+                    alreadyExisted,
+                    product,
+                    paths: {
+                        root: workspace.getProductDir(slug),
+                        context: workspace.getContextDir(slug),
+                        assets: workspace.getAssetsDir(slug),
+                    },
+                    message: alreadyExisted
+                        ? `Product '${slug}' already exists — returning existing record.`
+                        : `Product '${slug}' created. Context and assets folders are ready.`,
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 12: PRODUCT-GET — read a specific product's metadata
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "product-get",
+    `Retrieve full metadata for a specific product by its slug.`,
+    {
+        slug: z.string().describe("The product slug, e.g. 'xpertin-ai'"),
+    },
+    async ({ slug }) => {
+        const product = await productRegistry.get(slug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Product not found: ${slug}` }, null, 2)
+                }]
+            };
+        }
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    product,
+                    paths: {
+                        root: workspace.getProductDir(slug),
+                        context: workspace.getContextDir(slug),
+                        assets: workspace.getAssetsDir(slug),
+                    },
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 13: CONTEXT-ADD — add PM-provided context to a product
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "context-add",
+    `Attach a piece of PM-provided context to a product. Context entries feed
+future analyses — robots see them alongside interview answers.
+
+Types:
+  note            — ad-hoc note or observation
+  url             — a link with optional commentary
+  document        — a longer writeup (stored as its own file in context/documents/)
+  analyst-report  — third-party research report pasted as text
+
+Notes and URLs are appended to notes.md. Documents and analyst reports are
+saved as individual markdown files in context/documents/.`,
+    {
+        productSlug: z.string().describe("Product slug to attach context to"),
+        type: z.enum(["note", "url", "document", "analyst-report"]).describe("Context entry type"),
+        title: z.string().describe("Short human-readable title for this entry"),
+        content: z.string().describe("The note body, URL, or document contents"),
+        source: z.string().optional().describe("Original source URL or attribution"),
+    },
+    async ({ productSlug, type, title, content, source }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}` }, null, 2)
+                }]
+            };
+        }
+
+        try {
+            const saved = await teamLeader.contextStore.add(productSlug, { type, title, content, source });
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        saved: true,
+                        entry: saved,
+                        message: `Context entry '${title}' saved to product '${productSlug}'.`,
+                    }, null, 2)
+                }]
+            };
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: err.message }, null, 2)
+                }]
+            };
+        }
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 14: CONTEXT-LIST — list context entries for a product
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "context-list",
+    `List all context entries attached to a product. Optionally filter by type.`,
+    {
+        productSlug: z.string().describe("Product slug"),
+        type: z.enum(["note", "url", "document", "analyst-report"]).optional().describe("Filter by entry type"),
+    },
+    async ({ productSlug, type }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}` }, null, 2)
+                }]
+            };
+        }
+        const entries = await teamLeader.contextStore.list(productSlug, { type });
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    productSlug,
+                    count: entries.length,
+                    entries,
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 15: CONTEXT-GET — retrieve a single context entry
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "context-get",
+    `Retrieve the full content of a single context entry by its id.`,
+    {
+        productSlug: z.string().describe("Product slug"),
+        id: z.string().describe("Context entry id (from context-list)"),
+    },
+    async ({ productSlug, id }) => {
+        const entry = await teamLeader.contextStore.get(productSlug, id);
+        if (!entry) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Context entry not found: ${id}` }, null, 2)
+                }]
+            };
+        }
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify(entry, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 16: FRESHNESS-CHECK — see what is fresh/stale for a product
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "freshness-check",
+    `Show which robot analyses and interview answers are fresh, stale, or
+missing for a product. Use this BEFORE starting an interview or running
+robots to decide what can be reused and what should be refreshed.
+
+Each robot reports one of:
+  fresh    — last run is within the staleness window (reuse automatically)
+  stale    — older than the staleness window (re-run recommended)
+  missing  — never run
+
+The response also includes the staleness window in days per robot so the
+user can make informed decisions.`,
+    {
+        productSlug: z.string().describe("Product slug"),
+    },
+    async ({ productSlug }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}` }, null, 2)
+                }]
+            };
+        }
+
+        const [robotFreshness, interviewFreshness] = await Promise.all([
+            teamLeader.freshness.getRobotFreshness(productSlug),
+            teamLeader.freshness.getInterviewFreshness(productSlug),
+        ]);
+
+        // Summarise what the user can reuse vs. needs to refresh
+        const freshRobots = [];
+        const staleRobots = [];
+        const missingRobots = [];
+        for (const [robot, state] of Object.entries(robotFreshness)) {
+            if (state.status === "fresh") freshRobots.push(robot);
+            else if (state.status === "stale") staleRobots.push(robot);
+            else missingRobots.push(robot);
+        }
+
+        let freshAnswerCount = 0;
+        let staleAnswerCount = 0;
+        for (const state of Object.values(interviewFreshness)) {
+            if (state.status === "fresh") freshAnswerCount++;
+            else staleAnswerCount++;
+        }
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    productSlug,
+                    summary: {
+                        robots: {
+                            fresh: freshRobots,
+                            stale: staleRobots,
+                            missing: missingRobots,
+                        },
+                        interviewAnswers: {
+                            fresh: freshAnswerCount,
+                            stale: staleAnswerCount,
+                            total: freshAnswerCount + staleAnswerCount,
+                        },
+                    },
+                    robots: robotFreshness,
+                    interviewAnswers: interviewFreshness,
+                    instructions: (freshRobots.length > 0 || freshAnswerCount > 0)
+                        ? "Ask the PM whether to reuse the fresh artifacts or force a re-run. Pass 'useEarlierResearch: true' to 'interview' to pre-fill fresh answers, and pass 'forceRerun: true' to 'run-robot' to ignore cached results."
+                        : "Nothing fresh to reuse — run the interview and robots from scratch.",
+                }, null, 2)
+            }]
+        };
+    }
+);
+
 // ── Start ────────────────────────────────────────────────────────────
 async function main() {
+    // Wait for the brain database to finish loading from disk before
+    // accepting connections — prevents serving stale/empty data.
+    await teamLeader.ready;
+    await workspace.ensureWorkspace();
+
     const transport = new StdioServerTransport();
     await server.connect(transport);
     console.log("🚀 ProductFlow MCP Server v2.0 running on stdio");

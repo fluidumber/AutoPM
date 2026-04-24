@@ -174,7 +174,7 @@ class InterviewRobot {
                 required: false,
                 default: "Idea stage",
                 examples: ["Just an idea", "Pre-seed, raising $500k", "Bootstrapped with 100 users"],
-                coversIds: ["team_size"],
+                coversIds: [],
                 followUps: [],
             },
 
@@ -256,20 +256,41 @@ class InterviewRobot {
 
     /**
      * Start a new interview session. Returns the first question.
+     *
+     * @param {string} rawIdea
+     * @param {object} [opts]
+     * @param {Record<string,string>} [opts.preFilledAnswers] - prior answers
+     *        to seed the session with. Questions whose id is in this map are
+     *        treated as already answered and will be skipped in the interview
+     *        loop (though still surfaced in the final enrichedContext).
+     * @param {string[]} [opts.preFilledSources] - informational list of the
+     *        question ids that were pre-filled (surfaced to the caller so the
+     *        UI can show "N questions reused from prior research").
      */
-    startInterview(rawIdea) {
+    startInterview(rawIdea, { preFilledAnswers = {}, preFilledSources = [] } = {}) {
         const sessionId = `interview-${Date.now()}`;
         const questions = this._buildQuestionBank();
+
+        // Only keep answers whose question id is in the current question bank
+        const validQuestionIds = new Set(questions.map(q => q.id));
+        const seededAnswers = {};
+        for (const [qid, value] of Object.entries(preFilledAnswers || {})) {
+            if (validQuestionIds.has(qid) && value != null && String(value).trim() !== "") {
+                seededAnswers[qid] = String(value);
+            }
+        }
 
         this.sessions.set(sessionId, {
             rawIdea,
             questions,
-            answers: {},
+            answers: seededAnswers,
             currentIndex: 0,
             skippedIds: new Set(),
             askedFollowUp: false,
             pendingFollowUp: null,
             completed: false,
+            reusedAnswerIds: Object.keys(seededAnswers),
+            preFilledSources: preFilledSources.filter(id => seededAnswers[id]),
         });
 
         return this._buildNextResponse(sessionId);
@@ -384,6 +405,7 @@ class InterviewRobot {
             if (q.id === question.id) continue;
             if (session.answers[q.id]) continue; // already answered
             if (session.skippedIds.has(q.id)) continue;
+            if (session.questions.indexOf(q) < session.currentIndex) continue;
 
             // Check if the current answer mentions content relevant to future questions
             if (this._answerCoversQuestion(lower, q)) {
@@ -439,8 +461,11 @@ class InterviewRobot {
             revenue_model: ["subscription", "freemium", "commission", "revenue", "monetiz"],
             funding_stage: ["seed", "series", "bootstrap", "raised", "funding", "pre-seed", "idea stage"],
             timeline: ["month", "quarter", "q1", "q2", "q3", "q4", "launch by", "deadline"],
-            team_size: ["solo", "founder", "team of", "engineer", "developer", "designer"],
-            tech_preferences: ["react", "python", "mobile", "web", "ai", "ml", "cloud", "genai", "llm", "native"],
+            team_size: ["solo founder", "team of", "co-founder", "just me",
+                "two founders", "building the team", "no team yet"],
+            tech_preferences: ["react native", "next.js", "python backend", "mobile first",
+                "web first", "must use", "built on", "llm integration",
+                "genai", "ml model", "rest api", "graphql"],
             reference_companies: ["benchmark", "like uber", "like slack", "inspired by"],
             data_sources: ["gartner", "report", "crunchbase", "g2", "capterra"],
         };
@@ -509,13 +534,16 @@ class InterviewRobot {
 
     _buildCompletionResponse(session) {
         const context = this._buildEnrichedContext(session);
+        const reusedCount = (session.reusedAnswerIds || []).length;
         return {
             sessionId: null, // session complete
             type: "complete",
-            message:
-                "Interview complete! Use the enrichedContext below to call 'run-robot' for each robot.",
+            message: reusedCount > 0
+                ? `Interview complete! ${reusedCount} answers were reused from prior research. Use the enrichedContext below to call 'run-robot' for each robot.`
+                : "Interview complete! Use the enrichedContext below to call 'run-robot' for each robot.",
             enrichedContext: context,
             answeredQuestions: Object.keys(session.answers).length,
+            reusedAnswerIds: session.reusedAnswerIds || [],
             summary: context.summary,
         };
     }
@@ -542,12 +570,13 @@ class InterviewRobot {
             answers,
             generatedAt: new Date().toISOString(),
             summary: parts.join(" | "),
+            brandTerms: this._extractBrandTerms(session.rawIdea),
 
             // Pre-packaged context hints for each robot
             robotHints: {
                 scout: {
                     searchPriority: this._deriveSearchPriority(answers),
-                    marketSizeKnown: answers.market_size_known !== "Research it",
+                    marketSizeKnown: !/^research/i.test(answers.market_size_known || ""),
                     knownMarketData: answers.market_size_known || null,
                 },
                 detective: {
@@ -576,10 +605,11 @@ class InterviewRobot {
 
     _extractCompetitorList(competitorAnswer) {
         if (!competitorAnswer) return [];
-        return competitorAnswer
+        const cleaned = competitorAnswer.split("|")[0].trim();
+        return cleaned
             .split(/,|;|\n/)
             .map(c => c.replace(/\[.*?\]/g, "").trim())
-            .filter(c => c.length > 2 && !c.startsWith("["));
+            .filter(c => c.length > 2 && !c.toLowerCase().startsWith("research"));
     }
 
     _countSegments(segmentAnswer) {
@@ -601,6 +631,19 @@ class InterviewRobot {
             segment: segment.includes("B2C") ? "consumer" : segment.includes("B2B") ? "enterprise" : "mixed",
             hasCompetitors: !!(answers.known_competitors && answers.known_competitors.length > 10),
         };
+    }
+
+    _extractBrandTerms(rawIdea) {
+        // Take the first 1-3 words of the raw idea — almost always the product/company name
+        // e.g. "XpertIN AI is a career..." → ["xpertin", "ai"]
+        // e.g. "Notion is a productivity..." → ["notion"]
+        // e.g. "A career counselling platform..." → [] (no brand, starts with article)
+        const words = rawIdea.split(/\s+/).slice(0, 3);
+        return words
+            .filter(w => w.length > 2)
+            .filter(w => /^[A-Z]/.test(w))        // starts with capital
+            .filter(w => !/^(A|An|The|This|We|Our|I)$/.test(w)) // not articles/pronouns
+            .map(w => w.replace(/[^a-zA-Z0-9]/g, "").toLowerCase());
     }
 
     _getProgress(session) {

@@ -1,4 +1,6 @@
-// detective-robot.js — Full Rewrite
+// detective-robot.js — Full Rewrite + Brand Name Bug Fix + Coverage Completeness
+import { extractDomainKeywords } from "../utils/keywords.js";
+
 class DetectiveRobot {
     constructor() {
         this.name = "Detective Robot 🔎";
@@ -28,12 +30,13 @@ class DetectiveRobot {
                     "Every competitor strength and weakness must be grounded in observable evidence (product, pricing, reviews, funding)",
                     "NEVER list generic moat factors like 'brand loyalty' without explaining how THIS product earns them",
                     "NEVER return placeholder competitor names or generic weakness lists",
+                    "Profile EVERY competitor in the knownCompetitors list — if a competitor is out of scope (e.g. wrong industry), explicitly state why it was excluded rather than silently dropping it",
                     "Conclude with a positioning recommendation — where should this product stand in the market?"
                 ],
 
                 requiredSections: {
                     directCompetitors: {
-                        instructions: `Research and profile each known competitor. Then search for additional competitors the PM may have missed. For each competitor provide:`,
+                        instructions: `Research and profile EVERY competitor in the knownCompetitors list below. Do not silently skip any — if a competitor is tangential or out of scope, include a one-line triage note explaining why it was deprioritised. Then search for additional competitors the PM may have missed.`,
                         perCompetitor: [
                             "Name, founding year, funding raised (with source)",
                             "Core product and methodology (what makes them tick)",
@@ -43,7 +46,8 @@ class DetectiveRobot {
                             "Estimated market reach or revenue if findable",
                             "The ONE thing they do better than anyone else"
                         ],
-                        knownCompetitors: knownCompetitors
+                        knownCompetitors: knownCompetitors,
+                        coverageRule: "Profile all competitors above OR provide an explicit triage note for any excluded. Never silently drop a competitor from the list."
                     },
                     indirectCompetitors: {
                         instructions: "What do customers use TODAY when they don't use any of the direct competitors? These are the real alternatives to displace.",
@@ -131,21 +135,35 @@ class DetectiveRobot {
 
     _generateSearchQueries(context, competitors) {
         const queries = [];
-        const geo = (context.answers?.target_geo || "India").split(",")[0].trim();
 
-        // Competitor-specific searches
+        // ── FIX: read brandTerms seeded by interview robot ──────────────
+        const brandTerms = context.brandTerms || [];
+
+        // Derive domain keywords from pain_point (always descriptive, never branded)
+        const painPoint = context.answers?.pain_point || "";
+        let keywords = extractDomainKeywords(painPoint, brandTerms);
+
+        // Fallback: if pain_point produced fewer than 2 words, use productIdea minus brand terms
+        if (keywords.split(" ").filter(Boolean).length < 2) {
+            keywords = extractDomainKeywords(context.productIdea || "", brandTerms);
+        }
+
+        const geo = (context.answers?.target_geo || "India").split(/[—,]/)[0].trim();
+
+        // Competitor-specific searches — still uses actual competitor names (correct)
         competitors.slice(0, 3).forEach(c => {
             queries.push(`${c} funding pricing product features 2024 2025`);
             queries.push(`${c} reviews complaints alternatives`);
         });
 
-        // Gap discovery
-        const keywords = context.productIdea?.split(" ").slice(0, 3).join(" ") || "";
+        // ── FIX: gap discovery now uses clean domain keywords, not raw productIdea words
         queries.push(`${keywords} market gaps underserved segment ${geo}`);
         queries.push(`best ${keywords} platform ${geo} comparison`);
 
         return queries;
     }
+
+    // Keyword extraction moved to utils/keywords.js
 }
 
 export default DetectiveRobot;

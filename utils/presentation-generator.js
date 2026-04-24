@@ -1,7 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const PLANS_DIR = "./plans";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PLANS_DIR = path.join(__dirname, "..", "plans");
 
 /**
  * Generate a self-contained HTML presentation from analysis results.

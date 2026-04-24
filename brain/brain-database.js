@@ -9,7 +9,9 @@ class BrainDatabase {
             errors: [],
             designPreferences: null,
         };
-        this.loadFromDisk();
+        // Expose a promise that resolves when disk data is loaded.
+        // Callers must `await db.ready` before reading data.
+        this.ready = this.loadFromDisk();
     }
 
     async loadFromDisk() {

@@ -4,7 +4,14 @@
       "Bash(claude mcp:*)",
       "mcp__productflow__analyze",
       "mcp__productflow__interview",
-      "mcp__productflow__run-robot"
+      "mcp__productflow__run-robot",
+      "Bash(node -e ' *)",
+      "Bash(timeout 3 node /Users/anandshrivastava/anewapp/productflow/src/mcp-server.js)",
+      "Read(//Users/anandshrivastava/.claude/**)",
+      "Bash(node tests/workspace.test.js)",
+      "Bash(npm test *)",
+      "Bash(file /Users/anandshrivastava/Downloads/productflow-*.skill)",
+      "Bash(git add *)"
     ]
   },
   "enableAllProjectMcpServers": true,

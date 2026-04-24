@@ -1,7 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const DATA_DIR = "./data";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.join(__dirname, "..", "data");
 
 // Make sure data folder exists
 async function ensureDataDir() {
