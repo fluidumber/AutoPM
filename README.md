@@ -2,6 +2,8 @@
 
 AutoPM is an agentic MCP server that transforms raw business ideas into complete product strategies. It orchestrates a specialized AI team to handle real-time market research, competitive deep-dives, persona building, and dynamic financial modeling, culminating in a fully-styled, pitch-ready presentation.
 
+> **🟢 New to this?** Check out the [Quick Start Guide for Beginners](QUICKSTART.md) for step-by-step setup instructions!
+
 ## Features
 
 - **The Robot Pipeline**:
@@ -22,6 +24,19 @@ AutoPM is an agentic MCP server that transforms raw business ideas into complete
 1. Open your Claude Desktop settings config file (`claude_desktop_config.json`).
 2. Point a new server at the Absolute Path of this project with `command: "node"` and `args: ["/absolute/path/to/AutoPM/src/mcp-server.js"]`.
 3. Start the workflow using the `interview` tool, iterate via `run-robot`, and export using `generate-presentation`!
+
+### Via Other MCP Clients (Cursor, Roo Code, etc.)
+Because AutoPM is built on the standard **Model Context Protocol (MCP)**, you can use it with any compatible client!
+- **Cursor**: Go to Settings -> Features -> MCP. Add a new MCP server. Type: `command`, Command: `node`, Args: `/absolute/path/to/AutoPM/src/mcp-server.js`.
+- **Roo Code (VS Code)**: Open MCP Settings and add a configuration similar to Claude Desktop:
+  ```json
+  "mcpServers": {
+    "productflow": {
+      "command": "node",
+      "args": ["/absolute/path/to/AutoPM/src/mcp-server.js"]
+    }
+  }
+  ```
 
 ### Via standard CLI
 1. Ensure Node.js (v20+) is installed 

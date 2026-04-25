@@ -98,6 +98,72 @@ export class AssetStore {
         return relPath;
     }
 
+    // ── Phase 2: robot output files ───────────────────────────────────
+    //
+    // Phase 1 asset files (saveRobotResult) store the _claudeInstructions
+    // prompt payload — the input to Claude.  Phase 2 robots need Claude's
+    // GENERATED analysis text as their input.  These two methods manage a
+    // companion file pattern:
+    //
+    //   YYYY-MM-DD-<robot>.md          ← prompt payload  (existing)
+    //   YYYY-MM-DD-<robot>-output.md   ← Claude's response text (new)
+
+    /**
+     * Save Claude's generated analysis text for a robot.
+     * Called by the save-robot-output MCP tool after Claude produces its response.
+     *
+     * Filename pattern: YYYY-MM-DD-<robot>-output.md
+     * New runs overwrite the same day's file (idempotent per day).
+     *
+     * @param {string} slug       - product slug
+     * @param {string} robotName  - robot name, e.g. "people" or "user-stories"
+     * @param {string} markdownText - raw analysis text Claude generated
+     * @returns {Promise<string>} relative path, e.g. "assets/2026-04-24-people-output.md"
+     */
+    async saveRobotOutput(slug, robotName, markdownText) {
+        await this.workspace.ensureProductStructure(slug);
+
+        const today = new Date().toISOString().slice(0, 10);
+        const filename = `${today}-${robotName}-output.md`;
+        const absPath = path.join(this.workspace.getAssetsDir(slug), filename);
+        const relPath = path.posix.join("assets", filename);
+
+        await fs.writeFile(absPath, markdownText, "utf-8");
+        return relPath;
+    }
+
+    /**
+     * Load the most recently dated output file for a robot.
+     * Filenames are YYYY-MM-DD-<robot>-output.md so lexicographic sort = date sort.
+     *
+     * @param {string} slug      - product slug
+     * @param {string} robotName - robot name
+     * @returns {Promise<string|null>} raw markdown text, or null if no file found
+     */
+    async loadLatestRobotOutput(slug, robotName) {
+        const dir = this.workspace.getAssetsDir(slug);
+        let files;
+        try {
+            files = await fs.readdir(dir);
+        } catch {
+            return null;
+        }
+
+        const suffix = `-${robotName}-output.md`;
+        const matches = files
+            .filter(f => f.endsWith(suffix))
+            .sort()
+            .reverse(); // most-recent date first (YYYY-MM-DD sorts lexicographically)
+
+        if (matches.length === 0) return null;
+
+        try {
+            return await fs.readFile(path.join(dir, matches[0]), "utf-8");
+        } catch {
+            return null;
+        }
+    }
+
     // ── internals ──────────────────────────────────────────────────
 
     _renderMarkdown(robotName, result, feedback) {

@@ -15,7 +15,78 @@
       "rating": 3,
       "notes": "Need real competitor names",
       "timestamp": "2026-04-15T19:08:53.434Z"
+    },
+    {
+      "analysisId": "analysis-1777117759879",
+      "robotName": "scout",
+      "rating": 5,
+      "notes": "User rated this a solid 4.5/5. Strong research quality and context. Improvement requested: add correlation logic, an equation, and smart visuals that bring the market, AI, pricing, competitive funding, and product wedge data together into a clearer investment thesis direction. Output should be more human-presentable: details plus correlation logic plus visuals such as charts, Venn diagrams, or other smart visualizations.",
+      "timestamp": "2026-04-25T12:04:05.867Z"
+    },
+    {
+      "analysisId": "analysis-1777119037784",
+      "robotName": "detective",
+      "rating": 5,
+      "notes": "User rated Detective output 5 stars. They liked the competitive framing and are ready to proceed to the People robot.",
+      "timestamp": "2026-04-25T12:25:26.004Z"
+    },
+    {
+      "analysisId": "analysis-1777119945864",
+      "robotName": "people",
+      "rating": 5,
+      "notes": "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+      "timestamp": "2026-04-25T12:33:07.559Z"
+    },
+    {
+      "analysisId": "analysis-1777120410036",
+      "robotName": "money",
+      "rating": 5,
+      "notes": "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+      "timestamp": "2026-04-25T12:47:04.478Z"
+    },
+    {
+      "analysisId": "analysis-1777120410036",
+      "robotName": "money",
+      "rating": 5,
+      "notes": "Follow-up improvement: Money output should include investment ratios and finance metrics such as NPV, IRR, LTV, NRR, GRR, and EBITDA, plus a chart showing the top 2-3 crucial values across the 3-year period.",
+      "timestamp": "2026-04-25T12:53:14.433Z"
+    },
+    {
+      "analysisId": "analysis-1777121249733",
+      "robotName": "feature",
+      "rating": 5,
+      "notes": "User rated Feature output a solid 5. Improvement requests: clarify how Feature Prioritization Logic differs from later RICE prioritization, likely strategic vs tactical levels; and add an MVP capacity/sizing sanity check against the known team size of 6 engineers and timeline to show whether the MVP scope is realistically accommodated or likely to need major engineering edits.",
+      "timestamp": "2026-04-25T14:11:31.616Z"
+    },
+    {
+      "analysisId": "analysis-1777126791136",
+      "robotName": "plan",
+      "rating": 5,
+      "notes": "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+      "timestamp": "2026-04-25T14:29:32.026Z"
+    },
+    {
+      "analysisId": "analysis-1777127404946",
+      "robotName": "priority",
+      "rating": 5,
+      "notes": "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+      "timestamp": "2026-04-25T14:35:20.695Z"
+    },
+    {
+      "analysisId": "analysis-1777130983039",
+      "robotName": "user-stories",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output is execution-ready, covers all Phase 1 personas, maps the Q3/Q4 scope into MoSCoW stories, preserves the critical governed mobile capture loop, and includes dependencies and scope-cut guidance for downstream Phase 2 robots.",
+      "timestamp": "2026-04-25T15:40:01.869Z"
+    },
+    {
+      "analysisId": "analysis-1777131619103",
+      "robotName": "scope-spec",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output draws clear Q3 MVP, Q4 GA, and 2027 boundaries; identifies Mobile 2.0 as a critical change; specifies core/non-core functionality, role permissions, ruthless out-of-scope items, assumptions, constraints, limitations, gates, and scope-cut rules.",
+      "timestamp": "2026-04-25T15:42:31.683Z"
     }
   ],
-  "errors": []
+  "errors": [],
+  "designPreferences": null
 }

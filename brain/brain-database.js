@@ -62,25 +62,38 @@ class BrainDatabase {
 
     // ── Feedback ─────────────────────────────────────────────────────
 
-    async saveFeedback(analysisId, robotName, rating, notes) {
+    /**
+     * Persist PM feedback for a robot run.
+     *
+     * @param {string} analysisId
+     * @param {string} robotName
+     * @param {number} rating - 1-5
+     * @param {string} notes  - PM's free-text feedback
+     * @param {string} [productSlug] - Which product this run was for (global learning if null)
+     */
+    async saveFeedback(analysisId, robotName, rating, notes, productSlug = null) {
         this.data.feedback.push({
             analysisId,
             robotName,
             rating,
             notes,
+            productSlug,       // ← new: ties feedback to a specific product
             timestamp: new Date().toISOString(),
         });
         await saveData("brain-database.json", this.data);
         console.log(
-            `💬 Feedback saved: ${robotName} rated ${rating}/5`
+            `💬 Feedback saved: ${robotName} rated ${rating}/5${productSlug ? ` (${productSlug})` : ""}`
         );
     }
 
     /**
      * Get all historical feedback for a specific robot type.
+     * @param {string} robotName
+     * @param {string} [productSlug] - Optional: filter to a single product
      */
-    getFeedbackForRobot(robotName) {
-        return this.data.feedback.filter((f) => f.robotName === robotName);
+    getFeedbackForRobot(robotName, productSlug = null) {
+        const all = this.data.feedback.filter((f) => f.robotName === robotName);
+        return productSlug ? all.filter(f => f.productSlug === productSlug) : all;
     }
 
     /**

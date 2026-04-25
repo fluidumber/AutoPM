@@ -17,15 +17,31 @@
 import fs from "fs/promises";
 
 // Staleness windows in days. Tactical artifacts (features, plan, priority)
-// expire fast; strategic artifacts (personas) live longer.
+// expire fast; strategic artifacts (personas, journeys) live longer.
+//
+// Phase 1 — Strategic Discovery
+// Phase 2 — Execution Definition (all derived from Phase 1; rerun when Phase 1 changes)
 export const ROBOT_STALENESS_DAYS = {
-    scout: 90,
+    // ── Phase 1 ────────────────────────────────────────────────────
+    scout:     90,
     detective: 60,
-    people: 180,
-    money: 90,
-    feature: 30,
-    plan: 30,
-    priority: 30,
+    people:    180,
+    money:     90,
+    feature:   30,
+    plan:      30,
+    priority:  30,
+
+    // ── Phase 2 ────────────────────────────────────────────────────
+    "user-stories":       30,
+    "scope-spec":         30,
+    "feasibility-tech":   30,
+    "feasibility-design": 30,
+    "customer-journeys":  60,
+    "data-privacy":       30,
+    "gtm-readiness":      30,
+    "risks-registry":     30,
+    "kpis":               30,
+    "daci-stakeholders":  60,
 };
 
 export const INTERVIEW_STALENESS_DAYS = 180;

@@ -1,0 +1,260 @@
+// UserStoriesRobot — Phase 2 execution robot.
+//
+// Derives MoSCoW-tagged user stories from Phase 1 people + feature robot outputs.
+// Personas are sourced exclusively from people robot output.
+// Features are sourced exclusively from feature robot output.
+// Never re-prompts the PM for information already captured in Phase 1.
+//
+// Input:  enrichedContext with phase1Outputs.people + phase1Outputs.feature
+// Output: _claudeInstructions payload — Claude generates the user stories JSON
+
+/**
+ * @typedef {Object} Phase1Outputs
+ * @property {string} [people]  - Markdown text from the people robot output file
+ * @property {string} [feature] - Markdown text from the feature robot output file
+ * @property {string} [plan]    - Markdown text from the plan robot output file (for phase/timeline signals)
+ */
+
+/**
+ * @typedef {Object} Phase2Context
+ * @property {string} [personaOverride]  - PM-supplied persona clarifications or corrections
+ * @property {string} [featureOverride]  - PM-supplied feature clarifications or corrections
+ * @property {string} [scopeOverride]    - PM-supplied scope boundaries
+ */
+
+/**
+ * @typedef {Object} EnrichedContext
+ * @property {string}        productIdea     - Product name or one-line description
+ * @property {Object}        answers         - Interview answer map (qid → value)
+ * @property {string}        [summary]       - Product summary from interview
+ * @property {string[]}      [brandTerms]    - Brand-name sanitisation terms
+ * @property {Phase1Outputs} [phase1Outputs] - Loaded Phase 1 robot output text
+ * @property {Phase2Context} [phase2Context] - Phase 2 PM-provided context manifest
+ */
+
+/**
+ * @typedef {Object} UserStory
+ * @property {string} id          - Sequential ID, e.g. "US-001"
+ * @property {string} persona     - Exact persona name from people robot output
+ * @property {string} story       - "As a [persona], I want [goal], so that [reason]."
+ * @property {string} description - 2-3 sentence acceptance criteria
+ * @property {"MUST_HAVE"|"SHOULD_HAVE"|"COULD_HAVE"|"WONT_HAVE"|"PHASE_2"} moscow - MoSCoW priority
+ */
+
+/**
+ * @typedef {Object} UserStoriesOutput
+ * @property {string}      productIdea          - Echoed from input
+ * @property {Object}      _claudeInstructions  - Prompt payload for Claude
+ * @property {string}      _claudeInstructions.role
+ * @property {string[]}    _claudeInstructions.mandate
+ * @property {string[]}    _claudeInstructions.requiredSections
+ * @property {Object}      _claudeInstructions.productContext
+ * @property {Object}      _claudeInstructions.outputFormat
+ */
+
+class UserStoriesRobot {
+    constructor() {
+        this.name = "User Stories Robot";
+    }
+
+    /**
+     * Build the Claude prompt payload for user story generation.
+     * Claude's response to this payload becomes the persisted analysis.
+     *
+     * @param {EnrichedContext|string} enrichedContext
+     * @returns {Promise<UserStoriesOutput>}
+     */
+    async analyze(enrichedContext) {
+        // Double-parse guard — MCP may pass a JSON string
+        const context = typeof enrichedContext === "string"
+            ? JSON.parse(enrichedContext)
+            : enrichedContext;
+
+        const personaContext = this._extractPersonaContext(context);
+        const featureContext = this._extractFeatureContext(context);
+        const planContext    = this._extractPlanContext(context);
+        const phase2Notes    = context.phase2Context || {};
+        const hasPhase1Outputs = !!(
+            context.phase1Outputs?.people ||
+            context.phase1Outputs?.feature
+        );
+
+        return {
+            productIdea: context.productIdea || context.summary || "Unknown product",
+
+            _claudeInstructions: {
+                role: "You are a senior product manager and user story specialist with deep expertise in translating strategic product research into execution-ready, sprint-plannable user stories.",
+
+                mandate: [
+                    // ── STEP 1: Phase 1 synthesis ──────────────────────────
+                    "PHASE 1 SYNTHESIS FIRST: Before writing any user stories, output a 'Phase 1 Synthesis' section. In 3-5 bullet points, state: (1) which personas you identified and which you are using, (2) which features you are deriving stories from and why, (3) the key MoSCoW signals from the feature robot (mvpCriticalPath, must-have vs nice-to-have vs future splits), (4) any gaps in Phase 1 data and how you are handling them. Label this section clearly so the PM can review your reasoning.",
+
+                    // ── STEP 2: Derivation assumptions ────────────────────
+                    "DERIVATION ASSUMPTIONS: After the Phase 1 Synthesis, output a 'Derivation Assumptions' section listing 3-5 assumptions you are making (e.g. persona priority order, MoSCoW boundary decisions, feature → story mapping choices). Each assumption should be reviewable — if the PM disagrees, they note it in feedback for a re-run.",
+
+                    // ── Personas ───────────────────────────────────────────
+                    "PERSONAS: Use ONLY the personas found in the people robot output. Do not invent new personas. Each story must map to exactly one persona. If the people robot output is unavailable, infer personas from the product context — but flag this clearly in Phase 1 Synthesis.",
+
+                    // ── Features ───────────────────────────────────────────
+                    "FEATURES: Derive stories from the feature robot output only — mustHaveFeatures map to MUST_HAVE and SHOULD_HAVE stories; niceToHaveFeatures map to COULD_HAVE; futureFeatures map to PHASE_2. If the feature robot output is unavailable, derive from the product context — but flag this in Phase 1 Synthesis.",
+
+                    // ── Story format ───────────────────────────────────────
+                    "STORY FORMAT: Every story must use the exact format: 'As a [persona name], I want [specific, concrete goal], so that [concrete business or personal outcome].' All three clauses are mandatory. The persona clause must be an exact persona name. The goal clause must name a specific capability, not a generic action. The reason clause must connect to a real pain point or job-to-be-done from the people robot.",
+
+                    // ── MoSCoW alignment ───────────────────────────────────
+                    "MOSCOW ALIGNMENT: MUST_HAVE = feature is on the mvpCriticalPath or in the top tier of mustHaveFeatures. SHOULD_HAVE = mustHaveFeatures not on critical path, or highest-value niceToHaveFeatures. COULD_HAVE = remaining niceToHaveFeatures. WONT_HAVE = features explicitly out of scope. PHASE_2 = futureFeatures or items deprioritised for later phases. When plan robot phase signals are available, align PHASE_2 stories to roadmap phase names.",
+
+                    // ── Volume and distribution ────────────────────────────
+                    "VOLUME: Generate 20-35 stories total. Distribution target: MUST_HAVE 40-50%, SHOULD_HAVE 25-30%, COULD_HAVE 15-20%, PHASE_2 5-10%. Generate at least 2 stories per persona and at least 1 story per must-have feature. Do not generate duplicate stories.",
+
+                    // ── Specificity bar ────────────────────────────────────
+                    "SPECIFICITY: Every story must be product-specific. Generic stories are failures — e.g. 'As a user, I want to log in' is rejected. Reference the actual product, the specific persona name, and the concrete feature. The story should be specific enough to be handed to an engineer and understood without further context.",
+
+                    // ── IDs and grouping ───────────────────────────────────
+                    "IDs AND GROUPING: Assign sequential IDs starting at US-001. Group stories by persona in the output array — all stories for persona A, then all for persona B, etc. Within a persona group, sort by MoSCoW (MUST_HAVE first, then SHOULD_HAVE, etc.).",
+
+                    // ── Description field ──────────────────────────────────
+                    "DESCRIPTION: Each story must include a description field with 2-3 sentences of acceptance criteria: what 'done' looks like, what the system does, and any key edge cases or constraints the implementer must handle.",
+
+                    // ── PM override instructions ───────────────────────────
+                    "PM OVERRIDE INSTRUCTIONS: End the output with a brief 'How to Override' note (outside the JSON, as a markdown comment) explaining: to change a persona, update the people robot output and re-run; to change feature priorities, update the feature robot and re-run; to add a new story directly, use the feedback field.",
+
+                    // ── No re-prompting ────────────────────────────────────
+                    "NO RE-PROMPTING: Do not ask the PM for information already in the Phase 1 outputs. If data is ambiguous, make the best inference and note it in Derivation Assumptions.",
+                ],
+
+                requiredSections: [
+                    "phase1Synthesis",
+                    "derivationAssumptions",
+                    "userStories",
+                ],
+
+                productContext: {
+                    productIdea:       context.productIdea || context.summary || null,
+                    targetMarket:      context.answers?.target_geo || context.answers?.target_market || null,
+                    productStage:      context.answers?.product_stage || null,
+                    summary:           context.summary || null,
+                    phase1DataPresent: hasPhase1Outputs,
+
+                    // Phase 1 robot outputs — primary source of truth
+                    personaContext,
+                    featureContext,
+                    planContext: planContext || null,
+
+                    // Phase 2 PM overrides (may be empty)
+                    phase2Notes: Object.keys(phase2Notes).length > 0 ? phase2Notes : null,
+                },
+
+                outputFormat: {
+                    description: "Return a single JSON object. No markdown fences. No commentary outside the JSON.",
+                    schema: {
+                        phase1Synthesis:       "string — 3-5 bullet points (prefix each with \\n• ), covering personas identified, features used, MoSCoW signals, and any data gaps",
+                        derivationAssumptions: "string — 3-5 bullet points (prefix each with \\n• ), listing assumptions the PM can review and override via feedback",
+                        userStories: [
+                            {
+                                id:          "string — US-NNN format, sequential, e.g. US-001",
+                                persona:     "string — exact persona name from people robot output",
+                                story:       "string — 'As a [persona], I want [specific goal], so that [concrete reason].'",
+                                description: "string — 2-3 sentences of acceptance criteria",
+                                moscow:      "MUST_HAVE | SHOULD_HAVE | COULD_HAVE | WONT_HAVE | PHASE_2",
+                            },
+                        ],
+                        totalCount:     "integer — total number of stories in userStories array",
+                        mustHaveCount:  "integer — number of MUST_HAVE stories",
+                        shouldHaveCount: "integer — number of SHOULD_HAVE stories",
+                        couldHaveCount: "integer — number of COULD_HAVE stories",
+                        phase2Count:    "integer — number of PHASE_2 stories",
+                    },
+                    critical: "The JSON object is the complete deliverable. Do not wrap it in markdown. Do not add prose before or after the JSON.",
+                },
+            },
+        };
+    }
+
+    // ── Private helpers ────────────────────────────────────────────────
+
+    /**
+     * Extract persona context from enrichedContext.
+     * Priority: phase1Outputs.people (saved output file) → interview answers.
+     *
+     * @param {EnrichedContext} context
+     * @returns {string}
+     */
+    _extractPersonaContext(context) {
+        if (context.phase1Outputs?.people?.trim()) {
+            return context.phase1Outputs.people;
+        }
+
+        // Graceful fallback — interview answers that describe user segments
+        const a = context.answers || {};
+        const parts = [];
+
+        if (a.target_persona)        parts.push(`Target persona: ${a.target_persona}`);
+        if (a.primary_user)          parts.push(`Primary user: ${a.primary_user}`);
+        if (a.user_pain_points)      parts.push(`Pain points: ${a.user_pain_points}`);
+        if (a.jobs_to_be_done)       parts.push(`Jobs to be done: ${a.jobs_to_be_done}`);
+        if (a.target_customer)       parts.push(`Target customer: ${a.target_customer}`);
+        if (a.target_geo)            parts.push(`Target market: ${a.target_geo}`);
+
+        if (parts.length === 0) {
+            parts.push(
+                `Product: ${context.productIdea || context.summary || "Not specified"}`,
+                "NOTE: People robot output not available — personas will be inferred from product context."
+            );
+        }
+
+        return parts.join("\n\n");
+    }
+
+    /**
+     * Extract feature context from enrichedContext.
+     * Priority: phase1Outputs.feature (saved output file) → interview answers.
+     *
+     * @param {EnrichedContext} context
+     * @returns {string}
+     */
+    _extractFeatureContext(context) {
+        if (context.phase1Outputs?.feature?.trim()) {
+            return context.phase1Outputs.feature;
+        }
+
+        // Graceful fallback — interview answers that describe scope
+        const a = context.answers || {};
+        const parts = [];
+
+        if (a.core_features || a.key_features) {
+            parts.push(`Core features: ${a.core_features || a.key_features}`);
+        }
+        if (a.mvp_scope || a.minimum_scope) {
+            parts.push(`MVP scope: ${a.mvp_scope || a.minimum_scope}`);
+        }
+        if (a.differentiator || a.unique_value) {
+            parts.push(`Differentiator: ${a.differentiator || a.unique_value}`);
+        }
+
+        if (parts.length === 0) {
+            parts.push(
+                `Product: ${context.productIdea || context.summary || "Not specified"}`,
+                "NOTE: Feature robot output not available — features will be inferred from product context."
+            );
+        }
+
+        return parts.join("\n\n");
+    }
+
+    /**
+     * Extract plan/roadmap context for phase alignment.
+     * Returns null if not available — plan signals are optional for user stories.
+     *
+     * @param {EnrichedContext} context
+     * @returns {string|null}
+     */
+    _extractPlanContext(context) {
+        if (context.phase1Outputs?.plan?.trim()) {
+            return context.phase1Outputs.plan;
+        }
+        return null;
+    }
+}
+
+export default UserStoriesRobot;

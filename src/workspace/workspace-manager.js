@@ -111,6 +111,32 @@ export class WorkspaceManager {
         }
     }
 
+    // ── Phase 2 path helpers ───────────────────────────────────────────
+
+    /**
+     * Path to the Phase 2 context manifest for a product.
+     * Scaffolded by promote-to-phase-2; consumed by all Phase 2 robots.
+     */
+    getPhase2ContextPath(slug) {
+        return path.join(this.getContextDir(slug), "phase2-context.json");
+    }
+
+    /**
+     * Path to the DACI manifest for a product.
+     * Written by the daci-stakeholders robot; referenced by the PDD composer.
+     */
+    getDACIPath(slug) {
+        return path.join(this.getContextDir(slug), "daci.json");
+    }
+
+    /**
+     * Path to the PDD output directory for a product.
+     * All PDD exports (markdown + HTML) are stored here.
+     */
+    getPDDDir(slug) {
+        return path.join(this.getAssetsDir(slug), "pdd");
+    }
+
     /**
      * Does the PM profile file exist?
      */

@@ -1,3 +1,5 @@
+import fs from "fs/promises";
+
 import ScoutRobot from "../robots/scout-robot.js";
 import DetectiveRobot from "../robots/detective-robot.js";
 import PeopleRobot from "../robots/people-robot.js";
@@ -6,6 +8,18 @@ import FeatureRobot from "../robots/feature-robot.js";
 import PlanRobot from "../robots/plan-robot.js";
 import PriorityRobot from "../robots/priority-robot.js";
 import InterviewRobot from "../robots/interview-robot.js";
+
+// Phase 2 robots
+import UserStoriesRobot      from "../robots/user-stories-robot.js";
+import ScopeSpecRobot        from "../robots/scope-spec-robot.js";
+import CustomerJourneysRobot from "../robots/customer-journeys-robot.js";
+import FeasibilityTechRobot   from "../robots/feasibility-tech-robot.js";
+import FeasibilityDesignRobot  from "../robots/feasibility-design-robot.js";
+import KpisRobot               from "../robots/kpis-robot.js";
+import DataPrivacyRobot        from "../robots/data-privacy-robot.js";
+import GtmReadinessRobot       from "../robots/gtm-readiness-robot.js";
+import RisksRegistryRobot      from "../robots/risks-registry-robot.js";
+import DaciStakeholdersRobot   from "../robots/daci-stakeholders-robot.js";
 
 import RobotMemory from "../brain/robot-memory.js";
 import LearningEngine from "../brain/learning-engine.js";
@@ -16,7 +30,9 @@ import { AssetStore } from "../src/workspace/asset-store.js";
 import { ContextStore } from "../src/workspace/context-store.js";
 import { FreshnessTracker } from "../src/workspace/freshness-tracker.js";
 
-// Robot registry — maps names to instances
+// ── Robot registries ────────────────────────────────────────────────
+
+/** Phase 1 run order — strategic discovery */
 const ROBOT_ORDER = [
     "scout",
     "detective",
@@ -27,19 +43,51 @@ const ROBOT_ORDER = [
     "priority",
 ];
 
+/** Phase 2 run order — execution definition */
+const ROBOT_ORDER_PHASE_2 = [
+    "user-stories",
+    "scope-spec",
+    "feasibility-tech",
+    "feasibility-design",
+    "customer-journeys",
+    "data-privacy",
+    "gtm-readiness",
+    "risks-registry",
+    "kpis",
+    "daci-stakeholders",
+];
+
+/**
+ * Gate rule: ALL Phase 1 robots must be fresh before any Phase 2 robot
+ * can run.  This is the full set — no exceptions.
+ */
+const PHASE2_GATE_ROBOTS = ROBOT_ORDER;
+
 class TeamLeader {
     constructor() {
         console.log("👑 === TEAM LEADER: Initializing ===");
 
-        // Create all robots
+        // Create all robots — Phase 1
         this.robots = {
-            scout: new ScoutRobot(),
+            scout:     new ScoutRobot(),
             detective: new DetectiveRobot(),
-            people: new PeopleRobot(),
-            money: new MoneyRobot(),
-            feature: new FeatureRobot(),
-            plan: new PlanRobot(),
-            priority: new PriorityRobot(),
+            people:    new PeopleRobot(),
+            money:     new MoneyRobot(),
+            feature:   new FeatureRobot(),
+            plan:      new PlanRobot(),
+            priority:  new PriorityRobot(),
+
+            // Phase 2
+            "user-stories":        new UserStoriesRobot(),
+            "scope-spec":          new ScopeSpecRobot(),
+            "customer-journeys":   new CustomerJourneysRobot(),
+            "feasibility-tech":    new FeasibilityTechRobot(),
+            "feasibility-design":  new FeasibilityDesignRobot(),
+            "kpis":                new KpisRobot(),
+            "data-privacy":        new DataPrivacyRobot(),
+            "gtm-readiness":       new GtmReadinessRobot(),
+            "risks-registry":      new RisksRegistryRobot(),
+            "daci-stakeholders":   new DaciStakeholdersRobot(),
         };
         this.interviewer = new InterviewRobot();
 
@@ -58,8 +106,10 @@ class TeamLeader {
         // Active analysis sessions: analysisId -> session state
         this.sessions = new Map();
 
-        // Propagate the database ready promise so callers can await full init
-        this.ready = this.database.ready;
+        // Propagate the database ready promise so callers can await full init.
+        // Chain: after disk load, immediately hydrate the LearningEngine with
+        // all persisted feedback so improvement hints survive server restarts.
+        this.ready = this.database.ready.then(() => this._hydrateLearner());
 
         console.log("✅ All robots ready! 🤖🤖🤖🤖🤖🤖🤖🤖\n");
     }
@@ -144,10 +194,81 @@ class TeamLeader {
         return id;
     }
 
+    // ── Phase 2 helpers ──────────────────────────────────────────────
+
+    /**
+     * Build extended enrichedContext for a Phase 2 robot.
+     *
+     * Loads Phase 1 robot output files (Claude's generated analysis text) from
+     * assets/*-output.md, and merges the Phase 2 context manifest from
+     * context/phase2-context.json.  The result is passed to Phase 2 robot
+     * analyze() methods in place of the base enrichedContext.
+     *
+     * @param {string} productSlug
+     * @param {Object} baseContext - the session's enrichedContext
+     * @returns {Promise<Object>} extended context with phase1Outputs + phase2Context
+     */
+    async _buildPhase2Context(productSlug, baseContext) {
+        // Load Claude's generated output text for ALL robots — Phase 1 and Phase 2.
+        // Phase 2 robots like risks-registry read feasibility-tech-output and
+        // gtm-readiness-output, so we must load every available output file.
+        // The map key is the robot name regardless of phase.
+        const phase1Outputs = {};
+        const allRobots = [...ROBOT_ORDER, ...ROBOT_ORDER_PHASE_2];
+        for (const robot of allRobots) {
+            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot);
+            if (text) {
+                phase1Outputs[robot] = text;
+            }
+        }
+
+        // Load Phase 2 context manifest (scaffolded by promote-to-phase-2)
+        let phase2Context = {};
+        try {
+            const p2Path = this.workspace.getPhase2ContextPath(productSlug);
+            const raw = await fs.readFile(p2Path, "utf-8");
+            phase2Context = JSON.parse(raw);
+        } catch {
+            // Phase 2 manifest not yet created — Phase 2 robots degrade gracefully
+        }
+
+        // Load DACI data (daci-stakeholders robot reads and confirms this)
+        try {
+            const daciPath = this.workspace.getDACIPath(productSlug);
+            const raw = await fs.readFile(daciPath, "utf-8");
+            phase2Context.daciData = JSON.parse(raw);
+        } catch {
+            // daci.json not yet written — daci-stakeholders robot will scaffold it
+            phase2Context.daciData = null;
+        }
+
+        return {
+            ...baseContext,
+            phase1Outputs,
+            phase2Context,
+        };
+    }
+
+    /**
+     * Check whether all Phase 1 gate robots are fresh for a product.
+     * Returns an array of robot names that are NOT fresh (empty = gate passed).
+     *
+     * @param {string} productSlug
+     * @returns {Promise<string[]>} list of stale/missing robots
+     */
+    async checkPhase2Gate(productSlug) {
+        const freshnessState = await this.freshness.getRobotFreshness(productSlug);
+        return PHASE2_GATE_ROBOTS.filter(r => freshnessState[r]?.status !== "fresh");
+    }
+
     /**
      * Run a single robot by name, store the result in the session.
      * If the session is tied to a product, the result is also persisted
      * to the product's assets/ folder and freshness is updated.
+     *
+     * For Phase 2 robots, additionally:
+     *   - Enforces the Phase 2 gate (all Phase 1 must be fresh)
+     *   - Builds extended context (Phase 1 outputs + Phase 2 manifest)
      *
      * @param {string} analysisId
      * @param {string} robotName
@@ -183,12 +304,37 @@ class TeamLeader {
             }
         }
 
+        // ── Phase 2 gate + context enrichment ───────────────────────
+        let analysisContext = session.enrichedContext;
+
+        if (ROBOT_ORDER_PHASE_2.includes(robotName)) {
+            if (!session.productSlug) {
+                throw new Error(
+                    `Phase 2 robot '${robotName}' requires a productSlug. ` +
+                    `Run run-robot with a productSlug so Phase 1 outputs can be loaded.`
+                );
+            }
+            // Enforce gate: all Phase 1 must be fresh
+            const blockedRobots = await this.checkPhase2Gate(session.productSlug);
+            if (blockedRobots.length > 0) {
+                throw new Error(
+                    `Phase 2 gate blocked for '${robotName}': ` +
+                    `Phase 1 robots not fresh — ${blockedRobots.join(", ")}. ` +
+                    `Run all Phase 1 robots first, then retry.`
+                );
+            }
+            // Build extended context from Phase 1 outputs + Phase 2 manifest
+            analysisContext = await this._buildPhase2Context(session.productSlug, session.enrichedContext);
+            console.log(`🔗 Phase 2 context built for '${robotName}' — ` +
+                `Phase 1 outputs loaded: [${Object.keys(analysisContext.phase1Outputs).join(", ")}]`);
+        }
+
         // Gather improvement hints from past feedback
         const hints = this.learner.getImprovementHints(robotName);
 
         // Build the prompt that goes into the robot — enriched context + hints
         console.log(`🤖 Running ${robot.name}...`);
-        const result = await robot.analyze(session.enrichedContext);
+        const result = await robot.analyze(analysisContext);
 
         // Attach improvement hints so Claude can see them
         result._improvementHints = hints;
@@ -347,5 +493,5 @@ class TeamLeader {
     }
 }
 
-export { ROBOT_ORDER };
+export { ROBOT_ORDER, ROBOT_ORDER_PHASE_2, PHASE2_GATE_ROBOTS };
 export default TeamLeader;

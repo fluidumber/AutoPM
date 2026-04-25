@@ -2,8 +2,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-import TeamLeader, { ROBOT_ORDER } from "../leader/team-leader.js";
+import TeamLeader, { ROBOT_ORDER, ROBOT_ORDER_PHASE_2, PHASE2_GATE_ROBOTS } from "../leader/team-leader.js";
 import { generatePresentation } from "../utils/presentation-generator.js";
+import { renderMarkdown, renderHtml } from "../utils/pdd-renderer.js";
+import { PDDComposer } from "./workspace/pdd-composer.js";
 import { WorkspaceManager } from "./workspace/workspace-manager.js";
 import { PMProfile } from "./workspace/pm-profile.js";
 import { ProductRegistry } from "./workspace/product-registry.js";
@@ -16,6 +18,7 @@ const teamLeader = new TeamLeader();
 const workspace = new WorkspaceManager();
 const pmProfile = new PMProfile(workspace);
 const productRegistry = new ProductRegistry(workspace, pmProfile);
+const pddComposer = new PDDComposer(workspace, teamLeader.assetStore);
 
 const server = new McpServer({
     name: "productflow",
@@ -125,7 +128,7 @@ server.tool(
     "run-robot",
     `Run a SINGLE analysis robot and return its results. Call this one robot at a time so the user can review and give feedback before moving to the next.
 
-Available robots (in recommended order):
+Available robots — Phase 1 (strategic discovery, run first):
 1. scout     — Market demand (TAM/SAM/SOM, growth, demand signals)
 2. detective — Competitive landscape (competitors, gaps, moat)
 3. people    — User personas (segments, pain points, behaviors)
@@ -133,6 +136,9 @@ Available robots (in recommended order):
 5. feature   — Feature breakdown (must-have, nice-to-have, future)
 6. plan      — Product roadmap (phased 12-18 month plan)
 7. priority  — Feature prioritization (RICE scoring)
+
+Available robots — Phase 2 (execution definition, requires all Phase 1 fresh):
+8. user-stories — MoSCoW-tagged user stories derived from people + feature outputs
 
 If 'productSlug' is provided:
   - Results are persisted to the product's assets/ folder as markdown.
@@ -148,7 +154,14 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
                 "Analysis session ID. If not provided, a new session is created automatically."
             ),
         robotName: z
-            .enum(["scout", "detective", "people", "money", "feature", "plan", "priority"])
+            .enum([
+                // Phase 1 — strategic discovery
+                "scout", "detective", "people", "money", "feature", "plan", "priority",
+                // Phase 2 — execution definition
+                "user-stories", "scope-spec", "customer-journeys",
+                "feasibility-tech", "feasibility-design", "kpis",
+                "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
+            ])
             .describe("Which robot to run"),
         enrichedContext: z
             .string()
@@ -279,7 +292,14 @@ The learning engine will show improvement hints to robots on future runs.`,
     {
         analysisId: z.string().describe("The analysis session ID"),
         robotName: z
-            .enum(["scout", "detective", "people", "money", "feature", "plan", "priority"])
+            .enum([
+                // Phase 1
+                "scout", "detective", "people", "money", "feature", "plan", "priority",
+                // Phase 2
+                "user-stories", "scope-spec", "customer-journeys",
+                "feasibility-tech", "feasibility-design", "kpis",
+                "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
+            ])
             .describe("Which robot to rate"),
         rating: z
             .number()
@@ -896,6 +916,497 @@ user can make informed decisions.`,
                     instructions: (freshRobots.length > 0 || freshAnswerCount > 0)
                         ? "Ask the PM whether to reuse the fresh artifacts or force a re-run. Pass 'useEarlierResearch: true' to 'interview' to pre-fill fresh answers, and pass 'forceRerun: true' to 'run-robot' to ignore cached results."
                         : "Nothing fresh to reuse — run the interview and robots from scratch.",
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 17: SAVE-ROBOT-OUTPUT — persist Claude's generated analysis text
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "save-robot-output",
+    `Save the raw analysis text that Claude generated for a robot to the product's assets folder.
+
+This is distinct from the prompt payload saved by run-robot.  This tool saves the ACTUAL ANALYSIS TEXT
+Claude produced — the content that Phase 2 robots read as their primary input.
+
+Call this immediately after Claude generates a robot's analysis, passing the full markdown text.
+
+File pattern: assets/YYYY-MM-DD-<robotName>-output.md
+
+IMPORTANT: Call this tool after EVERY Phase 1 robot run if the product will eventually go to Phase 2.
+Phase 2 robots (user-stories, scope-spec, etc.) read these output files to derive their analysis.`,
+    {
+        productSlug: z.string().describe("The product slug"),
+        robotName: z
+            .enum([
+                "scout", "detective", "people", "money", "feature", "plan", "priority",
+                "user-stories", "scope-spec", "customer-journeys",
+                "feasibility-tech", "feasibility-design", "kpis",
+                "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
+            ])
+            .describe("Which robot produced this output"),
+        markdownText: z.string().describe("The full analysis text Claude generated for this robot"),
+    },
+    async ({ productSlug, robotName, markdownText }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}. Call 'product-create' first.` }, null, 2)
+                }]
+            };
+        }
+
+        try {
+            const relPath = await teamLeader.assetStore.saveRobotOutput(productSlug, robotName, markdownText);
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        saved: true,
+                        robotName,
+                        productSlug,
+                        relPath,
+                        absPath: `${teamLeader.workspace.getAssetsDir(productSlug)}/${relPath.split("/").pop()}`,
+                        message: `${robotName} output saved. Phase 2 robots will use this file.`,
+                    }, null, 2)
+                }]
+            };
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: err.message }, null, 2)
+                }]
+            };
+        }
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 18: PROMOTE-TO-PHASE-2 — gate check + Phase 2 context scaffold
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "promote-to-phase-2",
+    `Promote a product from Phase 1 (strategic discovery) to Phase 2 (execution definition).
+
+This tool:
+1. Checks that ALL 7 Phase 1 robots are fresh for this product (gate enforcement).
+2. Scaffolds context/phase2-context.json with initial values the PM can fill in.
+3. Returns instructions telling Claude to present a Phase 1 summary to the PM and collect Phase 2 intake.
+
+Do NOT call run-robot with a Phase 2 robot (user-stories, scope-spec, etc.) until this tool
+returns { promoted: true }.  The gate is also enforced inside run-robot itself, but calling
+promote-to-phase-2 first gives the PM a clear summary of what they are promoting.`,
+    {
+        productSlug: z.string().describe("The product slug to promote"),
+        ownerName:   z.string().optional().describe("PM's name for the PDD owner field"),
+        ownerRole:   z.string().optional().describe("PM's role, e.g. 'Senior Product Manager'"),
+        ownerEmail:  z.string().optional().describe("PM's email for the PDD meta section"),
+    },
+    async ({ productSlug, ownerName, ownerRole, ownerEmail }) => {
+        const fspath = await import("fs/promises");
+        const ppath  = await import("path");
+
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}` }, null, 2)
+                }]
+            };
+        }
+
+        // Gate check
+        const blockedRobots = await teamLeader.checkPhase2Gate(productSlug);
+        if (blockedRobots.length > 0) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        promoted: false,
+                        gateBlocked: true,
+                        blockedRobots,
+                        message: `Cannot promote to Phase 2: the following Phase 1 robots are not fresh — ${blockedRobots.join(", ")}. Run them first, then retry.`,
+                    }, null, 2)
+                }]
+            };
+        }
+
+        // Scaffold phase2-context.json
+        const p2Path = teamLeader.workspace.getPhase2ContextPath(productSlug);
+        const pddDir = teamLeader.workspace.getPDDDir(productSlug);
+
+        await fspath.mkdir(pddDir, { recursive: true });
+
+        const phase2Manifest = {
+            promotedAt: new Date().toISOString(),
+            promotedFromPhase1: ROBOT_ORDER,
+            pddVersion: "1.0.0",
+            pddStatus:  "DRAFT",
+            owner: {
+                name:  ownerName  || "",
+                role:  ownerRole  || "",
+                email: ownerEmail || "",
+            },
+            links: {
+                jira:       null,
+                tdd:        null,
+                figma:      null,
+                confluence: null,
+            },
+            // PM-provided overrides — fill these in after reviewing Phase 1 outputs
+            personaOverride:  "",
+            featureOverride:  "",
+            scopeOverride:    "",
+        };
+
+        // Idempotent — only scaffold if not already present
+        let alreadyExisted = false;
+        try {
+            await fspath.access(p2Path);
+            alreadyExisted = true;
+        } catch {
+            await fspath.writeFile(p2Path, JSON.stringify(phase2Manifest, null, 2), "utf-8");
+        }
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    promoted: true,
+                    alreadyExisted,
+                    productSlug,
+                    pddVersion: phase2Manifest.pddVersion,
+                    phase2ManifestPath: p2Path,
+                    pddOutputDir: pddDir,
+                    phase2Robots: ROBOT_ORDER_PHASE_2,
+                    message: alreadyExisted
+                        ? `Product '${productSlug}' is already in Phase 2. Manifest unchanged.`
+                        : `Product '${productSlug}' promoted to Phase 2. You may now run Phase 2 robots.`,
+                    instructions: [
+                        "Phase 2 is unlocked. Run Phase 2 robots via 'run-robot' in the recommended order.",
+                        "Recommended first robot: user-stories (tightest dependency graph).",
+                        "Optional: edit context/phase2-context.json to add personaOverride, featureOverride, or scopeOverride before running robots.",
+                        "After each Phase 2 robot runs, call 'save-robot-output' to persist Claude's analysis for downstream robots.",
+                    ],
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 19: GENERATE-PDD — assemble PDD JSON from all robot outputs
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "generate-pdd",
+    `Assemble a Product Definition Document (PDD) for a product that has completed Phase 2.
+
+HOW IT WORKS:
+1. This tool loads every robot output saved to disk (Phase 1 + Phase 2) via save-robot-output.
+2. It returns a structured assemblyPayload with all those outputs, plus metadata.
+3. Claude uses that payload to compose the final PDD JSON according to the schema provided.
+4. After Claude generates the PDD JSON, call 'save-pdd' with the full JSON to persist it.
+
+WHEN TO CALL:
+- After all required Phase 2 robots have run and their outputs saved via 'save-robot-output'.
+- Can be called with partial output (not all robots need to have run) — missing sections will
+  be marked as incomplete in the PDD status tracker.
+
+WORKFLOW:
+1. Call generate-pdd → receive assemblyPayload
+2. Claude assembles PDD JSON using the payload (role + mandate + schema all included)
+3. Call save-pdd with the JSON Claude produced`,
+    {
+        productSlug: z.string().describe("The product slug"),
+        pddVersion:  z.string().optional().describe("Explicit version override, e.g. '1.2.0'. Defaults to auto-incrementing the patch version."),
+    },
+    async ({ productSlug, pddVersion }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}. Call 'product-create' first.` }, null, 2)
+                }]
+            };
+        }
+
+        let assemblyPayload;
+        try {
+            assemblyPayload = await pddComposer.assemble(productSlug);
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Assembly failed: ${err.message}` }, null, 2)
+                }]
+            };
+        }
+
+        // Determine target version — auto-increment patch from phase2-context.json or default
+        let targetVersion = pddVersion;
+        if (!targetVersion) {
+            const currentVersion = assemblyPayload.phase2Context?.pddVersion || "1.0.0";
+            const parts = String(currentVersion).split(".").map(Number);
+            parts[2] = (parts[2] || 0) + 1;
+            targetVersion = parts.join(".");
+        }
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    action: "assemble-pdd",
+                    productSlug,
+                    targetVersion,
+                    assemblyPayload,
+
+                    _claudeInstructions: {
+                        role: "You are a senior product manager completing a Product Definition Document (PDD). Your job is to map every robot output in the assemblyPayload to the PDD schema below — producing a complete, specific, non-generic PDD JSON that can be rendered to Notion-compatible markdown and presented to an executive sponsor.",
+
+                        mandate: [
+                            "MAP EVERY AVAILABLE ROBOT OUTPUT: For each section in the PDD schema, look for the corresponding robot output in assemblyPayload.robotOutputs. Use the 'json' field if available (Phase 2 robots with structured JSON), otherwise derive from the 'raw' field (Phase 1 narrative text).",
+                            "MISSING SECTIONS ARE OK: If a robot hasn't run, mark that section as null in the PDD. The sectionStatus array in daciData will already reflect what's missing. Do not invent content for sections with no robot output.",
+                            "META BLOCK: Populate from assemblyPayload.productMeta (name, slug), assemblyPayload.phase2Context (version, status, owner), and the targetVersion provided.",
+                            "DACI + KEY CONTACTS + SECTION STATUS: Copy directly from assemblyPayload.daciData if present. If daciData is null, derive from the daci-stakeholders robot output JSON if available.",
+                            "SCOPE: Map from the scope-spec robot JSON output — criticalChange, coreFunctionalities, nonCoreFunctionalities, rolesAndPermissions, outOfScope, assumptions, constraints, limitations.",
+                            "USER STORIES: Map from user-stories robot JSON output — preserve MoSCoW priority tags (Must Have / Should Have / Could Have / Won't Have).",
+                            "CUSTOMER JOURNEYS: Map from customer-journeys robot JSON output — preserve all steps, emotional annotations, friction points, delight moments.",
+                            "FEASIBILITY TECH: Map from feasibility-tech robot JSON — architectureOverview, architectureDiagramMermaid (valid Mermaid only), technicalConcerns[], thirdPartyVendors[], securityAndCompliance, infrastructureDependencies[].",
+                            "FEASIBILITY DESIGN: Map from feasibility-design robot JSON — designPrinciples[], wireflow[], accessibilityCommitments[].",
+                            "DATA PRIVACY: Map from data-privacy robot JSON — array of {area, impact, description, mitigation}.",
+                            "COMPETITOR ANALYSIS: Derive from detective robot raw text — extract the core competitive insight as a concise 2-3 paragraph narrative.",
+                            "ROADMAP: Derive from plan robot raw text — extract the phase-by-phase roadmap as a concise narrative.",
+                            "RISKS: Map from risks-registry robot JSON — array of {category, risk, probability, impact, mitigation, owner}.",
+                            "GTM READINESS: Map from gtm-readiness robot JSON — cxStageMatrix[], provisioning, rollout, previewToGA, pricingAndMonetization, supportAndTroubleshooting.",
+                            "KPIS: Map from kpis robot JSON — northStar, adoption[], retention[], usage[], revenue[], feedbackMechanisms[].",
+                            "APPENDIX: Populate from assemblyPayload metadata — robotsPresent, robotsMissing, assembledAt.",
+                            "EXECUTIVE SUMMARY: Write a 150-200 word executive summary synthesising the product vision, target market, key differentiator, delivery timeline, and top 3 risks. Derive every claim from the robot outputs — no generic filler.",
+                            "FEATURE OVERVIEW: Write a 100-150 word feature overview synthesising the scout + people robot outputs. Focus on what the product does, who it serves, and why it matters.",
+                            "SPECIFICITY BAR: Every sentence must be specific to this product. 'The product will serve users' is not acceptable. 'The product serves mid-market B2B enterprises in MENA seeking to unify CX across voice, chat, and AI channels' is acceptable.",
+                            "OUTPUT ONLY JSON: Return a single JSON object matching the schema exactly. No markdown fences. No commentary outside the JSON.",
+                        ],
+
+                        pddSchema: {
+                            meta: {
+                                productName: "string",
+                                slug:        "string",
+                                version:     "string",
+                                status:      "DRAFT | REVIEW | APPROVED",
+                                owner: { name: "string", role: "string", email: "string" },
+                                createdAt:   "ISO timestamp",
+                                lastUpdated: "ISO timestamp",
+                            },
+                            executiveSummary:  "string — 150-200 words synthesising vision, market, differentiator, timeline, top 3 risks",
+                            featureOverview:   "string — 100-150 words synthesising scout + people outputs",
+                            daci: {
+                                driver:       { name: "string", role: "string" },
+                                approver:     { name: "string", role: "string" },
+                                contributors: [{ name: "string", role: "string" }],
+                                informed:     [{ name: "string", role: "string" }],
+                            },
+                            keyContacts:  [{ name: "string", role: "string", company: "string", email: "string" }],
+                            sectionStatus: [{ section: "string", draftComplete: "boolean", finalComplete: "boolean" }],
+                            scope: {
+                                criticalChange:          "boolean",
+                                coreFunctionalities:     "string or string[]",
+                                nonCoreFunctionalities:  "string or string[]",
+                                rolesAndPermissions:     "string or string[]",
+                                outOfScope:              ["string"],
+                                assumptions:             ["string"],
+                                constraints:             ["string"],
+                                limitations:             ["string"],
+                            },
+                            userStories: [{ priority: "string", persona: "string", story: "string", acceptanceCriteria: ["string"] }],
+                            customerJourneys: [{
+                                persona: "string", title: "string",
+                                steps: [{ stepNumber: "integer", action: "string", detail: "string" }],
+                            }],
+                            feasibilityTech: {
+                                architectureOverview:       "string",
+                                architectureDiagramMermaid: "string — valid Mermaid diagram syntax",
+                                technicalConcerns:          [{ area: "string", severity: "string", description: "string", mitigation: "string" }],
+                                thirdPartyVendors:          [{ vendor: "string", purpose: "string", risk: "string" }],
+                                securityAndCompliance:      "string",
+                                infrastructureDependencies: ["string"],
+                            },
+                            feasibilityDesign: {
+                                designPrinciples:        [{ principle: "string", rationale: "string" }],
+                                wireflow:                [{ screenNumber: "integer", screenName: "string", description: "string" }],
+                                accessibilityCommitments: ["string"],
+                            },
+                            competitorAnalysis: "string — concise 2-3 paragraph narrative from detective output",
+                            roadmap:            "string — concise phase-by-phase narrative from plan output",
+                            dataPrivacy:  [{ area: "string", impact: "string", description: "string", mitigation: "string" }],
+                            risks:        [{ category: "string", risk: "string", probability: "string", impact: "string", mitigation: "string", owner: "string" }],
+                            gtmReadiness: {
+                                cxStageMatrix:           [{}],
+                                provisioning:            "string",
+                                rollout:                 { plan: "string", regions: ["string"], waves: [{}] },
+                                previewToGA:             "string",
+                                pricingAndMonetization:  "string",
+                                supportAndTroubleshooting: "string",
+                            },
+                            kpis: {
+                                northStar:          { metric: "string", definition: "string", rationale: "string" },
+                                adoption:           [{ kpi: "string", target: "string", timeframe: "string", sourceSystem: "string" }],
+                                retention:          [{ kpi: "string", target: "string", timeframe: "string", sourceSystem: "string" }],
+                                usage:              [{ kpi: "string", target: "string", timeframe: "string", sourceSystem: "string" }],
+                                revenue:            [{ kpi: "string", target: "string", timeframe: "string", sourceSystem: "string" }],
+                                feedbackMechanisms: ["string"],
+                            },
+                            appendix: {
+                                robotsPresent:  ["string"],
+                                robotsMissing:  ["string"],
+                                assembledAt:    "ISO timestamp",
+                            },
+                        },
+                    },
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 20: SAVE-PDD — persist the PDD JSON Claude assembled
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "save-pdd",
+    `Persist the PDD JSON that Claude assembled via 'generate-pdd'.
+
+This tool:
+1. Validates the PDD JSON has a meta block with productName + version.
+2. Saves three files to assets/pdd/:
+     pdd-<slug>-v<version>.json     — machine-readable PDD
+     pdd-<slug>-v<version>.md       — Notion-compatible markdown
+     pdd-<slug>-latest.md           — copy of latest version (overwritten on every save)
+3. Optionally renders an HTML file to plans/ directory.
+4. Updates pddVersion in context/phase2-context.json.
+
+Call this immediately after Claude generates the PDD JSON from 'generate-pdd'.`,
+    {
+        productSlug:  z.string().describe("The product slug"),
+        pddJson:      z.string().describe("The full PDD JSON string that Claude generated"),
+        renderHtmlFlag: z.boolean().optional().describe("Set true to also save an HTML version to plans/. Default false."),
+    },
+    async ({ productSlug, pddJson: pddJsonStr, renderHtmlFlag }) => {
+        const fspath = await import("fs/promises");
+        const ppath  = await import("path");
+
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}` }, null, 2)
+                }]
+            };
+        }
+
+        // Parse the PDD JSON
+        let pddJson;
+        try {
+            const trimmed = pddJsonStr.trim();
+            // Handle fenced JSON (shouldn't happen, but defensive)
+            const fenceMatch = trimmed.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/);
+            pddJson = JSON.parse(fenceMatch ? fenceMatch[1].trim() : trimmed);
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `PDD JSON parse failed: ${err.message}` }, null, 2)
+                }]
+            };
+        }
+
+        // Validate meta block
+        if (!pddJson.meta?.productName || !pddJson.meta?.version) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: "PDD JSON must have meta.productName and meta.version" }, null, 2)
+                }]
+            };
+        }
+
+        const version = pddJson.meta.version;
+        const pddDir  = workspace.getPDDDir(productSlug);
+        await fspath.mkdir(pddDir, { recursive: true });
+
+        const jsonFileName   = `pdd-${productSlug}-v${version}.json`;
+        const mdFileName     = `pdd-${productSlug}-v${version}.md`;
+        const latestFileName = `pdd-${productSlug}-latest.md`;
+
+        const jsonPath   = ppath.join(pddDir, jsonFileName);
+        const mdPath     = ppath.join(pddDir, mdFileName);
+        const latestPath = ppath.join(pddDir, latestFileName);
+
+        // Render markdown
+        const markdownText = renderMarkdown(pddJson);
+
+        // Save all three files
+        await Promise.all([
+            fspath.writeFile(jsonPath,   JSON.stringify(pddJson, null, 2), "utf-8"),
+            fspath.writeFile(mdPath,     markdownText, "utf-8"),
+            fspath.writeFile(latestPath, markdownText, "utf-8"),
+        ]);
+
+        // Optional HTML export
+        let htmlPath = null;
+        if (renderHtmlFlag) {
+            const plansDir = ppath.join(process.env.HOME || "~", ".productflow", "plans");
+            await fspath.mkdir(plansDir, { recursive: true });
+            const htmlFileName = `pdd-${productSlug}-v${version}.html`;
+            htmlPath = ppath.join(plansDir, htmlFileName);
+            const htmlContent = renderHtml(pddJson);
+            await fspath.writeFile(htmlPath, htmlContent, "utf-8");
+        }
+
+        // Update pddVersion in phase2-context.json
+        try {
+            const p2Path = workspace.getPhase2ContextPath(productSlug);
+            const raw = await fspath.readFile(p2Path, "utf-8");
+            const manifest = JSON.parse(raw);
+            manifest.pddVersion = version;
+            manifest.pddStatus  = pddJson.meta.status || manifest.pddStatus;
+            manifest.lastPddAt  = new Date().toISOString();
+            await fspath.writeFile(p2Path, JSON.stringify(manifest, null, 2), "utf-8");
+        } catch {
+            // phase2-context.json may not exist if called without promote-to-phase-2 — non-fatal
+        }
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    saved: true,
+                    productSlug,
+                    version,
+                    files: {
+                        json:   jsonPath,
+                        markdown: mdPath,
+                        latest:  latestPath,
+                        html:    htmlPath || "(not rendered)",
+                    },
+                    summary: {
+                        sectionsPopulated: Object.keys(pddJson).filter(k => pddJson[k] !== null && k !== "meta"),
+                        robotsPresent:     pddJson.appendix?.robotsPresent || [],
+                        robotsMissing:     pddJson.appendix?.robotsMissing || [],
+                    },
+                    message: `PDD v${version} saved. Share ${latestFileName} with stakeholders or open the HTML in a browser.`,
+                    nextSteps: [
+                        "Review the markdown in assets/pdd/ — it is Notion-paste-ready.",
+                        "Use 'generate-presentation' to create a slide deck from the PDD.",
+                        "Re-run any missing robots and call 'generate-pdd' + 'save-pdd' again to increment the version.",
+                    ],
                 }, null, 2)
             }]
         };
