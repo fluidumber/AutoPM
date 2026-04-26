@@ -2,5 +2,5 @@ node_modules/
 brain-database.json
 plans/
 .DS_Store
-docs/
+pdd-examples/
 Building a Product Management Orchestration Platform.docx
