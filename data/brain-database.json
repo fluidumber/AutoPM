@@ -85,6 +85,62 @@
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output draws clear Q3 MVP, Q4 GA, and 2027 boundaries; identifies Mobile 2.0 as a critical change; specifies core/non-core functionality, role permissions, ruthless out-of-scope items, assumptions, constraints, limitations, gates, and scope-cut rules.",
       "timestamp": "2026-04-25T15:42:31.683Z"
+    },
+    {
+      "analysisId": "analysis-1777131839059",
+      "robotName": "feasibility-tech",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output gives a concrete feasibility verdict, architecture overview, Mermaid component diagram, capability feasibility table, technical risks and mitigations, vendor/platform dependencies, security/compliance requirements, infrastructure blockers, architecture spikes, NFRs, sequencing, and go/no-go gates. It preserves the Q3 depth-first capture loop and clearly identifies where to cut if gates fail.",
+      "timestamp": "2026-04-25T15:46:01.408Z"
+    },
+    {
+      "analysisId": "analysis-1777132120344",
+      "robotName": "feasibility-design",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output gives a clear design feasibility verdict, grounded design principles, Q3 information architecture, 15-screen primary wireflow covering all must-have features, Q4 design extensions, risks and mitigations, research plan, prototype plan, accessibility commitments, content/copy requirements, design capacity assessment, and design gates. It centers the trust principle that capture should feel like protection, not surveillance.",
+      "timestamp": "2026-04-25T15:50:36.774Z"
+    },
+    {
+      "analysisId": "analysis-1777132300624",
+      "robotName": "customer-journeys",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output provides a complete journey system map, six persona journeys for frontline, supervisor, operations, IT/security, compliance, and executive buyer, adjacent later journeys for expert/revenue/field personas, journey insights, traceability to requirements, telemetry events, and a clear Q3 recommendation centered on the Sofia-to-Jamal operating loop.",
+      "timestamp": "2026-04-25T15:53:59.562Z"
+    },
+    {
+      "analysisId": "analysis-1777132486258",
+      "robotName": "data-privacy",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+      "timestamp": "2026-04-25T15:58:07.306Z"
+    },
+    {
+      "analysisId": "analysis-1777132879262",
+      "robotName": "gtm-readiness",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+      "timestamp": "2026-04-25T16:04:36.212Z"
+    },
+    {
+      "analysisId": "analysis-1777133136923",
+      "robotName": "risks-registry",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+      "timestamp": "2026-04-25T16:07:40.289Z"
+    },
+    {
+      "analysisId": "analysis-1777133343323",
+      "robotName": "kpis",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+      "timestamp": "2026-04-25T16:11:02.623Z"
+    },
+    {
+      "analysisId": "analysis-1777133524753",
+      "robotName": "daci-stakeholders",
+      "rating": 5,
+      "notes": "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation.",
+      "timestamp": "2026-04-25T16:14:33.406Z"
     }
   ],
   "errors": [],

@@ -19,6 +19,8 @@ const ASSEMBLY_ROBOTS = [
     "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
 ];
 
+const PHASE1_ROBOTS = ["scout", "detective", "people", "money", "feature", "plan", "priority"];
+
 export class PDDComposer {
     /**
      * @param {import('./workspace-manager.js').WorkspaceManager} workspace
@@ -53,6 +55,34 @@ export class PDDComposer {
             productMeta,
             phase2Context,
             daciData,
+            robotOutputs,
+            robotsPresent,
+            robotsMissing,
+            assembledAt: new Date().toISOString(),
+        };
+    }
+
+    /**
+     * Assemble Phase 1 robot outputs for presentation generation.
+     * Loads only the 7 Phase 1 robot output files + product metadata.
+     * Does NOT require Phase 2 to have run — presentations are unlocked by
+     * Phase 1 completion, independent of the PDD lifecycle.
+     *
+     * @param {string} slug - product slug
+     * @returns {Promise<Phase1AssemblyPayload>}
+     */
+    async assemblePhase1(slug) {
+        const [productMeta, robotOutputs] = await Promise.all([
+            this._loadProductMeta(slug),
+            this._loadPhase1RobotOutputs(slug),
+        ]);
+
+        const robotsPresent = Object.keys(robotOutputs);
+        const robotsMissing = PHASE1_ROBOTS.filter(r => !robotsPresent.includes(r));
+
+        return {
+            slug,
+            productMeta,
             robotOutputs,
             robotsPresent,
             robotsMissing,
@@ -116,6 +146,20 @@ export class PDDComposer {
     }
 
     /**
+     * Load Phase 1 robot output files only.
+     * Used by assemblePhase1() — keeps presentations independent of Phase 2.
+     */
+    async _loadPhase1RobotOutputs(slug) {
+        const outputs = {};
+        await Promise.all(PHASE1_ROBOTS.map(async (robot) => {
+            const raw = await this.assetStore.loadLatestRobotOutput(slug, robot);
+            if (!raw) return;
+            outputs[robot] = { raw };
+        }));
+        return outputs;
+    }
+
+    /**
      * Robustly extract a JSON object from a robot output file.
      * Handles three cases:
      *   1. File IS valid JSON (Phase 2 robots following the mandate)
@@ -161,5 +205,15 @@ export class PDDComposer {
  * @property {Object}   robotOutputs    - Map: robotName → { raw, json }
  * @property {string[]} robotsPresent   - Robots with saved output files
  * @property {string[]} robotsMissing   - Robots not yet run
+ * @property {string}   assembledAt     - ISO timestamp
+ */
+
+/**
+ * @typedef {Object} Phase1AssemblyPayload
+ * @property {string}   slug            - Product slug
+ * @property {Object}   productMeta     - { name, raw }
+ * @property {Object}   robotOutputs    - Map: Phase 1 robotName → { raw }
+ * @property {string[]} robotsPresent   - Phase 1 robots with saved output files
+ * @property {string[]} robotsMissing   - Phase 1 robots not yet run
  * @property {string}   assembledAt     - ISO timestamp
  */

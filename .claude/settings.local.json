@@ -42,7 +42,8 @@
       "Bash(node --input-type=module --eval \"import\\('/Users/anandshrivastava/anewapp/productflow/utils/pdd-renderer.js'\\).then\\(m => { console.log\\('exports:', Object.keys\\(m\\)\\); }\\).catch\\(e => console.error\\('ERROR:', e.message\\)\\);\")",
       "Bash(node --check src/mcp-server.js)",
       "Bash(node --check src/workspace/pdd-composer.js)",
-      "Bash(node --check utils/pdd-renderer.js)"
+      "Bash(node --check utils/pdd-renderer.js)",
+      "Bash(node tests/persistence.test.js)"
     ]
   },
   "enableAllProjectMcpServers": true,

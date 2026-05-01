@@ -114,6 +114,31 @@ class TeamLeader {
         console.log("✅ All robots ready! 🤖🤖🤖🤖🤖🤖🤖🤖\n");
     }
 
+    /**
+     * Restore learning state from persisted feedback on boot.
+     */
+    _hydrateLearner() {
+        const allFeedback = this.database.data.feedback || [];
+        let hydratedCount = 0;
+        for (const fb of allFeedback) {
+            if (fb.rating >= 4) {
+                this.learner.learnFromSuccess(
+                    `${fb.robotName}: ${fb.notes || "good output"}`,
+                    fb.rating / 5
+                );
+            } else {
+                this.learner.learnFromFailure(
+                    `${fb.robotName}: needs improvement`,
+                    fb.notes || "low rating"
+                );
+            }
+            hydratedCount++;
+        }
+        if (hydratedCount > 0) {
+            console.log(`🧠 Hydrated learner with ${hydratedCount} historical feedback items`);
+        }
+    }
+
     // ── Interview (stateful, one question at a time) ────────────────
 
     /**
@@ -394,16 +419,43 @@ class TeamLeader {
 
     /**
      * Store user feedback for a robot's output.
-     * If the session is tied to a product, the feedback is also appended
-     * to the robot's asset markdown file on disk.
+     *
+     * analysisMarkdown — the full text Claude generated for this robot.  When
+     *   provided, it is persisted as YYYY-MM-DD-<robot>-output.md so Phase 2
+     *   robots can read it.  This is the atomic persistence point: callers
+     *   should NOT rely on a separate save-robot-output call for the normal
+     *   human-in-the-loop flow.
+     *
+     * bypassReason — escape hatch for headless/programmatic callers that have
+     *   already persisted the output via save-robot-output.  When set,
+     *   analysisMarkdown is not required.
+     *
+     * @param {string} analysisId
+     * @param {string} robotName
+     * @param {number} rating
+     * @param {string} notes
+     * @param {{ analysisMarkdown?: string|null, bypassReason?: string|null }} [opts]
      */
-    async saveFeedback(analysisId, robotName, rating, notes) {
+    async saveFeedback(analysisId, robotName, rating, notes, { analysisMarkdown = null, bypassReason = null } = {}) {
         const session = this.sessions.get(analysisId);
         if (session) {
             session.feedback[robotName] = { rating, notes };
         }
-        // Also persist to brain database for long-term learning
+
+        // Persist the generated analysis text (atomic with the rating so it
+        // cannot be skipped in the normal human-in-the-loop flow).
+        if (analysisMarkdown && session?.productSlug) {
+            try {
+                await this.assetStore.saveRobotOutput(session.productSlug, robotName, analysisMarkdown);
+                console.log(`💾 Saved ${robotName} output text (via feedback)`);
+            } catch (err) {
+                console.error(`Failed to save ${robotName} output: ${err.message}`);
+            }
+        }
+
+        // Persist rating to brain database for long-term learning
         await this.database.saveFeedback(analysisId, robotName, rating, notes);
+
         // Feed into learning engine
         if (rating >= 4) {
             this.learner.learnFromSuccess(
@@ -417,9 +469,8 @@ class TeamLeader {
             );
         }
 
-        // Persist to asset file if the session is product-scoped.
-        // Look up the latest asset path via the freshness tracker so we
-        // don't have to track it separately on the session.
+        // Append rating block to the prompt-payload asset file so the history
+        // file reflects the PM's assessment alongside the original analysis.
         if (session?.productSlug) {
             try {
                 const freshnessState = await this.freshness.getRobotFreshness(session.productSlug);

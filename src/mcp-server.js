@@ -1,8 +1,11 @@
+import fs from "fs/promises";
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
 import TeamLeader, { ROBOT_ORDER, ROBOT_ORDER_PHASE_2, PHASE2_GATE_ROBOTS } from "../leader/team-leader.js";
+import { traverseGates } from "../leader/gate-traversal.js";
 import { generatePresentation } from "../utils/presentation-generator.js";
 import { renderMarkdown, renderHtml } from "../utils/pdd-renderer.js";
 import { PDDComposer } from "./workspace/pdd-composer.js";
@@ -24,6 +27,18 @@ const server = new McpServer({
     name: "productflow",
     version: "2.0.0",
 });
+
+// ── Active session helper ─────────────────────────────────────────────
+// Reads active-session.json written by start-session.  Returns null when no
+// session has been started (non-fatal — tools still function without it).
+async function readActiveSession() {
+    try {
+        const raw = await fs.readFile(teamLeader.workspace.getActiveSessionPath(), "utf-8");
+        return JSON.parse(raw);
+    } catch {
+        return null;
+    }
+}
 
 // ═════════════════════════════════════════════════════════════════════
 // Tool 1: INTERVIEW — get PM questions for context gathering
@@ -126,19 +141,30 @@ WORKFLOW:
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "run-robot",
-    `Run a SINGLE analysis robot and return its results. Call this one robot at a time so the user can review and give feedback before moving to the next.
+    `Run a SINGLE analysis robot and return its results. Call one robot at a time so the PM can review and give feedback before proceeding.
 
 Available robots — Phase 1 (strategic discovery, run first):
-1. scout     — Market demand (TAM/SAM/SOM, growth, demand signals)
-2. detective — Competitive landscape (competitors, gaps, moat)
-3. people    — User personas (segments, pain points, behaviors)
-4. money     — Financial projections (unit economics, revenue models)
-5. feature   — Feature breakdown (must-have, nice-to-have, future)
-6. plan      — Product roadmap (phased 12-18 month plan)
-7. priority  — Feature prioritization (RICE scoring)
+ 1. scout          — Market demand (TAM/SAM/SOM, growth signals, demand validation)
+ 2. detective      — Competitive landscape (competitors, gaps, differentiators, moat)
+ 3. people         — User personas (segments, pain points, behaviors, jobs-to-be-done)
+ 4. money          — Financial model (unit economics, CAC/LTV/ARR/NRR/GRR, 3-scenario projections, Vega-Lite charts)
+ 5. feature        — Feature breakdown (MoSCoW-tagged, must-have vs nice-to-have vs future)
+ 6. plan           — Product roadmap (phased 12-18 month plan with milestones)
+ 7. priority       — Feature prioritization (RICE scoring, effort vs impact)
 
-Available robots — Phase 2 (execution definition, requires all Phase 1 fresh):
-8. user-stories — MoSCoW-tagged user stories derived from people + feature outputs
+Available robots — Phase 2 (execution definition — all 7 Phase 1 robots must be fresh first):
+ 8. user-stories       — MoSCoW-tagged user stories derived from people + feature outputs
+ 9. scope-spec         — Scope, assumptions, constraints, and critical-change flag
+10. feasibility-tech   — Architecture, technical concerns, third-party vendors, infrastructure deps
+11. feasibility-design — Design principles, wireflow (screen-by-screen), accessibility commitments
+12. customer-journeys  — End-to-end journey narratives per persona with step-by-step flows
+13. data-privacy       — InfoSec, legal, and certification impact matrix (GDPR, SOC 2, etc.)
+14. gtm-readiness      — CX stage matrix, rollout waves, Preview → GA criteria, pricing model
+15. risks-registry     — Structured risk register across 5 risk categories with mitigations
+16. kpis               — Adoption, retention, usage, and revenue KPIs with targets + source systems
+17. daci-stakeholders  — DACI table + key contacts (persists across runs, updates incrementally)
+
+Phase 2 prerequisite: call 'promote-to-phase-2' and receive { promoted: true } before running any Phase 2 robot.
 
 If 'productSlug' is provided:
   - Results are persisted to the product's assets/ folder as markdown.
@@ -249,6 +275,12 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
         // Get session state
         const state = teamLeader.getAnalysisState(sessionId);
 
+        // Soft session guard — hint if no active start-session call was made
+        const activeSession = await readActiveSession();
+        const sessionHint = (!activeSession || (productSlug && activeSession.productSlug !== productSlug))
+            ? "No active session found for this product. Call 'start-session' with productSlug to see gate status and recommended next steps."
+            : null;
+
         return {
             content: [
                 {
@@ -265,6 +297,7 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
                                 remaining: state.remainingRobots,
                                 nextRobot: teamLeader.getNextRobot(sessionId),
                             },
+                            ...(sessionHint ? { sessionHint } : {}),
                         },
                         null,
                         2
@@ -276,19 +309,27 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
 );
 
 // ═════════════════════════════════════════════════════════════════════
-// Tool 3: FEEDBACK — capture user rating for a robot's output
+// Tool 3: FEEDBACK — capture user rating + persist robot output
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "feedback",
     `Save user feedback for a robot's analysis output. Call this after showing the user each robot's results and asking them to rate it.
 
-The feedback is stored and used to improve future analyses:
-- Ratings 4-5: recorded as successful patterns
-- Ratings 1-3: recorded as areas to improve
+REQUIRED: You MUST provide either 'analysisMarkdown' or 'bypassReason' — never neither.
 
-If the analysis session is tied to a product (productSlug was used on run-robot), the feedback is also appended to the robot's asset markdown file on disk.
+  analysisMarkdown — the full analysis text Claude generated for this robot. Providing it here
+    persists it atomically alongside the rating so Phase 2 robots can read Phase 1 outputs.
+    This is the normal path for every human-in-the-loop run.
 
-The learning engine will show improvement hints to robots on future runs.`,
+  bypassReason — escape hatch for headless / programmatic callers that have already persisted
+    the output via 'save-robot-output'. Describe why the text is not being passed here.
+    Example: "output already saved via save-robot-output before feedback was available".
+
+Feedback ratings:
+  4-5 → recorded as successful patterns (learning engine improves future runs)
+  1-3 → recorded as areas to improve
+
+If the session is tied to a product, the rating is also appended to the robot's asset file on disk.`,
     {
         analysisId: z.string().describe("The analysis session ID"),
         robotName: z
@@ -309,36 +350,56 @@ The learning engine will show improvement hints to robots on future runs.`,
         notes: z
             .string()
             .optional()
-            .describe(
-                "User's improvement suggestions or comments, e.g. 'Add more specific TAM numbers' or 'Great competitive analysis'"
-            ),
+            .describe("Improvement suggestions or comments, e.g. 'Add specific TAM numbers'"),
+        analysisMarkdown: z
+            .string()
+            .optional()
+            .describe("The full analysis text Claude generated for this robot. Pass this to persist the output atomically with the rating. Required unless bypassReason is set."),
+        bypassReason: z
+            .string()
+            .optional()
+            .describe("Escape hatch — explain why analysisMarkdown is not provided (e.g. 'saved via save-robot-output'). Required if analysisMarkdown is absent."),
     },
-    async ({ analysisId, robotName, rating, notes }) => {
+    async ({ analysisId, robotName, rating, notes, analysisMarkdown, bypassReason }) => {
+        // Enforce: one of the two must be present
+        if (!analysisMarkdown && !bypassReason) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        error: "Missing required field: provide 'analysisMarkdown' (the analysis text Claude generated) or 'bypassReason' (why it is being omitted). This ensures Phase 2 robots always have Phase 1 output files to read.",
+                        hint: "Pass the full markdown text of Claude's analysis as 'analysisMarkdown'.",
+                    }, null, 2),
+                }],
+            };
+        }
+
         await teamLeader.saveFeedback(
             analysisId,
             robotName,
             rating,
-            notes || ""
+            notes || "",
+            { analysisMarkdown: analysisMarkdown || null, bypassReason: bypassReason || null }
         );
 
         const nextRobot = teamLeader.getNextRobot(analysisId);
 
         return {
-            content: [
-                {
-                    type: "text",
-                    text: JSON.stringify({
-                        saved: true,
-                        robotName,
-                        rating,
-                        notes: notes || "",
-                        nextRobot,
-                        message: nextRobot
-                            ? `Feedback saved! Next up: ${nextRobot} robot.`
-                            : "Feedback saved! All robots are done. Call 'generate-presentation' to create the final deliverable.",
-                    }),
-                },
-            ],
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    saved: true,
+                    robotName,
+                    rating,
+                    notes:           notes || "",
+                    outputPersisted: !!analysisMarkdown,
+                    bypassReason:    bypassReason || null,
+                    nextRobot,
+                    message: nextRobot
+                        ? `Feedback saved! Next up: ${nextRobot} robot.`
+                        : "Feedback saved! All robots are done. Call 'generate-presentation' to create the final deliverable.",
+                }, null, 2),
+            }],
         };
     }
 );
@@ -348,62 +409,128 @@ The learning engine will show improvement hints to robots on future runs.`,
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "generate-presentation",
-    `Begin the presentation generation process.
-This tool does NOT immediately create the file! 
-If the user's design preferences (logo, fonts, theme) are missing from the database, this tool returns an instruction telling you to ask the user for them.
-If the preferences exist, it returns all the analysis data + design preferences + instructions on how YOU (Claude) should generate the final HTML code.`,
+    `Begin the presentation generation process. The presentation is a STRATEGIC artifact — it covers Phase 1 analysis only and is designed for stakeholder buy-in before Phase 2 execution begins.
+
+This tool does NOT immediately create the file.
+
+TWO INPUT MODES (prefer productSlug):
+  productSlug — loads Phase 1 robot outputs from the workspace (survives server restarts, regeneratable any time). This is the preferred path.
+  analysisId  — loads from the in-memory session (deprecated, lost on server restart). Only use if productSlug is unavailable.
+
+FLOW:
+  1. If design preferences are missing → returns actionRequired: "ask_user_for_preferences".
+  2. If preferences exist → returns Phase 1 robot outputs + design preferences + instructions for Claude to generate HTML.
+  3. Claude generates the HTML and calls 'save-presentation-file' to write it to disk.
+
+Can be regenerated any time Phase 1 outputs are on disk — no re-runs required.`,
     {
+        productSlug: z
+            .string()
+            .optional()
+            .describe("Preferred: the product slug. Loads Phase 1 outputs from disk — survives restarts and can be regenerated any time."),
         analysisId: z
             .string()
-            .describe("The analysis session ID to generate a presentation for"),
+            .optional()
+            .describe("Deprecated fallback: in-memory analysis session ID. Use productSlug instead."),
     },
-    async ({ analysisId }) => {
-        const data = teamLeader.getFullResults(analysisId);
-        if (!data) {
+    async ({ productSlug, analysisId }) => {
+        // ── Validate: need at least one source ───────────────────────
+        if (!productSlug && !analysisId) {
             return {
-                content: [{ type: "text", text: `Analysis session '${analysisId}' not found.` }],
+                content: [{ type: "text", text: JSON.stringify({
+                    error: "Provide 'productSlug' (preferred) or 'analysisId' (deprecated fallback).",
+                }, null, 2) }],
             };
         }
 
+        // ── Check design preferences ─────────────────────────────────
         const prefs = teamLeader.database.getDesignPreferences();
-
         if (!prefs) {
             return {
-                content: [{
-                    type: "text", text: JSON.stringify({
-                        actionRequired: "ask_user_for_preferences",
-                        instructions: "The user has not set their presentation design preferences. Ask them for their preferred logo URL (or skip if none), font families, primary/accent colors, and overall visual theme (e.g., dark mode, corporate, playful). Wait for their reply, then call 'save-design-preferences'. Afterward, call 'generate-presentation' again."
-                    }, null, 2)
-                }]
+                content: [{ type: "text", text: JSON.stringify({
+                    actionRequired: "ask_user_for_preferences",
+                    instructions: "No presentation design preferences found. Ask the PM for: logo URL (optional), font family, primary colour, and visual theme (e.g. 'Dark and Modern', 'Corporate Minimalist'). Then call 'save-design-preferences' and retry 'generate-presentation'.",
+                }, null, 2) }],
             };
         }
 
-        // Also save analysis data to DB like the old flow
-        await teamLeader.database.saveAnalysis(data.productIdea, data.results);
+        // ── Load Phase 1 data ────────────────────────────────────────
+        let phase1Data;
+        let dataSource;
 
-        const prompt = {
+        if (productSlug) {
+            // Verify product exists
+            const product = await productRegistry.get(productSlug);
+            if (!product) {
+                return {
+                    content: [{ type: "text", text: JSON.stringify({
+                        error: `Unknown product: ${productSlug}. Call 'product-create' first.`,
+                    }, null, 2) }],
+                };
+            }
+
+            // Load from workspace — survives restarts, regeneratable any time
+            phase1Data = await pddComposer.assemblePhase1(productSlug);
+            dataSource  = "workspace";
+
+            if (phase1Data.robotsPresent.length === 0) {
+                return {
+                    content: [{ type: "text", text: JSON.stringify({
+                        error: `No Phase 1 robot outputs found for '${productSlug}'. Run at least one Phase 1 robot (scout, detective, people, money, feature, plan, priority) and submit feedback before generating a presentation.`,
+                        robotsMissing: phase1Data.robotsMissing,
+                    }, null, 2) }],
+                };
+            }
+        } else {
+            // Deprecated in-memory fallback
+            const inMemory = teamLeader.getFullResults(analysisId);
+            if (!inMemory) {
+                return {
+                    content: [{ type: "text", text: JSON.stringify({
+                        error: `Analysis session '${analysisId}' not found. Pass 'productSlug' instead — it loads from disk and survives server restarts.`,
+                    }, null, 2) }],
+                };
+            }
+            phase1Data = inMemory;
+            dataSource  = "in-memory-session (deprecated — pass productSlug for persistence)";
+            await teamLeader.database.saveAnalysis(inMemory.productIdea, inMemory.results);
+        }
+
+        // ── Build instruction payload ─────────────────────────────────
+        const payload = {
             _claudeInstructions: {
-                role: "You are a world-class Web Designer and Presentation expert.",
+                role: "You are a world-class Product Strategist and Web Designer producing a stakeholder presentation to secure investment and buy-in for a new product.",
                 mandate: [
-                    "You are generating the final deliverable. Output a completely self-contained HTML document with inline CSS.",
-                    "Use the design preferences provided to style the presentation (fonts, colors, theme, logo).",
-                    "Do NOT use markdown outside of the final file. Just return the raw HTML file or use a markdown codeblock.",
-                    "Take all the analysis data provided and format it into a stunning, responsive, web-based presentation.",
-                    "Include a title slide, one gorgeous slide for each robot's output, and a final summary slide.",
-                    "Once you have generated the HTML, call the 'save-presentation-file' tool to write it to disk."
-                ]
+                    "OUTPUT FORMAT: A self-contained HTML document with inline CSS. May use Vega-Lite CDN for financial charts (see CHARTS below).",
+                    "DESIGN: Apply the designPreferences (font, colours, theme, logo) throughout — every slide must reflect these choices consistently.",
+                    "STRUCTURE: Title slide → Executive Context slide → one rich slide per Phase 1 robot output → Investment Case summary slide.",
+                    "CONTENT SOURCE: Read each robot's analysis from robotOutputs.<robotName>.raw (markdown text). Synthesise insights into human-readable narrative — do NOT paste raw JSON or markdown verbatim.",
+                    "SPECIFICITY: Every claim must reference this specific product. Generic statements ('the product will serve users') are not acceptable.",
+                    "MISSING ROBOTS: If a robot is listed in robotsMissing, gracefully omit that slide rather than inventing content.",
+                    "CHARTS: If robotOutputs.money.raw contains Vega-Lite JSON specs (```json blocks with '$schema' containing 'vega-lite'), render them using vegaEmbed. Add these CDN scripts to the HTML <head>: <script src='https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js'></script> <script src='https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js'></script> <script src='https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js'></script>. For each chart spec, create a <div id='chart-N'> and call vegaEmbed('#chart-N', spec, {renderer:'svg', actions:false}) in a <script> block.",
+                    "SAVE: After generating the HTML, call 'save-presentation-file' to write it to disk. Use a filename like '<slug>-strategy-presentation.html'.",
+                ],
+                robotLabels: {
+                    scout:     { title: "Market Opportunity",        icon: "🔍" },
+                    detective: { title: "Competitive Landscape",      icon: "🔎" },
+                    people:    { title: "Target Users & Personas",    icon: "👥" },
+                    money:     { title: "Financial Projections",      icon: "💰" },
+                    feature:   { title: "Feature Strategy",           icon: "📝" },
+                    plan:      { title: "Product Roadmap",            icon: "🗺️" },
+                    priority:  { title: "Prioritisation",             icon: "⭐" },
+                },
             },
+            dataSource,
             designPreferences: prefs,
-            analysisData: data
+            productName:   phase1Data.productMeta?.name || productSlug || "Product",
+            robotsPresent: phase1Data.robotsPresent,
+            robotsMissing: phase1Data.robotsMissing,
+            robotOutputs:  phase1Data.robotOutputs,
+            assembledAt:   phase1Data.assembledAt,
         };
 
         return {
-            content: [
-                {
-                    type: "text",
-                    text: JSON.stringify(prompt, null, 2),
-                },
-            ],
+            content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
         };
     }
 );
@@ -466,27 +593,49 @@ server.tool(
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "robots-list",
-    "List all available ProductFlow analysis robots, their capabilities, and average user ratings from past feedback.",
+    `List all available ProductFlow analysis robots with their capabilities, phase grouping, staleness windows, and average user ratings.
+
+Phase 1 robots run first (strategic discovery) — no prerequisites.
+Phase 2 robots run after Phase 1 is complete and promote-to-phase-2 has been confirmed.`,
     {},
     async () => {
-        const robots = [
-            { name: "Scout Robot", key: "scout", type: "market-demand", description: "Analyzes market demand and size (TAM/SAM/SOM)" },
-            { name: "Detective Robot", key: "detective", type: "competitive-analysis", description: "Analyzes competitors, market gaps, and competitive moat" },
-            { name: "People Robot", key: "people", type: "personas", description: "Creates detailed user personas with pain points and motivations" },
-            { name: "Money Robot", key: "money", type: "financial", description: "Calculates financial projections and unit economics" },
-            { name: "Feature Robot", key: "feature", type: "features", description: "Generates prioritized feature list (must-have, nice-to-have, future)" },
-            { name: "Plan Robot", key: "plan", type: "roadmap", description: "Creates phased product roadmap (12-18 months)" },
-            { name: "Priority Robot", key: "priority", type: "prioritization", description: "Prioritizes features using RICE scoring" },
+        const phase1Robots = [
+            { phase: 1, key: "scout",     type: "market-demand",        description: "Market demand — TAM/SAM/SOM, growth signals, demand validation" },
+            { phase: 1, key: "detective", type: "competitive-analysis",  description: "Competitive landscape — competitors, gaps, differentiators, moat" },
+            { phase: 1, key: "people",    type: "personas",              description: "User personas — segments, pain points, behaviors, jobs-to-be-done" },
+            { phase: 1, key: "money",     type: "financial",             description: "Financial model — unit economics, CAC/LTV/ARR/NRR/GRR, 3-scenario projections, Vega-Lite charts" },
+            { phase: 1, key: "feature",   type: "features",              description: "Feature breakdown — MoSCoW-tagged, must-have vs nice-to-have vs future" },
+            { phase: 1, key: "plan",      type: "roadmap",               description: "Product roadmap — phased 12-18 month plan with milestones" },
+            { phase: 1, key: "priority",  type: "prioritization",        description: "Feature prioritization — RICE scoring, effort vs impact matrix" },
         ];
 
-        // Add average ratings from past feedback
-        for (const robot of robots) {
+        const phase2Robots = [
+            { phase: 2, key: "user-stories",       type: "user-stories",   description: "MoSCoW-tagged user stories from people + feature outputs" },
+            { phase: 2, key: "scope-spec",         type: "scope",          description: "Scope, assumptions, constraints, and critical-change flag" },
+            { phase: 2, key: "feasibility-tech",   type: "feasibility",    description: "Architecture, tech concerns, third-party vendors, infrastructure deps" },
+            { phase: 2, key: "feasibility-design", type: "design",         description: "Design principles, wireflow (screen-by-screen), accessibility commitments" },
+            { phase: 2, key: "customer-journeys",  type: "journeys",       description: "End-to-end journey narratives per persona with step-by-step flows" },
+            { phase: 2, key: "data-privacy",       type: "compliance",     description: "InfoSec, legal, and certification impact matrix (GDPR, SOC 2, etc.)" },
+            { phase: 2, key: "gtm-readiness",      type: "go-to-market",   description: "CX stage matrix, rollout waves, Preview → GA criteria, pricing model" },
+            { phase: 2, key: "risks-registry",     type: "risk",           description: "Structured risk register across 5 risk categories with mitigations" },
+            { phase: 2, key: "kpis",               type: "metrics",        description: "Adoption, retention, usage, and revenue KPIs with targets + source systems" },
+            { phase: 2, key: "daci-stakeholders",  type: "stakeholders",   description: "DACI table + key contacts — persists across runs, updates incrementally" },
+        ];
+
+        const allRobots = [...phase1Robots, ...phase2Robots];
+        // Enrich with average ratings from past feedback
+        for (const robot of allRobots) {
             robot.averageRating = teamLeader.database.getRobotAverageRating(robot.key);
         }
 
         return {
             content: [
-                { type: "text", text: JSON.stringify({ robots }, null, 2) },
+                { type: "text", text: JSON.stringify({
+                    phase1: phase1Robots,
+                    phase2: phase2Robots,
+                    total: allRobots.length,
+                    note: "Phase 2 robots require all 7 Phase 1 robots to be fresh. Call 'promote-to-phase-2' before running any Phase 2 robot.",
+                }, null, 2) },
             ],
         };
     }
@@ -540,38 +689,47 @@ server.tool(
 );
 
 // ═════════════════════════════════════════════════════════════════════
-// Tool 8: PM-PROFILE — read the PM's identity profile
+// Tool 8: PM-PROFILE — read the active persona's profile
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "pm-profile",
-    `Retrieve the PM's profile (role, industry focus, preferred frameworks, products owned).
-Returns { exists: false, actionRequired: 'setup' } if no profile exists — in that case, you should interview the PM to collect their details and then call 'pm-profile-save'.
-If a profile exists but is older than 90 days, returns { exists: true, staleness: 'stale' } — ask the PM whether anything has changed before proceeding.`,
+    `Retrieve the active PM persona's profile (role, industry focus, preferred frameworks, products owned).
+
+Returns { exists: false, actionRequired: 'setup' } if no profile exists — interview the PM and call 'pm-profile-save'.
+If the profile is older than 90 days, returns staleness: 'stale' — confirm it is still accurate before proceeding.
+
+To see all available personas, call 'pm-persona-list'.
+To switch to a different persona, call 'pm-persona-switch'.`,
     {},
     async () => {
         await workspace.ensureWorkspace();
         const profile = await pmProfile.load();
 
         if (!profile) {
+            const personas = await pmProfile.listPersonas();
             return {
                 content: [{
                     type: "text",
                     text: JSON.stringify({
                         exists: false,
                         actionRequired: "setup",
-                        instructions: "No PM profile found. Interview the user to gather: their name, role/title, industry focus, preferred frameworks (e.g. JTBD, RICE, OKRs), and preferred analysis depth. Then call 'pm-profile-save' with the collected fields.",
+                        availablePersonas: personas,
+                        instructions: personas.length > 0
+                            ? `No active persona. Existing personas: ${personas.map(p => p.slug).join(", ")}. Call 'pm-persona-switch' to activate one, or 'pm-profile-save' to create a new default persona.`
+                            : "No PM profile found. Interview the PM to gather: name, role/title, industry focus, preferred frameworks (e.g. JTBD, RICE, OKRs), and analysis depth. Then call 'pm-profile-save'.",
                         workspaceRoot: workspace.getRoot(),
                     }, null, 2)
                 }]
             };
         }
 
-        // Calculate staleness (90 day window for profile refresh check)
         const updatedAt = profile.updated ? new Date(profile.updated) : null;
-        const ageDays = updatedAt
+        const ageDays   = updatedAt
             ? Math.floor((Date.now() - updatedAt.getTime()) / (1000 * 60 * 60 * 24))
             : null;
         const staleness = ageDays !== null && ageDays > 90 ? "stale" : "fresh";
+
+        const allPersonas = await pmProfile.listPersonas();
 
         return {
             content: [{
@@ -581,6 +739,7 @@ If a profile exists but is older than 90 days, returns { exists: true, staleness
                     staleness,
                     ageDays,
                     profile,
+                    allPersonas,
                     instructions: staleness === "stale"
                         ? "Profile is older than 90 days — ask the PM to confirm it is still accurate, or collect updates and call 'pm-profile-save'."
                         : "Profile is fresh. Reference it when running robots to tailor analyses to the PM's style.",
@@ -591,18 +750,19 @@ If a profile exists but is older than 90 days, returns { exists: true, staleness
 );
 
 // ═════════════════════════════════════════════════════════════════════
-// Tool 9: PM-PROFILE-SAVE — persist a PM profile after interview
+// Tool 9: PM-PROFILE-SAVE — persist a PM persona profile
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "pm-profile-save",
-    `Save or update the PM's profile. Call this after interviewing the PM on their role, industry focus, and working style. All fields are optional — unspecified fields keep their prior values.`,
+    `Save or update the active PM persona's profile. All fields are optional — unspecified fields keep their prior values.
+If no persona is active yet, creates a "default" persona automatically.`,
     {
-        name: z.string().optional().describe("PM's name, e.g. 'Anand Shrivastava'"),
-        role: z.string().optional().describe("Title / role, e.g. 'Senior Product Leader'"),
-        industryFocus: z.string().optional().describe("Industry focus, e.g. 'CCaaS, CPaaS, AI-driven CXM'"),
+        name:               z.string().optional().describe("PM's name, e.g. 'Anand Shrivastava'"),
+        role:               z.string().optional().describe("Title / role, e.g. 'Senior Product Leader'"),
+        industryFocus:      z.string().optional().describe("Industry focus, e.g. 'CCaaS, CPaaS, AI-driven CXM'"),
         preferredFrameworks: z.string().optional().describe("Preferred PM frameworks, e.g. 'JTBD, RICE, OKRs'"),
-        analysisDepth: z.string().optional().describe("Depth preference, e.g. 'Deep' or 'Summary-first'"),
-        productsOwned: z.array(z.string()).optional().describe("Slugs of products the PM owns"),
+        analysisDepth:      z.string().optional().describe("Depth preference, e.g. 'Deep' or 'Summary-first'"),
+        productsOwned:      z.array(z.string()).optional().describe("Slugs of products the PM owns"),
     },
     async (patch) => {
         const saved = await pmProfile.save(patch);
@@ -612,11 +772,108 @@ server.tool(
                 text: JSON.stringify({
                     saved: true,
                     profile: saved,
-                    path: workspace.getPmProfilePath(),
-                    message: "PM profile saved. The file is human-editable — you can always edit it directly.",
+                    path: workspace.getPersonaProfilePath(saved.personaSlug),
+                    message: `PM profile saved for persona '${saved.personaSlug}'. The file is human-editable.`,
                 }, null, 2)
             }]
         };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 9a: PM-PERSONA-LIST — list all PM personas
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "pm-persona-list",
+    `List all PM personas stored in the workspace. Each persona has its own profile, staleness overrides, and products context.
+Use this at session start to confirm which persona is active, or to switch to a different industry focus.`,
+    {},
+    async () => {
+        await workspace.ensureWorkspace();
+        const personas = await pmProfile.listPersonas();
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    count: personas.length,
+                    personas,
+                    instructions: personas.length === 0
+                        ? "No personas yet. Call 'pm-profile-save' to create a default persona."
+                        : "Use 'pm-persona-switch' to change the active persona, or 'pm-persona-create' to add a new one.",
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 9b: PM-PERSONA-CREATE — create a new PM persona
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "pm-persona-create",
+    `Create a new PM persona with an optional initial profile. Does NOT switch to the new persona — call 'pm-persona-switch' to activate it.
+
+A persona is an industry-specific PM context (e.g. "ccaas-pm", "ai-cxm-pm"). Different personas can have different staleness windows and product portfolios.`,
+    {
+        slug:               z.string().describe("URL-safe persona identifier, e.g. 'ccaas-pm', 'ai-cxm-pm'"),
+        name:               z.string().optional().describe("PM name for this persona"),
+        role:               z.string().optional().describe("Role in this persona context"),
+        industryFocus:      z.string().optional().describe("Industry focus for this persona"),
+        preferredFrameworks: z.string().optional().describe("Preferred frameworks for this persona"),
+        analysisDepth:      z.string().optional().describe("Analysis depth for this persona"),
+    },
+    async ({ slug, ...profileData }) => {
+        const { alreadyExisted } = await pmProfile.createPersona(slug, profileData);
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    created: !alreadyExisted,
+                    alreadyExisted,
+                    slug,
+                    path: workspace.getPersonaProfilePath(slug),
+                    message: alreadyExisted
+                        ? `Persona '${slug}' already exists. Call 'pm-persona-switch' to activate it.`
+                        : `Persona '${slug}' created. Call 'pm-persona-switch' to activate it.`,
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 9c: PM-PERSONA-SWITCH — switch the active PM persona
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "pm-persona-switch",
+    `Switch the active PM persona. The persona must already exist — create it first with 'pm-persona-create' if needed.
+
+After switching, all subsequent calls to 'pm-profile', 'pm-profile-save', and 'run-robot' will use the new persona's profile and staleness windows.`,
+    {
+        slug: z.string().describe("The persona slug to activate, e.g. 'ccaas-pm'"),
+    },
+    async ({ slug }) => {
+        try {
+            const profile = await pmProfile.switchPersona(slug);
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        switched: true,
+                        activePersona: slug,
+                        profile,
+                        message: `Active persona is now '${slug}'.`,
+                    }, null, 2)
+                }]
+            };
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: err.message }, null, 2)
+                }]
+            };
+        }
     }
 );
 
@@ -923,6 +1180,56 @@ user can make informed decisions.`,
 );
 
 // ═════════════════════════════════════════════════════════════════════
+// Tool 16b: STALENESS-POLICY — show resolved staleness windows
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "staleness-policy",
+    `Show the resolved staleness windows (in days) for every ProductFlow artifact.
+
+Resolution order (highest precedence wins):
+  1. Per-product override  — products/<slug>/staleness-overrides.json
+  2. Per-persona override  — profiles/<slug>/staleness-overrides.json
+  3. Project policy        — config/staleness-policy.json
+  4. Compiled-in defaults
+
+Each entry shows: windowDays, phase, provenanceSource (which layer set this value).
+
+Use this tool to explain to the PM why a robot is marked stale, or to review
+the current effective windows before recommending whether to re-run.`,
+    {
+        productSlug: z.string().optional().describe("Include to show product-level overrides"),
+        personaSlug: z.string().optional().describe("Include to show persona-level overrides (Track 2)"),
+    },
+    async ({ productSlug, personaSlug }) => {
+        const resolved = await teamLeader.freshness.getResolvedPolicy({
+            personaSlug: personaSlug || null,
+            productSlug: productSlug || null,
+        });
+
+        const rows = Object.entries(resolved.robots).map(([key, windowDays]) => ({
+            robot:           key,
+            windowDays,
+            provenanceSource: resolved.provenance[key] ?? "compiled-default",
+        }));
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    personaSlug:        personaSlug || null,
+                    productSlug:        productSlug || null,
+                    interviewAnswers: {
+                        windowDays: resolved.interviewWindowDays,
+                    },
+                    robots: rows,
+                    note: "To override a window, create staleness-overrides.json at the product or persona path shown in WorkspaceManager.",
+                }, null, 2),
+            }],
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
 // Tool 17: SAVE-ROBOT-OUTPUT — persist Claude's generated analysis text
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
@@ -988,29 +1295,58 @@ Phase 2 robots (user-stories, scope-spec, etc.) read these output files to deriv
 );
 
 // ═════════════════════════════════════════════════════════════════════
-// Tool 18: PROMOTE-TO-PHASE-2 — gate check + Phase 2 context scaffold
+// Tool 18: PROMOTE-TO-PHASE-2 — two-call confirmation gate
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "promote-to-phase-2",
     `Promote a product from Phase 1 (strategic discovery) to Phase 2 (execution definition).
 
-This tool:
-1. Checks that ALL 7 Phase 1 robots are fresh for this product (gate enforcement).
-2. Scaffolds context/phase2-context.json with initial values the PM can fill in.
-3. Returns instructions telling Claude to present a Phase 1 summary to the PM and collect Phase 2 intake.
+TWO-CALL PATTERN — promotion requires explicit PM confirmation:
 
-Do NOT call run-robot with a Phase 2 robot (user-stories, scope-spec, etc.) until this tool
-returns { promoted: true }.  The gate is also enforced inside run-robot itself, but calling
-promote-to-phase-2 first gives the PM a clear summary of what they are promoting.`,
+CALL 1 — Review (omit 'confirm'):
+  1. Verifies all 7 Phase 1 robots are fresh (gate check).
+  2. Loads Phase 1 robot output files and extracts one-line summaries per robot.
+  3. Surfaces persona, feature, and competitor candidates for PM review.
+  4. Writes a pending-promotion.json with a confirmationToken (14-day expiry).
+  5. Returns requiresConfirmation: true — present the summaries to the PM and ask them to confirm.
+
+CALL 2 — Confirm (confirm: true + confirmationToken):
+  1. Verifies the token is valid and not expired.
+  2. Writes context/phase2-context.json with any PM-supplied overrides.
+  3. Deletes pending-promotion.json (token is single-use).
+  4. Returns { promoted: true } — Phase 2 robots are now unlocked.
+
+Override fields accepted only on Call 2:
+  personaOverride, featureOverride, scopeOverride,
+  ownerName, ownerRole, ownerEmail,
+  linkJira, linkTdd, linkFigma, linkConfluence.
+
+Do NOT call run-robot with any Phase 2 robot (user-stories, scope-spec, etc.)
+until this tool returns { promoted: true }.`,
     {
-        productSlug: z.string().describe("The product slug to promote"),
-        ownerName:   z.string().optional().describe("PM's name for the PDD owner field"),
-        ownerRole:   z.string().optional().describe("PM's role, e.g. 'Senior Product Manager'"),
-        ownerEmail:  z.string().optional().describe("PM's email for the PDD meta section"),
+        productSlug:       z.string().describe("The product slug to promote"),
+        confirm:           z.boolean().optional().describe("Set true for Call 2 — commits the promotion"),
+        confirmationToken: z.string().optional().describe("Token returned by Call 1 (required when confirm: true)"),
+        // Call-2-only override fields
+        personaOverride:   z.string().optional().describe("Override the primary persona name (Call 2 only)"),
+        featureOverride:   z.string().optional().describe("Override the primary feature set summary (Call 2 only)"),
+        scopeOverride:     z.string().optional().describe("Override the scope statement (Call 2 only)"),
+        ownerName:         z.string().optional().describe("PM's full name for the PDD owner field (Call 2 only)"),
+        ownerRole:         z.string().optional().describe("PM's role, e.g. 'Senior Product Manager' (Call 2 only)"),
+        ownerEmail:        z.string().optional().describe("PM's email for the PDD meta section (Call 2 only)"),
+        linkJira:          z.string().optional().describe("Link to Jira project or epic (Call 2 only)"),
+        linkTdd:           z.string().optional().describe("Link to Technical Design Doc (Call 2 only)"),
+        linkFigma:         z.string().optional().describe("Link to Figma design file (Call 2 only)"),
+        linkConfluence:    z.string().optional().describe("Link to Confluence space (Call 2 only)"),
     },
-    async ({ productSlug, ownerName, ownerRole, ownerEmail }) => {
+    async ({
+        productSlug, confirm, confirmationToken,
+        personaOverride, featureOverride, scopeOverride,
+        ownerName, ownerRole, ownerEmail,
+        linkJira, linkTdd, linkFigma, linkConfluence,
+    }) => {
         const fspath = await import("fs/promises");
-        const ppath  = await import("path");
+        const crypto = await import("crypto");
 
         const product = await productRegistry.get(productSlug);
         if (!product) {
@@ -1022,7 +1358,125 @@ promote-to-phase-2 first gives the PM a clear summary of what they are promoting
             };
         }
 
-        // Gate check
+        // ── CALL 2: Confirm ───────────────────────────────────────────
+        if (confirm === true) {
+            if (!confirmationToken) {
+                return {
+                    content: [{
+                        type: "text",
+                        text: JSON.stringify({
+                            error: "confirmationToken is required when confirm: true. Call promote-to-phase-2 without 'confirm' first to get a token.",
+                        }, null, 2)
+                    }]
+                };
+            }
+
+            // Load pending-promotion.json
+            const pendingPath = teamLeader.workspace.getPendingPromotionPath(productSlug);
+            let pending;
+            try {
+                const raw = await fspath.readFile(pendingPath, "utf-8");
+                pending = JSON.parse(raw);
+            } catch {
+                return {
+                    content: [{
+                        type: "text",
+                        text: JSON.stringify({
+                            error: "No pending promotion found for this product. Call promote-to-phase-2 without 'confirm' to generate a review summary and token.",
+                        }, null, 2)
+                    }]
+                };
+            }
+
+            // Verify token
+            if (pending.token !== confirmationToken) {
+                return {
+                    content: [{
+                        type: "text",
+                        text: JSON.stringify({ error: "Invalid confirmationToken." }, null, 2)
+                    }]
+                };
+            }
+
+            // Check expiry
+            if (new Date() > new Date(pending.expiresAt)) {
+                await fspath.unlink(pendingPath).catch(() => {});
+                return {
+                    content: [{
+                        type: "text",
+                        text: JSON.stringify({
+                            error: "Promotion token has expired (14-day window). Call promote-to-phase-2 again (without 'confirm') to generate a fresh review.",
+                        }, null, 2)
+                    }]
+                };
+            }
+
+            // Write phase2-context.json (idempotent — skip if already present)
+            const p2Path = teamLeader.workspace.getPhase2ContextPath(productSlug);
+            const pddDir = teamLeader.workspace.getPDDDir(productSlug);
+            await fspath.mkdir(pddDir, { recursive: true });
+
+            let alreadyExisted = false;
+            try {
+                await fspath.access(p2Path);
+                alreadyExisted = true;
+            } catch { /* new promotion */ }
+
+            if (!alreadyExisted) {
+                const phase2Manifest = {
+                    promotedAt: new Date().toISOString(),
+                    promotedFromPhase1: ROBOT_ORDER,
+                    pddVersion: "1.0.0",
+                    pddStatus:  "DRAFT",
+                    owner: {
+                        name:  ownerName  || "",
+                        role:  ownerRole  || "",
+                        email: ownerEmail || "",
+                    },
+                    links: {
+                        jira:       linkJira       || null,
+                        tdd:        linkTdd        || null,
+                        figma:      linkFigma      || null,
+                        confluence: linkConfluence || null,
+                    },
+                    // Default to best candidate from Phase 1 review if PM didn't supply override
+                    personaOverride: personaOverride || pending.candidates?.personas?.[0] || "",
+                    featureOverride: featureOverride || pending.candidates?.features?.[0] || "",
+                    scopeOverride:   scopeOverride   || "",
+                };
+                await fspath.writeFile(p2Path, JSON.stringify(phase2Manifest, null, 2), "utf-8");
+            }
+
+            // Delete the pending token — single-use
+            await fspath.unlink(pendingPath).catch(() => {});
+
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        promoted: true,
+                        alreadyExisted,
+                        productSlug,
+                        pddVersion: "1.0.0",
+                        phase2ManifestPath: p2Path,
+                        pddOutputDir: pddDir,
+                        phase2Robots: ROBOT_ORDER_PHASE_2,
+                        message: alreadyExisted
+                            ? `Product '${productSlug}' is already in Phase 2. Manifest unchanged.`
+                            : `Product '${productSlug}' confirmed and promoted to Phase 2.`,
+                        instructions: [
+                            "Phase 2 is unlocked. Run Phase 2 robots via 'run-robot' in the recommended order.",
+                            "Recommended first robot: user-stories (tightest dependency graph).",
+                            "After each Phase 2 robot runs, call 'save-robot-output' to persist Claude's analysis for downstream robots.",
+                        ],
+                    }, null, 2)
+                }]
+            };
+        }
+
+        // ── CALL 1: Review ────────────────────────────────────────────
+
+        // Gate check — all 7 Phase 1 robots must be fresh
         const blockedRobots = await teamLeader.checkPhase2Gate(productSlug);
         if (blockedRobots.length > 0) {
             return {
@@ -1038,62 +1492,112 @@ promote-to-phase-2 first gives the PM a clear summary of what they are promoting
             };
         }
 
-        // Scaffold phase2-context.json
-        const p2Path = teamLeader.workspace.getPhase2ContextPath(productSlug);
-        const pddDir = teamLeader.workspace.getPDDDir(productSlug);
+        // Load Phase 1 outputs for the review summary
+        let assemblyPayload;
+        try {
+            assemblyPayload = await pddComposer.assemblePhase1(productSlug);
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Failed to load Phase 1 outputs: ${err.message}` }, null, 2)
+                }]
+            };
+        }
 
-        await fspath.mkdir(pddDir, { recursive: true });
+        // One-line summaries — first ~300 chars, stripped of markdown syntax
+        const phase1Summaries = {};
+        for (const [robot, data] of Object.entries(assemblyPayload.robotOutputs)) {
+            if (data?.raw) {
+                const cleaned = data.raw
+                    .replace(/^#{1,6}\s+.*/gm, "")     // strip headings
+                    .replace(/\*\*|__|~~|`{1,3}/g, "")  // strip inline markers
+                    .replace(/\s+/g, " ")
+                    .trim();
+                phase1Summaries[robot] = cleaned.slice(0, 300) + (cleaned.length > 300 ? "…" : "");
+            }
+        }
 
-        const phase2Manifest = {
-            promotedAt: new Date().toISOString(),
-            promotedFromPhase1: ROBOT_ORDER,
-            pddVersion: "1.0.0",
-            pddStatus:  "DRAFT",
-            owner: {
-                name:  ownerName  || "",
-                role:  ownerRole  || "",
-                email: ownerEmail || "",
+        // Persona candidates — "Persona:" labels in people robot output
+        const personaCandidates = [];
+        const peopleRaw = assemblyPayload.robotOutputs?.people?.raw || "";
+        for (const m of peopleRaw.matchAll(/\bPersona\s*[:#–\-]?\s*([^\n.]{3,60})/gi)) {
+            const name = m[1].trim().replace(/\*\*/g, "");
+            if (name && !personaCandidates.includes(name)) personaCandidates.push(name);
+            if (personaCandidates.length >= 3) break;
+        }
+
+        // Feature candidates — H2/H3 headings from feature robot output
+        const featureCandidates = [];
+        const featureRaw = assemblyPayload.robotOutputs?.feature?.raw || "";
+        for (const m of featureRaw.matchAll(/^#{2,3}\s+(.+)$/gm)) {
+            const name = m[1].trim().replace(/\*\*/g, "").slice(0, 80);
+            if (name && !featureCandidates.includes(name)) featureCandidates.push(name);
+            if (featureCandidates.length >= 5) break;
+        }
+
+        // Competitor candidates from product metadata
+        const competitorCandidates = (product.competitors || [])
+            .filter(c => c && !c.startsWith("_("));
+
+        // Generate a single-use confirmation token
+        const token = crypto
+            .createHash("sha256")
+            .update(`${productSlug}|${Date.now()}|${Math.random()}`)
+            .digest("hex")
+            .slice(0, 32);
+
+        const now       = new Date();
+        const expiresAt = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days
+
+        const pending = {
+            token,
+            createdAt:  now.toISOString(),
+            expiresAt:  expiresAt.toISOString(),
+            productSlug,
+            robotsReviewed: Object.keys(assemblyPayload.robotOutputs),
+            candidates: {
+                personas:    personaCandidates,
+                features:    featureCandidates,
+                competitors: competitorCandidates,
             },
-            links: {
-                jira:       null,
-                tdd:        null,
-                figma:      null,
-                confluence: null,
-            },
-            // PM-provided overrides — fill these in after reviewing Phase 1 outputs
-            personaOverride:  "",
-            featureOverride:  "",
-            scopeOverride:    "",
         };
 
-        // Idempotent — only scaffold if not already present
-        let alreadyExisted = false;
-        try {
-            await fspath.access(p2Path);
-            alreadyExisted = true;
-        } catch {
-            await fspath.writeFile(p2Path, JSON.stringify(phase2Manifest, null, 2), "utf-8");
-        }
+        const pendingPath = teamLeader.workspace.getPendingPromotionPath(productSlug);
+        await fspath.writeFile(pendingPath, JSON.stringify(pending, null, 2), "utf-8");
+
+        // Draft phase2-context.json for PM to review before confirming (not yet written to disk)
+        const draftPhase2Context = {
+            pddVersion: "1.0.0",
+            pddStatus:  "DRAFT",
+            owner: { name: "", role: "", email: "" },
+            links: { jira: null, tdd: null, figma: null, confluence: null },
+            personaOverride: personaCandidates[0] || "",
+            featureOverride: featureCandidates[0] || "",
+            scopeOverride:   "",
+        };
 
         return {
             content: [{
                 type: "text",
                 text: JSON.stringify({
-                    promoted: true,
-                    alreadyExisted,
+                    requiresConfirmation: true,
                     productSlug,
-                    pddVersion: phase2Manifest.pddVersion,
-                    phase2ManifestPath: p2Path,
-                    pddOutputDir: pddDir,
-                    phase2Robots: ROBOT_ORDER_PHASE_2,
-                    message: alreadyExisted
-                        ? `Product '${productSlug}' is already in Phase 2. Manifest unchanged.`
-                        : `Product '${productSlug}' promoted to Phase 2. You may now run Phase 2 robots.`,
+                    productName:       product.name,
+                    confirmationToken: token,
+                    tokenExpiresAt:    expiresAt.toISOString(),
+                    gateStatus:        "passed",
+                    robotsReviewed:    Object.keys(assemblyPayload.robotOutputs),
+                    robotsMissing:     assemblyPayload.robotsMissing,
+                    phase1Summaries,
+                    candidates:        pending.candidates,
+                    draftPhase2Context,
                     instructions: [
-                        "Phase 2 is unlocked. Run Phase 2 robots via 'run-robot' in the recommended order.",
-                        "Recommended first robot: user-stories (tightest dependency graph).",
-                        "Optional: edit context/phase2-context.json to add personaOverride, featureOverride, or scopeOverride before running robots.",
-                        "After each Phase 2 robot runs, call 'save-robot-output' to persist Claude's analysis for downstream robots.",
+                        "Walk the PM through the phase1Summaries — one robot at a time.",
+                        "Show the candidates (personas, features, competitors) and ask the PM to confirm or override each.",
+                        "Ask: 'Are you satisfied with Phase 1 and ready to lock it and move to Phase 2?'",
+                        "When the PM confirms, call promote-to-phase-2 again with: confirm=true, confirmationToken copied from this response, and any PM-supplied overrides.",
+                        "Available overrides on the confirm call: personaOverride, featureOverride, scopeOverride, ownerName, ownerRole, ownerEmail, linkJira, linkTdd, linkFigma, linkConfluence.",
                     ],
                 }, null, 2)
             }]
@@ -1406,6 +1910,124 @@ Call this immediately after Claude generates the PDD JSON from 'generate-pdd'.`,
                         "Review the markdown in assets/pdd/ — it is Notion-paste-ready.",
                         "Use 'generate-presentation' to create a slide deck from the PDD.",
                         "Re-run any missing robots and call 'generate-pdd' + 'save-pdd' again to increment the version.",
+                    ],
+                }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 21: PRODUCT-STATUS — full G1–G8 gate report for a product
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "product-status",
+    `Show the current workflow status for a product across all G1–G8 gates.
+
+Gates evaluated (in order):
+  G1 PM Profile exists   →  G2 Product created   →  G3 Interview answered
+  G4 Phase 1 complete    →  G5 Phase 2 promoted   →  G6 Phase 2 in progress
+  G7 PDD exported        →  G8 Presentation generated
+
+Returns which gates passed, which are blocked, the highest consecutive gate reached,
+and a precise next-action instruction for the PM.
+
+Use this tool to orient the PM at the start of any session, or whenever they ask
+"where are we?" or "what should I do next?".`,
+    {
+        productSlug: z.string().describe("The product slug to check"),
+    },
+    async ({ productSlug }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        error: `Unknown product: ${productSlug}. Call 'product-list' to see available products.`
+                    }, null, 2)
+                }]
+            };
+        }
+
+        const report = await traverseGates(
+            { workspace: teamLeader.workspace, freshness: teamLeader.freshness },
+            productSlug
+        );
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({ productName: product.name, ...report }, null, 2)
+            }]
+        };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 22: START-SESSION — recommended entry point for every session
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "start-session",
+    `Begin a ProductFlow work session. Call this at the start of every conversation.
+
+Evaluates all G1–G8 workflow gates and returns a structured status report showing
+exactly where the PM is in the 5-step process:
+
+  G1 PM Profile exists   →  G2 Product created   →  G3 Interview answered
+  G4 Phase 1 complete    →  G5 Phase 2 promoted   →  G6 Phase 2 in progress
+  G7 PDD exported        →  G8 Presentation generated
+
+Writes active-session.json so run-robot can attach a sessionHint if no session is active.
+
+Returns the current gate level and the precise next action — use this to greet the PM
+and guide them to their next step without asking open-ended questions.`,
+    {
+        productSlug: z.string().optional().describe("Product to resume. Omit for a product-agnostic PM profile check."),
+    },
+    async ({ productSlug }) => {
+        const report = await traverseGates(
+            { workspace: teamLeader.workspace, freshness: teamLeader.freshness },
+            productSlug || null
+        );
+
+        // Persist active-session.json so other tools can reference the current product
+        const sessionRecord = {
+            productSlug: productSlug || null,
+            startedAt:   new Date().toISOString(),
+            highestGate: report.highestConsecutivePassed,
+            nextBlocker: report.nextBlocker,
+        };
+        try {
+            await teamLeader.workspace.ensureWorkspace();
+            await fs.writeFile(
+                teamLeader.workspace.getActiveSessionPath(),
+                JSON.stringify(sessionRecord, null, 2),
+                "utf-8"
+            );
+        } catch (err) {
+            console.error(`Failed to write active-session.json: ${err.message}`);
+        }
+
+        // Enrich with product name if it exists
+        let productName = productSlug || null;
+        if (productSlug) {
+            const product = await productRegistry.get(productSlug).catch(() => null);
+            if (product) productName = product.name;
+        }
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    sessionStarted: true,
+                    productSlug:    productSlug || null,
+                    productName,
+                    ...report,
+                    instructions: [
+                        `Current gate: ${report.highestConsecutivePassed === "none" ? "No gates passed yet" : report.highestConsecutivePassed + " of G8"}.`,
+                        `Next action: ${report.nextAction}`,
+                        "Present a brief gate summary to the PM (✅ completed gates, 👉 next step) and guide them forward without asking open-ended questions.",
                     ],
                 }, null, 2)
             }]

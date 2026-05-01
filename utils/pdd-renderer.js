@@ -631,9 +631,58 @@ export function renderMarkdown(pddJson) {
     return sections.filter(s => s !== "").join("\n") + "\n";
 }
 
+// ── Vega-Lite CDN helpers ──────────────────────────────────────────────
+
+const VEGA_CDN_SCRIPTS = `  <!-- Vega-Lite chart rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js"></script>`;
+
+/**
+ * Extract Vega-Lite JSON specs from a markdown text block.
+ * Matches ```json code fences that contain a Vega-Lite $schema URL.
+ *
+ * @param {string} text - raw markdown
+ * @returns {object[]} array of parsed Vega-Lite spec objects
+ */
+function extractVegaLiteSpecs(text) {
+    if (!text) return [];
+    const specs = [];
+    const fenceRe = /```json\s*\n([\s\S]*?)\n```/g;
+    let m;
+    while ((m = fenceRe.exec(text)) !== null) {
+        try {
+            const parsed = JSON.parse(m[1].trim());
+            if (typeof parsed.$schema === "string" && parsed.$schema.includes("vega-lite")) {
+                specs.push(parsed);
+            }
+        } catch { /* not valid JSON — skip */ }
+    }
+    return specs;
+}
+
+/**
+ * Render an array of Vega-Lite specs as inline HTML div + vegaEmbed script.
+ * Each chart gets a unique id so multiple charts on the same page work.
+ *
+ * @param {object[]} specs
+ * @param {number} [startIndex=0]
+ * @returns {string} HTML fragment
+ */
+function renderVegaLiteSpecsHtml(specs, startIndex = 0) {
+    if (!specs || specs.length === 0) return "";
+    return specs.map((spec, i) => {
+        const chartId = `vega-chart-${startIndex + i}`;
+        const specJson = JSON.stringify(spec);
+        return `<div id="${chartId}" style="margin: 20px 0;"></div>
+<script>vegaEmbed('#${chartId}', ${specJson}, {renderer: 'svg', actions: false}).catch(console.error);</script>`;
+    }).join("\n");
+}
+
 /**
  * Render a PDD JSON object as a standalone HTML document.
  * Suitable for saving to plans/ directory and opening in a browser.
+ * Includes Vega-Lite CDN so any chart specs in the PDD are rendered inline.
  *
  * @param {Object} pddJson
  * @returns {string} Full HTML document string
@@ -647,12 +696,18 @@ export function renderHtml(pddJson) {
     // Handles: headings, tables, code fences, bold, bullet lists, blockquotes.
     const html = markdownToHtml(markdown);
 
+    // Extract and render any Vega-Lite chart specs embedded in the PDD
+    // (e.g. from financialCharts field, or from money robot narrative sections)
+    const financialCharts = Array.isArray(pddJson?.financialCharts) ? pddJson.financialCharts : [];
+    const chartHtml = renderVegaLiteSpecsHtml(financialCharts);
+
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(productName)} — PDD v${escapeHtml(version)}</title>
+${VEGA_CDN_SCRIPTS}
   <style>
     :root {
       --bg: #ffffff;
@@ -716,6 +771,7 @@ export function renderHtml(pddJson) {
     <div class="meta">Product Definition Document &bull; Version ${escapeHtml(version)} &bull; ${escapeHtml(pddJson?.meta?.status || "DRAFT")}</div>
   </div>
   ${html}
+  ${chartHtml}
 </body>
 </html>`;
 }

@@ -4,17 +4,38 @@ AutoPM is an agentic MCP server that transforms raw business ideas into complete
 
 > **🟢 New to this?** Check out the [Quick Start Guide for Beginners](QUICKSTART.md) for step-by-step setup instructions!
 
+## The Two-Phased Agentic Approach
+
+Real-world Product Management requires distinguishing between *finding the right thing to build* and *defining how to build it right*. AutoPM mirrors this exact discipline through a strictly gated, two-phased workflow:
+
+1. **Phase 1: Strategic Discovery** ensures you are solving a real problem in a viable market before writing a single requirement. This phase answers the "Why?" and "Who?" through competitive intelligence, financial modeling, and roadmap prioritization.
+2. **Phase 2: Execution Definition** takes the validated strategy and translates it into rigorous engineering and design constraints. It answers the "What?" and "How?" by generating technical specifications, user stories, risk matrices, and success metrics.
+
+By enforcing Phase 1 as a prerequisite for Phase 2, AutoPM prevents the most common PM trap: rushing into solution design and feature-building without a validated market strategy.
+
 ## Features
 
 - **The Robot Pipeline**:
-  - **Interview Robot 🎤** - Dynamic, interactive context-gathering interview to lock in the product idea.
-  - **Scout Robot 🔭** - Market demand analysis (TAM/SAM/SOM, growth signals, demand validation)
-  - **Detective Robot 🔎** - Competitive intelligence (competitors, gaps, moat, positioning)
-  - **People Robot 👥** - User personas (segments, pain points, motivations, buying triggers)
-  - **Money Robot 💰** - Financial projections (unit economics, revenue models, 3-scenario forecast)
-  - **Feature Robot 📝** - Feature breakdown (must-have, nice-to-have, future, with WHY/WHEN)
-  - **Plan Robot 🗺️** - Product roadmap (phased 18-month plan with milestones, dependencies)
-  - **Priority Robot ⭐** - Feature prioritisation (RICE scoring with principled reasoning)
+  - **Phase 1: Strategic Discovery**
+    - **Interview Robot 🎤** - Dynamic, interactive context-gathering interview to lock in the product idea.
+    - **Scout Robot 🔭** - Market demand analysis (TAM/SAM/SOM, growth signals, demand validation)
+    - **Detective Robot 🔎** - Competitive intelligence (competitors, gaps, moat, positioning)
+    - **People Robot 👥** - User personas (segments, pain points, motivations, buying triggers)
+    - **Money Robot 💰** - Financial projections (unit economics, revenue models, 3-scenario forecast)
+    - **Feature Robot 📝** - Feature breakdown (must-have, nice-to-have, future, with WHY/WHEN)
+    - **Plan Robot 🗺️** - Product roadmap (phased 18-month plan with milestones, dependencies)
+    - **Priority Robot ⭐** - Feature prioritisation (RICE scoring with principled reasoning)
+  - **Phase 2: Execution Definition**
+    - **User Stories Robot 📖** - Epic and user story generation with acceptance criteria.
+    - **Scope Spec Robot 🎯** - Strict scope definition, out-of-scope boundaries, and requirements.
+    - **Customer Journeys Robot 🛤️** - End-to-end journey mapping across touchpoints.
+    - **Feasibility Tech Robot ⚙️** - Technical architecture evaluation and constraints.
+    - **Feasibility Design Robot 🎨** - UX/UI constraints, guidelines, and design complexity.
+    - **KPIs Robot 📈** - Success metrics, instrumentation strategies, and target baselines.
+    - **Data Privacy Robot 🛡️** - Security, compliance (GDPR/CCPA), and privacy risks.
+    - **GTM Readiness Robot 🚀** - Go-to-market strategy, launch phases, and marketing channels.
+    - **Risks Registry Robot ⚠️** - Comprehensive risk matrix and mitigation strategies.
+    - **DACI Stakeholders Robot 🤝** - Stakeholder alignment (Driver, Approver, Contributor, Informed).
 - **Agentic Presentation Generator**: A specialized workflow instructing Claude to act as an expert UI designer to draft and deploy beautiful, custom HTML/CSS pitch-deck presentations directly to your filesystem.
 - **Claude Desktop MCP Integration**: Use the agents right out of the Claude MacOS/Windows desktop app.
 

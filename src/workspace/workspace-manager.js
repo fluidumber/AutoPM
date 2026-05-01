@@ -2,11 +2,16 @@
 //
 // Layout:
 //   ~/.productflow/
-//     pm-profile.md
+//     profiles/
+//       active.json              { "activePersona": "<slug>" }
+//       <slug>/
+//         profile.md
+//         staleness-overrides.json   (optional)
 //     products/
 //       <slug>/
 //         product.md
 //         freshness.json
+//         staleness-overrides.json   (optional)
 //         context/
 //           documents/
 //           interview-answers.md
@@ -33,9 +38,40 @@ export class WorkspaceManager {
         return this.root;
     }
 
-    /** Path to the PM profile markdown file. */
-    getPmProfilePath() {
+    // ── Persona path helpers ───────────────────────────────────────────
+
+    /** Path to the profiles container directory. */
+    getProfilesDir() {
+        return path.join(this.root, "profiles");
+    }
+
+    /** Path to the active-persona pointer file. */
+    getActivePersonaFile() {
+        return path.join(this.getProfilesDir(), "active.json");
+    }
+
+    /** Path to a specific persona's directory. */
+    getPersonaDir(personaSlug) {
+        return path.join(this.getProfilesDir(), personaSlug);
+    }
+
+    /** Path to a specific persona's profile.md. */
+    getPersonaProfilePath(personaSlug) {
+        return path.join(this.getPersonaDir(personaSlug), "profile.md");
+    }
+
+    /**
+     * Legacy path — only used during migration from single-profile layout.
+     * Kept so any remaining caller can be updated in one pass.
+     * @deprecated use getPersonaProfilePath(activeSlug) instead
+     */
+    getLegacyPmProfilePath() {
         return path.join(this.root, "pm-profile.md");
+    }
+
+    /** @deprecated alias for getLegacyPmProfilePath() — remove after pm-profile.js is updated */
+    getPmProfilePath() {
+        return this.getLegacyPmProfilePath();
     }
 
     /** Path to the products container directory. */
@@ -74,6 +110,7 @@ export class WorkspaceManager {
     async ensureWorkspace() {
         await fs.mkdir(this.root, { recursive: true });
         await fs.mkdir(this.getProductsDir(), { recursive: true });
+        await fs.mkdir(this.getProfilesDir(), { recursive: true });
     }
 
     /**
@@ -138,11 +175,61 @@ export class WorkspaceManager {
     }
 
     /**
-     * Does the PM profile file exist?
+     * Path to the pending-promotion.json file for a product.
+     * Written by promote-to-phase-2 Call 1 (review); deleted by Call 2 (confirm).
+     * Contains the confirmation token, expiry, and Phase 1 summary candidates.
+     */
+    getPendingPromotionPath(slug) {
+        return path.join(this.getProductDir(slug), "pending-promotion.json");
+    }
+
+    /**
+     * Path to the active-session pointer file.
+     * Written by start-session; records which product the PM is working on and
+     * what gate they reached last.  Read by run-robot for soft session hints.
+     */
+    getActiveSessionPath() {
+        return path.join(this.root, "active-session.json");
+    }
+
+    // ── Staleness override path helpers ───────────────────────────────
+
+    /**
+     * Path to staleness overrides for a specific persona.
+     * Persona overrides take precedence over project defaults.
+     * Populated during Track 2 (multi-persona model).
+     */
+    getPersonaStalenessOverridePath(personaSlug) {
+        return path.join(this.root, "profiles", personaSlug, "staleness-overrides.json");
+    }
+
+    /**
+     * Path to staleness overrides for a specific product.
+     * Product overrides take precedence over persona overrides.
+     */
+    getProductStalenessOverridePath(productSlug) {
+        return path.join(this.getProductDir(productSlug), "staleness-overrides.json");
+    }
+
+    /**
+     * Does any PM profile exist?
+     * Checks the multi-persona layout first; falls back to the legacy single-file
+     * layout so existing workspaces work before migration runs.
      */
     async hasPmProfile() {
+        // New layout: active.json + persona profile
         try {
-            await fs.access(this.getPmProfilePath());
+            const raw          = await fs.readFile(this.getActivePersonaFile(), "utf-8");
+            const { activePersona } = JSON.parse(raw);
+            if (activePersona) {
+                await fs.access(this.getPersonaProfilePath(activePersona));
+                return true;
+            }
+        } catch { /* fall through */ }
+
+        // Legacy fallback: single pm-profile.md
+        try {
+            await fs.access(this.getLegacyPmProfilePath());
             return true;
         } catch {
             return false;

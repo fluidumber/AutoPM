@@ -56,28 +56,52 @@ class MoneyRobot {
                         ]
                     },
                     unitEconomics: {
-                        instructions: "Derive unit economics per segment. If multiple segments, do this per segment.",
+                        instructions: "Derive unit economics per segment. If multiple segments, do this per segment. Produce a markdown table.",
                         perSegment: [
                             "Average Revenue Per User/Account (ARPU/ARPA) — derive from pricing data",
-                            "Customer Acquisition Cost (CAC) — estimate from channel and stage",
+                            "Customer Acquisition Cost (CAC) — estimate from channel and stage, cite benchmark source",
                             "Payback period (months to recover CAC)",
-                            "Lifetime Value (LTV) — based on retention assumption, state the assumption",
-                            "LTV:CAC ratio and what it signals",
-                            "Gross margin % and what drives it"
+                            "Lifetime Value (LTV) — based on churn/retention assumption, state it explicitly",
+                            "LTV:CAC ratio — flag if < 3x (warning) or > 5x (healthy)",
+                            "Gross margin % and the primary drivers",
+                            "Gross Profit in Year 1 (revenue × gross margin)"
+                        ]
+                    },
+                    saasHealthMetrics: {
+                        instructions: "Produce the SaaS health dashboard for this product. All metrics per scenario (conservative / base / optimistic). Produce a markdown table.",
+                        metrics: [
+                            "ARR (Annual Recurring Revenue) at end of Year 1, 2, 3",
+                            "NRR (Net Revenue Retention) — expansion + contraction + churn, target > 100%",
+                            "GRR (Gross Revenue Retention) — churn only, target > 85%",
+                            "Gross Profit margin % at Year 1 and Year 3",
+                            "EBITDA margin % at Year 3 (state burn-rate assumption)"
                         ]
                     },
                     threeScenarioModel: {
-                        instructions: "Build conservative / base / optimistic projections for Year 1, 2, 3.",
+                        instructions: "Build conservative / base / optimistic projections for Year 1, 2, 3. Produce a summary table then narrative per scenario.",
                         structure: {
                             conservative: "Slow acquisition, lower conversion, single segment focus",
                             base: "Expected trajectory based on context provided",
-                            optimistic: "Multiple segments firing, strong word-of-mouth, expert marketplace scaling"
+                            optimistic: "Multiple segments firing, strong word-of-mouth, network effects"
                         },
                         metricsPerScenario: [
                             "Number of customers/accounts per segment",
                             "ARR at end of Year 1, 2, 3",
+                            "NRR at Year 2 and Year 3",
+                            "GRR at Year 2 and Year 3",
+                            "Gross Profit at Year 1 and Year 3",
+                            "EBITDA at Year 3",
                             "Burn rate assumption (bootstrapped = near zero)",
-                            "Break-even point"
+                            "Break-even point (month)"
+                        ]
+                    },
+                    advancedProjections: {
+                        instructions: "Stage-appropriate advanced projections. Omit any metric that is not meaningful at the current funding stage — explain why.",
+                        metrics: [
+                            "NPV (Net Present Value) of 3-year cashflow — use 10% discount rate, state assumption",
+                            "IRR (Internal Rate of Return) — relevant if external capital is deployed",
+                            "CAC Payback Period trend (Year 1 → Year 3)",
+                            "LTV:CAC trend (Year 1 → Year 3) — flag if deteriorating"
                         ]
                     },
                     keyFeatureImpact: {
@@ -92,6 +116,24 @@ class MoneyRobot {
                     keyMetricToWatch: {
                         instructions: "Given the stage, identify the ONE metric that matters most right now.",
                         reasoning: "At bootstrapped early-user stage, vanity metrics don't matter. What is the leading indicator of product-market fit for this specific business?"
+                    },
+                    chartSpecifications: {
+                        instructions: "After completing all tables, produce TWO Vega-Lite 5 JSON chart specifications. Each spec must be wrapped in a ```json code block. Both charts must use data.values arrays populated with the actual numbers from your analysis above — never use placeholder values.",
+                        charts: [
+                            {
+                                id: "arr-growth-chart",
+                                type: "Multi-series line chart",
+                                title: "ARR Growth — 3 Scenarios (Year 1–3)",
+                                requiredFields: "$schema (vega-lite v5), title, mark: line, encoding.x (year), encoding.y (ARR value), encoding.color (scenario), data.values with conservative/base/optimistic rows"
+                            },
+                            {
+                                id: "unit-economics-chart",
+                                type: "Grouped bar chart",
+                                title: "Unit Economics: LTV vs CAC by Segment",
+                                requiredFields: "$schema (vega-lite v5), title, mark: bar, encoding.x (segment), encoding.y (value), encoding.color (metric: LTV or CAC), data.values with actual LTV and CAC per segment"
+                            }
+                        ],
+                        vegaLiteSchemaUrl: "https://vega.github.io/schema/vega-lite/v5.json"
                     }
                 }
             },
@@ -109,10 +151,12 @@ class MoneyRobot {
             },
 
             outputFormat: {
-                style: "Structured narrative with explicit assumption callouts, then tables for numbers",
+                style: "Structured narrative with explicit assumption callouts, then tables for numbers, then Vega-Lite chart specs",
                 currency: geography.toLowerCase().includes("india") ? "INR" : "USD",
-                tables: "Use tables for: unit economics per segment, 3-scenario ARR projection, recommender feature impact",
-                assumptions: "Box or callout every assumption clearly — 'Assumption: 3% monthly churn based on [reason]'"
+                tables: "Use markdown tables for: unit economics per segment, SaaS health metrics, 3-scenario ARR projection, advanced projections, feature impact",
+                assumptions: "Box or callout every assumption clearly — 'Assumption: 3% monthly churn based on [reason]'",
+                charts: "After all tables, produce exactly 2 Vega-Lite 5 JSON specs in ```json code blocks: (1) ARR growth line chart, (2) LTV vs CAC bar chart. Use actual numbers from the analysis — never placeholders.",
+                length: "Comprehensive — financial models require depth. Do not truncate tables or omit scenarios."
             }
         };
 

@@ -62,13 +62,14 @@ export class ProductRegistry {
         return {
             slug,
             name,
-            overview: getSection(body, "Overview"),
-            stage: getSection(body, "Stage"),
+            overview:     getSection(body, "Overview"),
+            stage:        getSection(body, "Stage"),
             targetMarket: getSection(body, "Target Market"),
-            competitors: getListSection(body, "Competitors"),
-            tags: getListSection(body, "Tags"),
-            created: frontmatter.created || null,
-            updated: frontmatter.updated || null,
+            competitors:  getListSection(body, "Competitors"),
+            tags:         getListSection(body, "Tags"),
+            ownerPersona: frontmatter.ownerPersona || null,
+            created:      frontmatter.created      || null,
+            updated:      frontmatter.updated      || null,
         };
     }
 
@@ -83,6 +84,7 @@ export class ProductRegistry {
      * @param {string} [data.targetMarket]
      * @param {string[]} [data.competitors]
      * @param {string[]} [data.tags]
+     * @param {string} [data.ownerPersona] - Persona slug to bind this product to
      * @returns {Promise<{slug: string, alreadyExisted: boolean, product: object}>}
      */
     async create(data) {
@@ -96,19 +98,26 @@ export class ProductRegistry {
         await this.workspace.ensureProductStructure(slug);
 
         if (!alreadyExisted) {
+            // Resolve ownerPersona — use provided value, or read active persona
+            let ownerPersona = data.ownerPersona || null;
+            if (!ownerPersona) {
+                ownerPersona = await this.pmProfile._getActivePersonaSlug().catch(() => null);
+            }
+
             await this._writeProductMarkdown(slug, {
-                name: data.name,
-                overview: data.overview || "",
-                stage: data.stage || "",
+                name:         data.name,
+                overview:     data.overview     || "",
+                stage:        data.stage        || "",
                 targetMarket: data.targetMarket || "",
-                competitors: data.competitors || [],
-                tags: data.tags || [],
-                created: new Date().toISOString(),
-                updated: new Date().toISOString(),
+                competitors:  data.competitors  || [],
+                tags:         data.tags         || [],
+                ownerPersona: ownerPersona      || "",
+                created:      new Date().toISOString(),
+                updated:      new Date().toISOString(),
             });
         }
 
-        // Register the product on the PM profile (idempotent)
+        // Register the product on the active persona's profile (idempotent)
         if (await this.workspace.hasPmProfile()) {
             await this.pmProfile.addProduct(slug);
         }
@@ -144,8 +153,9 @@ export class ProductRegistry {
     async _writeProductMarkdown(slug, data) {
         const frontmatter = {
             slug,
-            created: data.created,
-            updated: data.updated,
+            ownerPersona: data.ownerPersona || "",
+            created:      data.created,
+            updated:      data.updated,
         };
         const body = this._buildBody(data);
         await fs.writeFile(
