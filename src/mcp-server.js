@@ -1357,12 +1357,14 @@ until this tool returns { promoted: true }.`,
         linkTdd:           z.string().optional().describe("Link to Technical Design Doc (Call 2 only)"),
         linkFigma:         z.string().optional().describe("Link to Figma design file (Call 2 only)"),
         linkConfluence:    z.string().optional().describe("Link to Confluence space (Call 2 only)"),
+        experimentClusterCount: z.number().min(1).max(5).optional().describe("Number of alternative solution clusters to generate (Call 2 only, default 1)"),
     },
     async ({
         productSlug, confirm, confirmationToken,
         personaOverride, featureOverride, scopeOverride,
         ownerName, ownerRole, ownerEmail,
         linkJira, linkTdd, linkFigma, linkConfluence,
+        experimentClusterCount,
     }) => {
         const fspath = await import("fs/promises");
         const crypto = await import("crypto");
@@ -1462,6 +1464,7 @@ until this tool returns { promoted: true }.`,
                     personaOverride: personaOverride || pending.candidates?.personas?.[0] || "",
                     featureOverride: featureOverride || pending.candidates?.features?.[0] || "",
                     scopeOverride:   scopeOverride   || "",
+                    experimentClusterCount: experimentClusterCount || 1,
                 };
                 await fspath.writeFile(p2Path, JSON.stringify(phase2Manifest, null, 2), "utf-8");
             }
@@ -1594,6 +1597,7 @@ until this tool returns { promoted: true }.`,
             personaOverride: personaCandidates[0] || "",
             featureOverride: featureCandidates[0] || "",
             scopeOverride:   "",
+            experimentClusterCount: 1,
         };
 
         return {
@@ -1616,7 +1620,7 @@ until this tool returns { promoted: true }.`,
                         "Show the candidates (personas, features, competitors) and ask the PM to confirm or override each.",
                         "Ask: 'Are you satisfied with Phase 1 and ready to lock it and move to Phase 2?'",
                         "When the PM confirms, call promote-to-phase-2 again with: confirm=true, confirmationToken copied from this response, and any PM-supplied overrides.",
-                        "Available overrides on the confirm call: personaOverride, featureOverride, scopeOverride, ownerName, ownerRole, ownerEmail, linkJira, linkTdd, linkFigma, linkConfluence.",
+                        "Available overrides on the confirm call: personaOverride, featureOverride, scopeOverride, experimentClusterCount (1-5), ownerName, ownerRole, ownerEmail, linkJira, linkTdd, linkFigma, linkConfluence.",
                     ],
                 }, null, 2)
             }]
