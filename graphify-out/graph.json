@@ -9,7 +9,7 @@
       "source_file": "run.js",
       "source_location": "L1",
       "id": "run_js",
-      "community": 6,
+      "community": 5,
       "norm_label": "run.js"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "run.js",
       "source_location": "L4",
       "id": "productflow_run_main",
-      "community": 6,
+      "community": 5,
       "norm_label": "main()"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "bin/productflow.js",
       "source_location": "L1",
       "id": "bin_productflow_js",
-      "community": 18,
+      "community": 19,
       "norm_label": "productflow.js"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "bin/productflow.js",
       "source_location": "L34",
       "id": "bin_productflow_initproject",
-      "community": 18,
+      "community": 19,
       "norm_label": "initproject()"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "bin/productflow.js",
       "source_location": "L55",
       "id": "bin_productflow_startmcpserver",
-      "community": 18,
+      "community": 19,
       "norm_label": "startmcpserver()"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "bin/productflow.js",
       "source_location": "L67",
       "id": "bin_productflow_analyzeproduct",
-      "community": 18,
+      "community": 19,
       "norm_label": "analyzeproduct()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "bin/productflow.js",
       "source_location": "L82",
       "id": "bin_productflow_showhelp",
-      "community": 18,
+      "community": 19,
       "norm_label": "showhelp()"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "tests/workspace.test.js",
       "source_location": "L1",
       "id": "tests_workspace_test_js",
-      "community": 26,
+      "community": 27,
       "norm_label": "workspace.test.js"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "tests/workspace.test.js",
       "source_location": "L22",
       "id": "tests_workspace_test_test",
-      "community": 26,
+      "community": 27,
       "norm_label": "test()"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "utils/keywords.js",
       "source_location": "L1",
       "id": "utils_keywords_js",
-      "community": 8,
+      "community": 9,
       "norm_label": "keywords.js"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "utils/keywords.js",
       "source_location": "L25",
       "id": "utils_keywords_extractdomainkeywords",
-      "community": 8,
+      "community": 9,
       "norm_label": "extractdomainkeywords()"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "utils/presentation-generator.js",
       "source_location": "L1",
       "id": "utils_presentation_generator_js",
-      "community": 23,
+      "community": 24,
       "norm_label": "presentation-generator.js"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "utils/presentation-generator.js",
       "source_location": "L11",
       "id": "utils_presentation_generator_generatepresentation",
-      "community": 23,
+      "community": 24,
       "norm_label": "generatepresentation()"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "utils/presentation-generator.js",
       "source_location": "L38",
       "id": "utils_presentation_generator_buildhtml",
-      "community": 23,
+      "community": 24,
       "norm_label": "buildhtml()"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "utils/presentation-generator.js",
       "source_location": "L275",
       "id": "utils_presentation_generator_escapehtml",
-      "community": 23,
+      "community": 24,
       "norm_label": "escapehtml()"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L1",
       "id": "utils_pdd_renderer_js",
-      "community": 3,
+      "community": 2,
       "norm_label": "pdd-renderer.js"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L21",
       "id": "utils_pdd_renderer_safe",
-      "community": 3,
+      "community": 2,
       "norm_label": "safe()"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L26",
       "id": "utils_pdd_renderer_safearray",
-      "community": 3,
+      "community": 2,
       "norm_label": "safearray()"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L35",
       "id": "utils_pdd_renderer_bulletlist",
-      "community": 3,
+      "community": 2,
       "norm_label": "bulletlist()"
     },
     {
@@ -198,7 +198,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L46",
       "id": "utils_pdd_renderer_mdtable",
-      "community": 3,
+      "community": 2,
       "norm_label": "mdtable()"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L56",
       "id": "utils_pdd_renderer_rendermeta",
-      "community": 3,
+      "community": 2,
       "norm_label": "rendermeta()"
     },
     {
@@ -216,7 +216,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L77",
       "id": "utils_pdd_renderer_rendersectionstatus",
-      "community": 3,
+      "community": 2,
       "norm_label": "rendersectionstatus()"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L91",
       "id": "utils_pdd_renderer_renderdaci",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderdaci()"
     },
     {
@@ -234,7 +234,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L107",
       "id": "utils_pdd_renderer_renderkeycontacts",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderkeycontacts()"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L122",
       "id": "utils_pdd_renderer_renderscope",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderscope()"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L192",
       "id": "utils_pdd_renderer_renderuserstories",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderuserstories()"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L214",
       "id": "utils_pdd_renderer_rendercustomerjourneys",
-      "community": 3,
+      "community": 2,
       "norm_label": "rendercustomerjourneys()"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L238",
       "id": "utils_pdd_renderer_renderfeasibilitytech",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderfeasibilitytech()"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L312",
       "id": "utils_pdd_renderer_renderfeasibilitydesign",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderfeasibilitydesign()"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L349",
       "id": "utils_pdd_renderer_renderdataprivacy",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderdataprivacy()"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L364",
       "id": "utils_pdd_renderer_renderrisks",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderrisks()"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L381",
       "id": "utils_pdd_renderer_rendergtmreadiness",
-      "community": 3,
+      "community": 2,
       "norm_label": "rendergtmreadiness()"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L440",
       "id": "utils_pdd_renderer_renderkpis",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderkpis()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L497",
       "id": "utils_pdd_renderer_rendernarrativesection",
-      "community": 3,
+      "community": 2,
       "norm_label": "rendernarrativesection()"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L502",
       "id": "utils_pdd_renderer_renderappendix",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderappendix()"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L529",
       "id": "utils_pdd_renderer_rendermarkdown",
-      "community": 3,
+      "community": 2,
       "norm_label": "rendermarkdown()"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L648",
       "id": "utils_pdd_renderer_extractvegalitespecs",
-      "community": 3,
+      "community": 2,
       "norm_label": "extractvegalitespecs()"
     },
     {
@@ -360,7 +360,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L672",
       "id": "utils_pdd_renderer_rendervegalitespecshtml",
-      "community": 3,
+      "community": 2,
       "norm_label": "rendervegalitespecshtml()"
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L690",
       "id": "utils_pdd_renderer_renderhtml",
-      "community": 3,
+      "community": 2,
       "norm_label": "renderhtml()"
     },
     {
@@ -378,7 +378,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L781",
       "id": "utils_pdd_renderer_escapehtml",
-      "community": 3,
+      "community": 2,
       "norm_label": "escapehtml()"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L798",
       "id": "utils_pdd_renderer_markdowntohtml",
-      "community": 3,
+      "community": 2,
       "norm_label": "markdowntohtml()"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "utils/pdd-renderer.js",
       "source_location": "L887",
       "id": "utils_pdd_renderer_inlinehtml",
-      "community": 3,
+      "community": 2,
       "norm_label": "inlinehtml()"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "utils/file-storage.js",
       "source_location": "L1",
       "id": "utils_file_storage_js",
-      "community": 4,
+      "community": 3,
       "norm_label": "file-storage.js"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "utils/file-storage.js",
       "source_location": "L9",
       "id": "utils_file_storage_ensuredatadir",
-      "community": 4,
+      "community": 3,
       "norm_label": "ensuredatadir()"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "utils/file-storage.js",
       "source_location": "L18",
       "id": "utils_file_storage_savedata",
-      "community": 4,
+      "community": 3,
       "norm_label": "savedata()"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "utils/file-storage.js",
       "source_location": "L33",
       "id": "utils_file_storage_loaddata",
-      "community": 4,
+      "community": 3,
       "norm_label": "loaddata()"
     },
     {
@@ -441,7 +441,7 @@
       "source_file": "utils/file-storage.js",
       "source_location": "L47",
       "id": "utils_file_storage_listsaveddata",
-      "community": 4,
+      "community": 3,
       "norm_label": "listsaveddata()"
     },
     {
@@ -450,7 +450,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L1",
       "id": "leader_team_leader_js",
-      "community": 2,
+      "community": 4,
       "norm_label": "team-leader.js"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L66",
       "id": "leader_team_leader_teamleader",
-      "community": 2,
+      "community": 4,
       "norm_label": "teamleader"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L67",
       "id": "leader_team_leader_teamleader_constructor",
-      "community": 2,
+      "community": 4,
       "norm_label": ".constructor()"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L120",
       "id": "leader_team_leader_teamleader_hydratelearner",
-      "community": 6,
+      "community": 5,
       "norm_label": "._hydratelearner()"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L155",
       "id": "leader_team_leader_teamleader_startinterview",
-      "community": 2,
+      "community": 4,
       "norm_label": ".startinterview()"
     },
     {
@@ -495,7 +495,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L176",
       "id": "leader_team_leader_teamleader_answerinterviewquestion",
-      "community": 2,
+      "community": 4,
       "norm_label": ".answerinterviewquestion()"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L180",
       "id": "leader_team_leader_teamleader_skipinterviewquestion",
-      "community": 2,
+      "community": 4,
       "norm_label": ".skipinterviewquestion()"
     },
     {
@@ -513,7 +513,7 @@
       "source_file": "leader/team-leader.js",
       "source_location": "L194",
       "id": "leader_team_leader_teamleader_startanalysis",
-      "community": 2,
+      "community": 4,
       "norm_label": ".startanalysis()"
     },
     {
@@ -529,72 +529,72 @@
       "label": ".checkPhase2Gate()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L284",
+      "source_location": "L293",
       "id": "leader_team_leader_teamleader_checkphase2gate",
-      "community": 5,
+      "community": 4,
       "norm_label": ".checkphase2gate()"
     },
     {
       "label": ".runSingleRobot()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L303",
+      "source_location": "L312",
       "id": "leader_team_leader_teamleader_runsinglerobot",
-      "community": 5,
+      "community": 4,
       "norm_label": ".runsinglerobot()"
     },
     {
       "label": ".getAnalysisState()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L392",
+      "source_location": "L401",
       "id": "leader_team_leader_teamleader_getanalysisstate",
-      "community": 2,
+      "community": 4,
       "norm_label": ".getanalysisstate()"
     },
     {
       "label": ".getNextRobot()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L410",
+      "source_location": "L419",
       "id": "leader_team_leader_teamleader_getnextrobot",
-      "community": 2,
+      "community": 4,
       "norm_label": ".getnextrobot()"
     },
     {
       "label": ".saveFeedback()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L439",
+      "source_location": "L448",
       "id": "leader_team_leader_teamleader_savefeedback",
-      "community": 6,
+      "community": 0,
       "norm_label": ".savefeedback()"
     },
     {
       "label": ".getFullResults()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L495",
+      "source_location": "L504",
       "id": "leader_team_leader_teamleader_getfullresults",
-      "community": 2,
+      "community": 4,
       "norm_label": ".getfullresults()"
     },
     {
       "label": ".analyzeBusiness()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L510",
+      "source_location": "L519",
       "id": "leader_team_leader_teamleader_analyzebusiness",
-      "community": 4,
+      "community": 3,
       "norm_label": ".analyzebusiness()"
     },
     {
       "label": ".showSummary()",
       "file_type": "code",
       "source_file": "leader/team-leader.js",
-      "source_location": "L539",
+      "source_location": "L548",
       "id": "leader_team_leader_teamleader_showsummary",
-      "community": 6,
+      "community": 5,
       "norm_label": ".showsummary()"
     },
     {
@@ -621,7 +621,7 @@
       "source_file": "brain/robot-memory.js",
       "source_location": "L1",
       "id": "brain_robot_memory_js",
-      "community": 6,
+      "community": 5,
       "norm_label": "robot-memory.js"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "brain/robot-memory.js",
       "source_location": "L2",
       "id": "brain_robot_memory_robotmemory",
-      "community": 6,
+      "community": 5,
       "norm_label": "robotmemory"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "brain/robot-memory.js",
       "source_location": "L3",
       "id": "brain_robot_memory_robotmemory_constructor",
-      "community": 6,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "brain/robot-memory.js",
       "source_location": "L9",
       "id": "brain_robot_memory_robotmemory_remember",
-      "community": 6,
+      "community": 5,
       "norm_label": ".remember()"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "brain/robot-memory.js",
       "source_location": "L23",
       "id": "brain_robot_memory_robotmemory_findsimilar",
-      "community": 6,
+      "community": 5,
       "norm_label": ".findsimilar()"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "brain/robot-memory.js",
       "source_location": "L32",
       "id": "brain_robot_memory_robotmemory_showall",
-      "community": 6,
+      "community": 5,
       "norm_label": ".showall()"
     },
     {
@@ -675,7 +675,7 @@
       "source_file": "brain/robot-memory.js",
       "source_location": "L44",
       "id": "brain_robot_memory_robotmemory_getbest",
-      "community": 6,
+      "community": 5,
       "norm_label": ".getbest()"
     },
     {
@@ -684,7 +684,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L1",
       "id": "brain_learning_engine_js",
-      "community": 6,
+      "community": 5,
       "norm_label": "learning-engine.js"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L2",
       "id": "brain_learning_engine_learningengine",
-      "community": 6,
+      "community": 5,
       "norm_label": "learningengine"
     },
     {
@@ -702,7 +702,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L3",
       "id": "brain_learning_engine_learningengine_constructor",
-      "community": 6,
+      "community": 5,
       "norm_label": ".constructor()"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L16",
       "id": "brain_learning_engine_learningengine_hydratefrompersistedfeedback",
-      "community": 6,
+      "community": 5,
       "norm_label": ".hydratefrompersistedfeedback()"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L49",
       "id": "brain_learning_engine_learningengine_learnfromsuccess",
-      "community": 6,
+      "community": 5,
       "norm_label": ".learnfromsuccess()"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L61",
       "id": "brain_learning_engine_learningengine_learnfromfailure",
-      "community": 6,
+      "community": 5,
       "norm_label": ".learnfromfailure()"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L73",
       "id": "brain_learning_engine_learningengine_applylearning",
-      "community": 6,
+      "community": 5,
       "norm_label": ".applylearning()"
     },
     {
@@ -747,7 +747,7 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L92",
       "id": "brain_learning_engine_learningengine_getimprovementhints",
-      "community": 6,
+      "community": 5,
       "norm_label": ".getimprovementhints()"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L1",
       "id": "brain_brain_database_js",
-      "community": 4,
+      "community": 3,
       "norm_label": "brain-database.js"
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L3",
       "id": "brain_brain_database_braindatabase",
-      "community": 4,
+      "community": 3,
       "norm_label": "braindatabase"
     },
     {
@@ -774,7 +774,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L4",
       "id": "brain_brain_database_braindatabase_constructor",
-      "community": 4,
+      "community": 3,
       "norm_label": ".constructor()"
     },
     {
@@ -783,7 +783,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L17",
       "id": "brain_brain_database_braindatabase_loadfromdisk",
-      "community": 4,
+      "community": 3,
       "norm_label": ".loadfromdisk()"
     },
     {
@@ -792,7 +792,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L33",
       "id": "brain_brain_database_braindatabase_savedesignpreferences",
-      "community": 4,
+      "community": 3,
       "norm_label": ".savedesignpreferences()"
     },
     {
@@ -801,7 +801,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L39",
       "id": "brain_brain_database_braindatabase_getdesignpreferences",
-      "community": 4,
+      "community": 3,
       "norm_label": ".getdesignpreferences()"
     },
     {
@@ -810,7 +810,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L45",
       "id": "brain_brain_database_braindatabase_saveanalysis",
-      "community": 4,
+      "community": 3,
       "norm_label": ".saveanalysis()"
     },
     {
@@ -819,7 +819,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L55",
       "id": "brain_brain_database_braindatabase_getallanalyses",
-      "community": 4,
+      "community": 3,
       "norm_label": ".getallanalyses()"
     },
     {
@@ -828,7 +828,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L59",
       "id": "brain_brain_database_braindatabase_getanalysiscount",
-      "community": 4,
+      "community": 3,
       "norm_label": ".getanalysiscount()"
     },
     {
@@ -837,7 +837,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L74",
       "id": "brain_brain_database_braindatabase_savefeedback",
-      "community": 4,
+      "community": 3,
       "norm_label": ".savefeedback()"
     },
     {
@@ -846,7 +846,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L94",
       "id": "brain_brain_database_braindatabase_getfeedbackforrobot",
-      "community": 4,
+      "community": 3,
       "norm_label": ".getfeedbackforrobot()"
     },
     {
@@ -855,7 +855,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L102",
       "id": "brain_brain_database_braindatabase_getrobotaveragerating",
-      "community": 4,
+      "community": 3,
       "norm_label": ".getrobotaveragerating()"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L111",
       "id": "brain_brain_database_braindatabase_savelearning",
-      "community": 4,
+      "community": 3,
       "norm_label": ".savelearning()"
     },
     {
@@ -873,7 +873,7 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L122",
       "id": "brain_brain_database_braindatabase_clearall",
-      "community": 4,
+      "community": 3,
       "norm_label": ".clearall()"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "robots/plan-robot.js",
       "source_location": "L1",
       "id": "robots_plan_robot_js",
-      "community": 19,
+      "community": 20,
       "norm_label": "plan-robot.js"
     },
     {
@@ -891,7 +891,7 @@
       "source_file": "robots/plan-robot.js",
       "source_location": "L2",
       "id": "robots_plan_robot_planrobot",
-      "community": 19,
+      "community": 20,
       "norm_label": "planrobot"
     },
     {
@@ -900,7 +900,7 @@
       "source_file": "robots/plan-robot.js",
       "source_location": "L3",
       "id": "robots_plan_robot_planrobot_constructor",
-      "community": 19,
+      "community": 20,
       "norm_label": ".constructor()"
     },
     {
@@ -909,7 +909,7 @@
       "source_file": "robots/plan-robot.js",
       "source_location": "L9",
       "id": "robots_plan_robot_planrobot_analyze",
-      "community": 19,
+      "community": 20,
       "norm_label": ".analyze()"
     },
     {
@@ -918,7 +918,7 @@
       "source_file": "robots/plan-robot.js",
       "source_location": "L119",
       "id": "robots_plan_robot_planrobot_derivephases",
-      "community": 19,
+      "community": 20,
       "norm_label": "._derivephases()"
     },
     {
@@ -927,7 +927,7 @@
       "source_file": "robots/people-robot.js",
       "source_location": "L1",
       "id": "robots_people_robot_js",
-      "community": 20,
+      "community": 21,
       "norm_label": "people-robot.js"
     },
     {
@@ -936,7 +936,7 @@
       "source_file": "robots/people-robot.js",
       "source_location": "L2",
       "id": "robots_people_robot_peoplerobot",
-      "community": 20,
+      "community": 21,
       "norm_label": "peoplerobot"
     },
     {
@@ -945,7 +945,7 @@
       "source_file": "robots/people-robot.js",
       "source_location": "L3",
       "id": "robots_people_robot_peoplerobot_constructor",
-      "community": 20,
+      "community": 21,
       "norm_label": ".constructor()"
     },
     {
@@ -954,7 +954,7 @@
       "source_file": "robots/people-robot.js",
       "source_location": "L9",
       "id": "robots_people_robot_peoplerobot_analyze",
-      "community": 20,
+      "community": 21,
       "norm_label": ".analyze()"
     },
     {
@@ -963,7 +963,7 @@
       "source_file": "robots/people-robot.js",
       "source_location": "L92",
       "id": "robots_people_robot_peoplerobot_derivesegments",
-      "community": 20,
+      "community": 21,
       "norm_label": "._derivesegments()"
     },
     {
@@ -972,7 +972,7 @@
       "source_file": "robots/feasibility-tech-robot.js",
       "source_location": "L1",
       "id": "robots_feasibility_tech_robot_js",
-      "community": 13,
+      "community": 14,
       "norm_label": "feasibility-tech-robot.js"
     },
     {
@@ -981,7 +981,7 @@
       "source_file": "robots/feasibility-tech-robot.js",
       "source_location": "L59",
       "id": "robots_feasibility_tech_robot_feasibilitytechrobot",
-      "community": 13,
+      "community": 14,
       "norm_label": "feasibilitytechrobot"
     },
     {
@@ -990,7 +990,7 @@
       "source_file": "robots/feasibility-tech-robot.js",
       "source_location": "L60",
       "id": "robots_feasibility_tech_robot_feasibilitytechrobot_constructor",
-      "community": 13,
+      "community": 14,
       "norm_label": ".constructor()"
     },
     {
@@ -999,7 +999,7 @@
       "source_file": "robots/feasibility-tech-robot.js",
       "source_location": "L71",
       "id": "robots_feasibility_tech_robot_feasibilitytechrobot_analyze",
-      "community": 13,
+      "community": 14,
       "norm_label": ".analyze()"
     },
     {
@@ -1008,7 +1008,7 @@
       "source_file": "robots/feasibility-tech-robot.js",
       "source_location": "L182",
       "id": "robots_feasibility_tech_robot_feasibilitytechrobot_extractfeaturecontext",
-      "community": 13,
+      "community": 14,
       "norm_label": "._extractfeaturecontext()"
     },
     {
@@ -1017,7 +1017,7 @@
       "source_file": "robots/feasibility-tech-robot.js",
       "source_location": "L207",
       "id": "robots_feasibility_tech_robot_feasibilitytechrobot_extractscopecontext",
-      "community": 13,
+      "community": 14,
       "norm_label": "._extractscopecontext()"
     },
     {
@@ -1026,7 +1026,7 @@
       "source_file": "robots/risks-registry-robot.js",
       "source_location": "L1",
       "id": "robots_risks_registry_robot_js",
-      "community": 10,
+      "community": 11,
       "norm_label": "risks-registry-robot.js"
     },
     {
@@ -1035,7 +1035,7 @@
       "source_file": "robots/risks-registry-robot.js",
       "source_location": "L46",
       "id": "robots_risks_registry_robot_risksregistryrobot",
-      "community": 10,
+      "community": 11,
       "norm_label": "risksregistryrobot"
     },
     {
@@ -1044,7 +1044,7 @@
       "source_file": "robots/risks-registry-robot.js",
       "source_location": "L47",
       "id": "robots_risks_registry_robot_risksregistryrobot_constructor",
-      "community": 10,
+      "community": 11,
       "norm_label": ".constructor()"
     },
     {
@@ -1053,7 +1053,7 @@
       "source_file": "robots/risks-registry-robot.js",
       "source_location": "L58",
       "id": "robots_risks_registry_robot_risksregistryrobot_analyze",
-      "community": 10,
+      "community": 11,
       "norm_label": ".analyze()"
     },
     {
@@ -1062,7 +1062,7 @@
       "source_file": "robots/risks-registry-robot.js",
       "source_location": "L163",
       "id": "robots_risks_registry_robot_risksregistryrobot_extractplancontext",
-      "community": 10,
+      "community": 11,
       "norm_label": "._extractplancontext()"
     },
     {
@@ -1071,7 +1071,7 @@
       "source_file": "robots/risks-registry-robot.js",
       "source_location": "L181",
       "id": "robots_risks_registry_robot_risksregistryrobot_extractfeasibilitycontext",
-      "community": 10,
+      "community": 11,
       "norm_label": "._extractfeasibilitycontext()"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_file": "robots/risks-registry-robot.js",
       "source_location": "L193",
       "id": "robots_risks_registry_robot_risksregistryrobot_extractgtmcontext",
-      "community": 10,
+      "community": 11,
       "norm_label": "._extractgtmcontext()"
     },
     {
@@ -1089,7 +1089,7 @@
       "source_file": "robots/feature-robot.js",
       "source_location": "L1",
       "id": "robots_feature_robot_js",
-      "community": 21,
+      "community": 22,
       "norm_label": "feature-robot.js"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_file": "robots/feature-robot.js",
       "source_location": "L2",
       "id": "robots_feature_robot_featurerobot",
-      "community": 21,
+      "community": 22,
       "norm_label": "featurerobot"
     },
     {
@@ -1107,7 +1107,7 @@
       "source_file": "robots/feature-robot.js",
       "source_location": "L3",
       "id": "robots_feature_robot_featurerobot_constructor",
-      "community": 21,
+      "community": 22,
       "norm_label": ".constructor()"
     },
     {
@@ -1116,7 +1116,7 @@
       "source_file": "robots/feature-robot.js",
       "source_location": "L9",
       "id": "robots_feature_robot_featurerobot_analyze",
-      "community": 21,
+      "community": 22,
       "norm_label": ".analyze()"
     },
     {
@@ -1125,7 +1125,7 @@
       "source_file": "robots/feature-robot.js",
       "source_location": "L109",
       "id": "robots_feature_robot_featurerobot_derivesegments",
-      "community": 21,
+      "community": 22,
       "norm_label": "._derivesegments()"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_file": "robots/gtm-readiness-robot.js",
       "source_location": "L1",
       "id": "robots_gtm_readiness_robot_js",
-      "community": 14,
+      "community": 15,
       "norm_label": "gtm-readiness-robot.js"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "robots/gtm-readiness-robot.js",
       "source_location": "L63",
       "id": "robots_gtm_readiness_robot_gtmreadinessrobot",
-      "community": 14,
+      "community": 15,
       "norm_label": "gtmreadinessrobot"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "robots/gtm-readiness-robot.js",
       "source_location": "L64",
       "id": "robots_gtm_readiness_robot_gtmreadinessrobot_constructor",
-      "community": 14,
+      "community": 15,
       "norm_label": ".constructor()"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "robots/gtm-readiness-robot.js",
       "source_location": "L75",
       "id": "robots_gtm_readiness_robot_gtmreadinessrobot_analyze",
-      "community": 14,
+      "community": 15,
       "norm_label": ".analyze()"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "robots/gtm-readiness-robot.js",
       "source_location": "L191",
       "id": "robots_gtm_readiness_robot_gtmreadinessrobot_extractplancontext",
-      "community": 14,
+      "community": 15,
       "norm_label": "._extractplancontext()"
     },
     {
@@ -1179,7 +1179,7 @@
       "source_file": "robots/gtm-readiness-robot.js",
       "source_location": "L205",
       "id": "robots_gtm_readiness_robot_gtmreadinessrobot_extractmoneycontext",
-      "community": 14,
+      "community": 15,
       "norm_label": "._extractmoneycontext()"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_file": "robots/scope-spec-robot.js",
       "source_location": "L1",
       "id": "robots_scope_spec_robot_js",
-      "community": 15,
+      "community": 16,
       "norm_label": "scope-spec-robot.js"
     },
     {
@@ -1197,7 +1197,7 @@
       "source_file": "robots/scope-spec-robot.js",
       "source_location": "L48",
       "id": "robots_scope_spec_robot_scopespecrobot",
-      "community": 15,
+      "community": 16,
       "norm_label": "scopespecrobot"
     },
     {
@@ -1206,7 +1206,7 @@
       "source_file": "robots/scope-spec-robot.js",
       "source_location": "L49",
       "id": "robots_scope_spec_robot_scopespecrobot_constructor",
-      "community": 15,
+      "community": 16,
       "norm_label": ".constructor()"
     },
     {
@@ -1215,7 +1215,7 @@
       "source_file": "robots/scope-spec-robot.js",
       "source_location": "L60",
       "id": "robots_scope_spec_robot_scopespecrobot_analyze",
-      "community": 15,
+      "community": 16,
       "norm_label": ".analyze()"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "robots/scope-spec-robot.js",
       "source_location": "L184",
       "id": "robots_scope_spec_robot_scopespecrobot_extractfeaturecontext",
-      "community": 15,
+      "community": 16,
       "norm_label": "._extractfeaturecontext()"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "robots/scope-spec-robot.js",
       "source_location": "L211",
       "id": "robots_scope_spec_robot_scopespecrobot_extractplancontext",
-      "community": 15,
+      "community": 16,
       "norm_label": "._extractplancontext()"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L1",
       "id": "robots_interview_robot_js",
-      "community": 2,
+      "community": 8,
       "norm_label": "interview-robot.js"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L7",
       "id": "robots_interview_robot_interviewrobot",
-      "community": 2,
+      "community": 8,
       "norm_label": "interviewrobot"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L8",
       "id": "robots_interview_robot_interviewrobot_constructor",
-      "community": 2,
+      "community": 8,
       "norm_label": ".constructor()"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L18",
       "id": "robots_interview_robot_interviewrobot_buildquestionbank",
-      "community": 2,
+      "community": 8,
       "norm_label": "._buildquestionbank()"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L270",
       "id": "robots_interview_robot_interviewrobot_startinterview",
-      "community": 2,
+      "community": 8,
       "norm_label": ".startinterview()"
     },
     {
@@ -1287,7 +1287,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L307",
       "id": "robots_interview_robot_interviewrobot_processanswer",
-      "community": 2,
+      "community": 8,
       "norm_label": ".processanswer()"
     },
     {
@@ -1296,7 +1296,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L367",
       "id": "robots_interview_robot_interviewrobot_skipquestion",
-      "community": 2,
+      "community": 4,
       "norm_label": ".skipquestion()"
     },
     {
@@ -1305,7 +1305,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L388",
       "id": "robots_interview_robot_interviewrobot_analyseanswer",
-      "community": 2,
+      "community": 8,
       "norm_label": "._analyseanswer()"
     },
     {
@@ -1314,7 +1314,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L452",
       "id": "robots_interview_robot_interviewrobot_answercoversquestion",
-      "community": 2,
+      "community": 8,
       "norm_label": "._answercoversquestion()"
     },
     {
@@ -1323,7 +1323,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L477",
       "id": "robots_interview_robot_interviewrobot_pickfollowup",
-      "community": 2,
+      "community": 8,
       "norm_label": "._pickfollowup()"
     },
     {
@@ -1332,7 +1332,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L495",
       "id": "robots_interview_robot_interviewrobot_buildnextresponse",
-      "community": 2,
+      "community": 8,
       "norm_label": "._buildnextresponse()"
     },
     {
@@ -1341,7 +1341,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L535",
       "id": "robots_interview_robot_interviewrobot_buildcompletionresponse",
-      "community": 2,
+      "community": 8,
       "norm_label": "._buildcompletionresponse()"
     },
     {
@@ -1350,7 +1350,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L551",
       "id": "robots_interview_robot_interviewrobot_buildenrichedcontext",
-      "community": 2,
+      "community": 8,
       "norm_label": "._buildenrichedcontext()"
     },
     {
@@ -1359,7 +1359,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L606",
       "id": "robots_interview_robot_interviewrobot_extractcompetitorlist",
-      "community": 2,
+      "community": 8,
       "norm_label": "._extractcompetitorlist()"
     },
     {
@@ -1368,7 +1368,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L615",
       "id": "robots_interview_robot_interviewrobot_countsegments",
-      "community": 2,
+      "community": 8,
       "norm_label": "._countsegments()"
     },
     {
@@ -1377,7 +1377,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L625",
       "id": "robots_interview_robot_interviewrobot_derivesearchpriority",
-      "community": 2,
+      "community": 8,
       "norm_label": "._derivesearchpriority()"
     },
     {
@@ -1386,7 +1386,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L636",
       "id": "robots_interview_robot_interviewrobot_extractbrandterms",
-      "community": 2,
+      "community": 8,
       "norm_label": "._extractbrandterms()"
     },
     {
@@ -1395,7 +1395,7 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L649",
       "id": "robots_interview_robot_interviewrobot_getprogress",
-      "community": 2,
+      "community": 8,
       "norm_label": "._getprogress()"
     },
     {
@@ -1404,7 +1404,7 @@
       "source_file": "robots/customer-journeys-robot.js",
       "source_location": "L1",
       "id": "robots_customer_journeys_robot_js",
-      "community": 16,
+      "community": 17,
       "norm_label": "customer-journeys-robot.js"
     },
     {
@@ -1413,7 +1413,7 @@
       "source_file": "robots/customer-journeys-robot.js",
       "source_location": "L59",
       "id": "robots_customer_journeys_robot_customerjourneysrobot",
-      "community": 16,
+      "community": 17,
       "norm_label": "customerjourneysrobot"
     },
     {
@@ -1422,7 +1422,7 @@
       "source_file": "robots/customer-journeys-robot.js",
       "source_location": "L60",
       "id": "robots_customer_journeys_robot_customerjourneysrobot_constructor",
-      "community": 16,
+      "community": 17,
       "norm_label": ".constructor()"
     },
     {
@@ -1431,7 +1431,7 @@
       "source_file": "robots/customer-journeys-robot.js",
       "source_location": "L71",
       "id": "robots_customer_journeys_robot_customerjourneysrobot_analyze",
-      "community": 16,
+      "community": 17,
       "norm_label": ".analyze()"
     },
     {
@@ -1440,7 +1440,7 @@
       "source_file": "robots/customer-journeys-robot.js",
       "source_location": "L172",
       "id": "robots_customer_journeys_robot_customerjourneysrobot_extractpersonacontext",
-      "community": 16,
+      "community": 17,
       "norm_label": "._extractpersonacontext()"
     },
     {
@@ -1449,7 +1449,7 @@
       "source_file": "robots/customer-journeys-robot.js",
       "source_location": "L202",
       "id": "robots_customer_journeys_robot_customerjourneysrobot_extractfeaturecontext",
-      "community": 16,
+      "community": 17,
       "norm_label": "._extractfeaturecontext()"
     },
     {
@@ -1458,7 +1458,7 @@
       "source_file": "robots/daci-stakeholders-robot.js",
       "source_location": "L1",
       "id": "robots_daci_stakeholders_robot_js",
-      "community": 22,
+      "community": 23,
       "norm_label": "daci-stakeholders-robot.js"
     },
     {
@@ -1467,7 +1467,7 @@
       "source_file": "robots/daci-stakeholders-robot.js",
       "source_location": "L55",
       "id": "robots_daci_stakeholders_robot_dacistakeholdersrobot",
-      "community": 22,
+      "community": 23,
       "norm_label": "dacistakeholdersrobot"
     },
     {
@@ -1476,7 +1476,7 @@
       "source_file": "robots/daci-stakeholders-robot.js",
       "source_location": "L56",
       "id": "robots_daci_stakeholders_robot_dacistakeholdersrobot_constructor",
-      "community": 22,
+      "community": 23,
       "norm_label": ".constructor()"
     },
     {
@@ -1485,7 +1485,7 @@
       "source_file": "robots/daci-stakeholders-robot.js",
       "source_location": "L67",
       "id": "robots_daci_stakeholders_robot_dacistakeholdersrobot_analyze",
-      "community": 22,
+      "community": 23,
       "norm_label": ".analyze()"
     },
     {
@@ -1494,7 +1494,7 @@
       "source_file": "robots/daci-stakeholders-robot.js",
       "source_location": "L187",
       "id": "robots_daci_stakeholders_robot_dacistakeholdersrobot_derivesectionstatus",
-      "community": 22,
+      "community": 23,
       "norm_label": "._derivesectionstatus()"
     },
     {
@@ -1503,7 +1503,7 @@
       "source_file": "robots/detective-robot.js",
       "source_location": "L1",
       "id": "robots_detective_robot_js",
-      "community": 8,
+      "community": 9,
       "norm_label": "detective-robot.js"
     },
     {
@@ -1512,7 +1512,7 @@
       "source_file": "robots/detective-robot.js",
       "source_location": "L4",
       "id": "robots_detective_robot_detectiverobot",
-      "community": 8,
+      "community": 9,
       "norm_label": "detectiverobot"
     },
     {
@@ -1521,7 +1521,7 @@
       "source_file": "robots/detective-robot.js",
       "source_location": "L5",
       "id": "robots_detective_robot_detectiverobot_constructor",
-      "community": 8,
+      "community": 9,
       "norm_label": ".constructor()"
     },
     {
@@ -1530,7 +1530,7 @@
       "source_file": "robots/detective-robot.js",
       "source_location": "L11",
       "id": "robots_detective_robot_detectiverobot_analyze",
-      "community": 8,
+      "community": 9,
       "norm_label": ".analyze()"
     },
     {
@@ -1539,7 +1539,7 @@
       "source_file": "robots/detective-robot.js",
       "source_location": "L128",
       "id": "robots_detective_robot_detectiverobot_extractcompetitorlist",
-      "community": 8,
+      "community": 9,
       "norm_label": "._extractcompetitorlist()"
     },
     {
@@ -1548,7 +1548,7 @@
       "source_file": "robots/detective-robot.js",
       "source_location": "L136",
       "id": "robots_detective_robot_detectiverobot_generatesearchqueries",
-      "community": 8,
+      "community": 9,
       "norm_label": "._generatesearchqueries()"
     },
     {
@@ -1557,7 +1557,7 @@
       "source_file": "robots/kpis-robot.js",
       "source_location": "L1",
       "id": "robots_kpis_robot_js",
-      "community": 11,
+      "community": 12,
       "norm_label": "kpis-robot.js"
     },
     {
@@ -1566,7 +1566,7 @@
       "source_file": "robots/kpis-robot.js",
       "source_location": "L50",
       "id": "robots_kpis_robot_kpisrobot",
-      "community": 11,
+      "community": 12,
       "norm_label": "kpisrobot"
     },
     {
@@ -1575,7 +1575,7 @@
       "source_file": "robots/kpis-robot.js",
       "source_location": "L51",
       "id": "robots_kpis_robot_kpisrobot_constructor",
-      "community": 11,
+      "community": 12,
       "norm_label": ".constructor()"
     },
     {
@@ -1584,7 +1584,7 @@
       "source_file": "robots/kpis-robot.js",
       "source_location": "L62",
       "id": "robots_kpis_robot_kpisrobot_analyze",
-      "community": 11,
+      "community": 12,
       "norm_label": ".analyze()"
     },
     {
@@ -1593,7 +1593,7 @@
       "source_file": "robots/kpis-robot.js",
       "source_location": "L179",
       "id": "robots_kpis_robot_kpisrobot_extractmoneycontext",
-      "community": 11,
+      "community": 12,
       "norm_label": "._extractmoneycontext()"
     },
     {
@@ -1602,7 +1602,7 @@
       "source_file": "robots/kpis-robot.js",
       "source_location": "L204",
       "id": "robots_kpis_robot_kpisrobot_extractplancontext",
-      "community": 11,
+      "community": 12,
       "norm_label": "._extractplancontext()"
     },
     {
@@ -1611,7 +1611,7 @@
       "source_file": "robots/kpis-robot.js",
       "source_location": "L219",
       "id": "robots_kpis_robot_kpisrobot_extractprioritycontext",
-      "community": 11,
+      "community": 12,
       "norm_label": "._extractprioritycontext()"
     },
     {
@@ -1620,61 +1620,61 @@
       "source_file": "robots/user-stories-robot.js",
       "source_location": "L1",
       "id": "robots_user_stories_robot_js",
-      "community": 12,
+      "community": 13,
       "norm_label": "user-stories-robot.js"
     },
     {
       "label": "UserStoriesRobot",
       "file_type": "code",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L55",
+      "source_location": "L65",
       "id": "robots_user_stories_robot_userstoriesrobot",
-      "community": 12,
+      "community": 13,
       "norm_label": "userstoriesrobot"
     },
     {
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L56",
+      "source_location": "L66",
       "id": "robots_user_stories_robot_userstoriesrobot_constructor",
-      "community": 12,
+      "community": 13,
       "norm_label": ".constructor()"
     },
     {
       "label": ".analyze()",
       "file_type": "code",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L67",
+      "source_location": "L77",
       "id": "robots_user_stories_robot_userstoriesrobot_analyze",
-      "community": 12,
+      "community": 13,
       "norm_label": ".analyze()"
     },
     {
       "label": "._extractPersonaContext()",
       "file_type": "code",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L183",
+      "source_location": "L242",
       "id": "robots_user_stories_robot_userstoriesrobot_extractpersonacontext",
-      "community": 12,
+      "community": 13,
       "norm_label": "._extractpersonacontext()"
     },
     {
       "label": "._extractFeatureContext()",
       "file_type": "code",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L216",
+      "source_location": "L275",
       "id": "robots_user_stories_robot_userstoriesrobot_extractfeaturecontext",
-      "community": 12,
+      "community": 13,
       "norm_label": "._extractfeaturecontext()"
     },
     {
       "label": "._extractPlanContext()",
       "file_type": "code",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L252",
+      "source_location": "L311",
       "id": "robots_user_stories_robot_userstoriesrobot_extractplancontext",
-      "community": 12,
+      "community": 13,
       "norm_label": "._extractplancontext()"
     },
     {
@@ -1683,7 +1683,7 @@
       "source_file": "robots/data-privacy-robot.js",
       "source_location": "L1",
       "id": "robots_data_privacy_robot_js",
-      "community": 17,
+      "community": 18,
       "norm_label": "data-privacy-robot.js"
     },
     {
@@ -1692,7 +1692,7 @@
       "source_file": "robots/data-privacy-robot.js",
       "source_location": "L42",
       "id": "robots_data_privacy_robot_dataprivacyrobot",
-      "community": 17,
+      "community": 18,
       "norm_label": "dataprivacyrobot"
     },
     {
@@ -1701,7 +1701,7 @@
       "source_file": "robots/data-privacy-robot.js",
       "source_location": "L43",
       "id": "robots_data_privacy_robot_dataprivacyrobot_constructor",
-      "community": 17,
+      "community": 18,
       "norm_label": ".constructor()"
     },
     {
@@ -1710,7 +1710,7 @@
       "source_file": "robots/data-privacy-robot.js",
       "source_location": "L54",
       "id": "robots_data_privacy_robot_dataprivacyrobot_analyze",
-      "community": 17,
+      "community": 18,
       "norm_label": ".analyze()"
     },
     {
@@ -1719,7 +1719,7 @@
       "source_file": "robots/data-privacy-robot.js",
       "source_location": "L138",
       "id": "robots_data_privacy_robot_dataprivacyrobot_extractfeaturecontext",
-      "community": 17,
+      "community": 18,
       "norm_label": "._extractfeaturecontext()"
     },
     {
@@ -1728,7 +1728,7 @@
       "source_file": "robots/data-privacy-robot.js",
       "source_location": "L157",
       "id": "robots_data_privacy_robot_dataprivacyrobot_extractfeasibilitycontext",
-      "community": 17,
+      "community": 18,
       "norm_label": "._extractfeasibilitycontext()"
     },
     {
@@ -1737,7 +1737,7 @@
       "source_file": "robots/money-robot.js",
       "source_location": "L1",
       "id": "robots_money_robot_js",
-      "community": 24,
+      "community": 25,
       "norm_label": "money-robot.js"
     },
     {
@@ -1746,7 +1746,7 @@
       "source_file": "robots/money-robot.js",
       "source_location": "L2",
       "id": "robots_money_robot_moneyrobot",
-      "community": 24,
+      "community": 25,
       "norm_label": "moneyrobot"
     },
     {
@@ -1755,7 +1755,7 @@
       "source_file": "robots/money-robot.js",
       "source_location": "L3",
       "id": "robots_money_robot_moneyrobot_constructor",
-      "community": 24,
+      "community": 25,
       "norm_label": ".constructor()"
     },
     {
@@ -1764,7 +1764,7 @@
       "source_file": "robots/money-robot.js",
       "source_location": "L9",
       "id": "robots_money_robot_moneyrobot_analyze",
-      "community": 24,
+      "community": 25,
       "norm_label": ".analyze()"
     },
     {
@@ -1773,7 +1773,7 @@
       "source_file": "robots/scout-robot.js",
       "source_location": "L1",
       "id": "robots_scout_robot_js",
-      "community": 8,
+      "community": 9,
       "norm_label": "scout-robot.js"
     },
     {
@@ -1782,7 +1782,7 @@
       "source_file": "robots/scout-robot.js",
       "source_location": "L4",
       "id": "robots_scout_robot_scoutrobot",
-      "community": 8,
+      "community": 9,
       "norm_label": "scoutrobot"
     },
     {
@@ -1791,7 +1791,7 @@
       "source_file": "robots/scout-robot.js",
       "source_location": "L5",
       "id": "robots_scout_robot_scoutrobot_constructor",
-      "community": 8,
+      "community": 9,
       "norm_label": ".constructor()"
     },
     {
@@ -1800,7 +1800,7 @@
       "source_file": "robots/scout-robot.js",
       "source_location": "L11",
       "id": "robots_scout_robot_scoutrobot_analyze",
-      "community": 8,
+      "community": 9,
       "norm_label": ".analyze()"
     },
     {
@@ -1809,7 +1809,7 @@
       "source_file": "robots/scout-robot.js",
       "source_location": "L125",
       "id": "robots_scout_robot_scoutrobot_generatesearchqueries",
-      "community": 8,
+      "community": 9,
       "norm_label": "._generatesearchqueries()"
     },
     {
@@ -1818,7 +1818,7 @@
       "source_file": "robots/priority-robot.js",
       "source_location": "L1",
       "id": "robots_priority_robot_js",
-      "community": 25,
+      "community": 26,
       "norm_label": "priority-robot.js"
     },
     {
@@ -1827,7 +1827,7 @@
       "source_file": "robots/priority-robot.js",
       "source_location": "L2",
       "id": "robots_priority_robot_priorityrobot",
-      "community": 25,
+      "community": 26,
       "norm_label": "priorityrobot"
     },
     {
@@ -1836,7 +1836,7 @@
       "source_file": "robots/priority-robot.js",
       "source_location": "L3",
       "id": "robots_priority_robot_priorityrobot_constructor",
-      "community": 25,
+      "community": 26,
       "norm_label": ".constructor()"
     },
     {
@@ -1845,7 +1845,7 @@
       "source_file": "robots/priority-robot.js",
       "source_location": "L9",
       "id": "robots_priority_robot_priorityrobot_analyze",
-      "community": 25,
+      "community": 26,
       "norm_label": ".analyze()"
     },
     {
@@ -1854,7 +1854,7 @@
       "source_file": "robots/feasibility-design-robot.js",
       "source_location": "L1",
       "id": "robots_feasibility_design_robot_js",
-      "community": 4,
+      "community": 3,
       "norm_label": "feasibility-design-robot.js"
     },
     {
@@ -1863,7 +1863,7 @@
       "source_file": "robots/feasibility-design-robot.js",
       "source_location": "L47",
       "id": "robots_feasibility_design_robot_feasibilitydesignrobot",
-      "community": 4,
+      "community": 3,
       "norm_label": "feasibilitydesignrobot"
     },
     {
@@ -1872,7 +1872,7 @@
       "source_file": "robots/feasibility-design-robot.js",
       "source_location": "L48",
       "id": "robots_feasibility_design_robot_feasibilitydesignrobot_constructor",
-      "community": 4,
+      "community": 3,
       "norm_label": ".constructor()"
     },
     {
@@ -1881,7 +1881,7 @@
       "source_file": "robots/feasibility-design-robot.js",
       "source_location": "L59",
       "id": "robots_feasibility_design_robot_feasibilitydesignrobot_analyze",
-      "community": 4,
+      "community": 3,
       "norm_label": ".analyze()"
     },
     {
@@ -1890,7 +1890,7 @@
       "source_file": "robots/feasibility-design-robot.js",
       "source_location": "L153",
       "id": "robots_feasibility_design_robot_feasibilitydesignrobot_extractpersonacontext",
-      "community": 4,
+      "community": 3,
       "norm_label": "._extractpersonacontext()"
     },
     {
@@ -1899,7 +1899,7 @@
       "source_file": "robots/feasibility-design-robot.js",
       "source_location": "L178",
       "id": "robots_feasibility_design_robot_feasibilitydesignrobot_extractfeaturecontext",
-      "community": 4,
+      "community": 3,
       "norm_label": "._extractfeaturecontext()"
     },
     {
@@ -1924,7 +1924,7 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "src/mcp-server.js",
-      "source_location": "L2039",
+      "source_location": "L2224",
       "id": "src_mcp_server_main",
       "community": 0,
       "norm_label": "main()"
@@ -2011,10 +2011,19 @@
       "norm_label": ".get()"
     },
     {
+      "label": ".loadResearchContext()",
+      "file_type": "code",
+      "source_file": "src/workspace/context-store.js",
+      "source_location": "L146",
+      "id": "workspace_context_store_contextstore_loadresearchcontext",
+      "community": 7,
+      "norm_label": ".loadresearchcontext()"
+    },
+    {
       "label": ".saveInterviewAnswers()",
       "file_type": "code",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L140",
+      "source_location": "L174",
       "id": "workspace_context_store_contextstore_saveinterviewanswers",
       "community": 7,
       "norm_label": ".saveinterviewanswers()"
@@ -2023,7 +2032,7 @@
       "label": ".loadInterviewAnswers()",
       "file_type": "code",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L165",
+      "source_location": "L199",
       "id": "workspace_context_store_contextstore_loadinterviewanswers",
       "community": 7,
       "norm_label": ".loadinterviewanswers()"
@@ -2032,7 +2041,7 @@
       "label": "._appendToNotesFile()",
       "file_type": "code",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L188",
+      "source_location": "L222",
       "id": "workspace_context_store_contextstore_appendtonotesfile",
       "community": 7,
       "norm_label": "._appendtonotesfile()"
@@ -2041,7 +2050,7 @@
       "label": "._extractNoteContent()",
       "file_type": "code",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L199",
+      "source_location": "L233",
       "id": "workspace_context_store_contextstore_extractnotecontent",
       "community": 7,
       "norm_label": "._extractnotecontent()"
@@ -2050,7 +2059,7 @@
       "label": "sanitiseFilename()",
       "file_type": "code",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L221",
+      "source_location": "L255",
       "id": "workspace_context_store_sanitisefilename",
       "community": 7,
       "norm_label": "sanitisefilename()"
@@ -2061,7 +2070,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L1",
       "id": "src_workspace_freshness_tracker_js",
-      "community": 5,
+      "community": 6,
       "norm_label": "freshness-tracker.js"
     },
     {
@@ -2070,7 +2079,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L76",
       "id": "workspace_freshness_tracker_resolvepolicy",
-      "community": 5,
+      "community": 6,
       "norm_label": "resolvepolicy()"
     },
     {
@@ -2079,7 +2088,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L138",
       "id": "workspace_freshness_tracker_clearpolicycache",
-      "community": 5,
+      "community": 6,
       "norm_label": "clearpolicycache()"
     },
     {
@@ -2088,7 +2097,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L142",
       "id": "workspace_freshness_tracker_freshnesstracker",
-      "community": 5,
+      "community": 6,
       "norm_label": "freshnesstracker"
     },
     {
@@ -2097,7 +2106,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L146",
       "id": "workspace_freshness_tracker_freshnesstracker_constructor",
-      "community": 5,
+      "community": 6,
       "norm_label": ".constructor()"
     },
     {
@@ -2106,7 +2115,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L150",
       "id": "workspace_freshness_tracker_freshnesstracker_load",
-      "community": 5,
+      "community": 6,
       "norm_label": "._load()"
     },
     {
@@ -2115,7 +2124,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L164",
       "id": "workspace_freshness_tracker_freshnesstracker_save",
-      "community": 5,
+      "community": 6,
       "norm_label": "._save()"
     },
     {
@@ -2124,7 +2133,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L178",
       "id": "workspace_freshness_tracker_freshnesstracker_recordrobotrun",
-      "community": 5,
+      "community": 6,
       "norm_label": ".recordrobotrun()"
     },
     {
@@ -2133,7 +2142,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L199",
       "id": "workspace_freshness_tracker_freshnesstracker_recordinterviewanswer",
-      "community": 5,
+      "community": 6,
       "norm_label": ".recordinterviewanswer()"
     },
     {
@@ -2142,7 +2151,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L218",
       "id": "workspace_freshness_tracker_freshnesstracker_recordallinterviewanswers",
-      "community": 5,
+      "community": 6,
       "norm_label": ".recordallinterviewanswers()"
     },
     {
@@ -2151,7 +2160,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L242",
       "id": "workspace_freshness_tracker_freshnesstracker_getrobotfreshness",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getrobotfreshness()"
     },
     {
@@ -2160,7 +2169,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L292",
       "id": "workspace_freshness_tracker_freshnesstracker_getinterviewfreshness",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getinterviewfreshness()"
     },
     {
@@ -2169,7 +2178,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L316",
       "id": "workspace_freshness_tracker_freshnesstracker_getstoredanswers",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getstoredanswers()"
     },
     {
@@ -2178,7 +2187,7 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L323",
       "id": "workspace_freshness_tracker_freshnesstracker_getraw",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getraw()"
     },
     {
@@ -2187,16 +2196,25 @@
       "source_file": "src/workspace/freshness-tracker.js",
       "source_location": "L331",
       "id": "workspace_freshness_tracker_freshnesstracker_getresolvedpolicy",
-      "community": 5,
+      "community": 6,
       "norm_label": ".getresolvedpolicy()"
+    },
+    {
+      "label": ".invalidateOnResearch()",
+      "file_type": "code",
+      "source_file": "src/workspace/freshness-tracker.js",
+      "source_location": "L346",
+      "id": "workspace_freshness_tracker_freshnesstracker_invalidateonresearch",
+      "community": 6,
+      "norm_label": ".invalidateonresearch()"
     },
     {
       "label": "daysSince()",
       "file_type": "code",
       "source_file": "src/workspace/freshness-tracker.js",
-      "source_location": "L336",
+      "source_location": "L377",
       "id": "workspace_freshness_tracker_dayssince",
-      "community": 5,
+      "community": 6,
       "norm_label": "dayssince()"
     },
     {
@@ -2205,7 +2223,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L1",
       "id": "src_workspace_product_registry_js",
-      "community": 0,
+      "community": 4,
       "norm_label": "product-registry.js"
     },
     {
@@ -2214,7 +2232,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L13",
       "id": "workspace_product_registry_productregistry",
-      "community": 0,
+      "community": 4,
       "norm_label": "productregistry"
     },
     {
@@ -2223,7 +2241,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L18",
       "id": "workspace_product_registry_productregistry_constructor",
-      "community": 0,
+      "community": 4,
       "norm_label": ".constructor()"
     },
     {
@@ -2241,7 +2259,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L50",
       "id": "workspace_product_registry_productregistry_get",
-      "community": 2,
+      "community": 4,
       "norm_label": ".get()"
     },
     {
@@ -2250,7 +2268,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L90",
       "id": "workspace_product_registry_productregistry_create",
-      "community": 0,
+      "community": 4,
       "norm_label": ".create()"
     },
     {
@@ -2259,7 +2277,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L132",
       "id": "workspace_product_registry_productregistry_update",
-      "community": 0,
+      "community": 4,
       "norm_label": ".update()"
     },
     {
@@ -2268,7 +2286,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L153",
       "id": "workspace_product_registry_productregistry_writeproductmarkdown",
-      "community": 0,
+      "community": 4,
       "norm_label": "._writeproductmarkdown()"
     },
     {
@@ -2277,7 +2295,7 @@
       "source_file": "src/workspace/product-registry.js",
       "source_location": "L168",
       "id": "workspace_product_registry_productregistry_buildbody",
-      "community": 0,
+      "community": 4,
       "norm_label": "._buildbody()"
     },
     {
@@ -2502,7 +2520,7 @@
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L1",
       "id": "src_workspace_workspace_manager_js",
-      "community": 0,
+      "community": 4,
       "norm_label": "workspace-manager.js"
     },
     {
@@ -2610,7 +2628,7 @@
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L88",
       "id": "workspace_workspace_manager_workspacemanager_getproductmarkdownpath",
-      "community": 0,
+      "community": 4,
       "norm_label": ".getproductmarkdownpath()"
     },
     {
@@ -2619,7 +2637,7 @@
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L93",
       "id": "workspace_workspace_manager_workspacemanager_getfreshnesspath",
-      "community": 0,
+      "community": 6,
       "norm_label": ".getfreshnesspath()"
     },
     {
@@ -2655,7 +2673,7 @@
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L120",
       "id": "workspace_workspace_manager_workspacemanager_ensureproductstructure",
-      "community": 0,
+      "community": 7,
       "norm_label": ".ensureproductstructure()"
     },
     {
@@ -2709,7 +2727,7 @@
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L202",
       "id": "workspace_workspace_manager_workspacemanager_getpersonastalenessoverridepath",
-      "community": 5,
+      "community": 0,
       "norm_label": ".getpersonastalenessoverridepath()"
     },
     {
@@ -2736,7 +2754,7 @@
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L242",
       "id": "workspace_workspace_manager_workspacemanager_hasproduct",
-      "community": 0,
+      "community": 4,
       "norm_label": ".hasproduct()"
     },
     {
@@ -2745,7 +2763,7 @@
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L257",
       "id": "workspace_workspace_manager_slugify",
-      "community": 0,
+      "community": 4,
       "norm_label": "slugify()"
     },
     {
@@ -2790,7 +2808,7 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L40",
       "id": "workspace_asset_store_assetstore_loadrobotresult",
-      "community": 5,
+      "community": 0,
       "norm_label": ".loadrobotresult()"
     },
     {
@@ -2853,7 +2871,7 @@
       "source_file": "src/workspace/pdd-composer.js",
       "source_location": "L1",
       "id": "src_workspace_pdd_composer_js",
-      "community": 9,
+      "community": 10,
       "norm_label": "pdd-composer.js"
     },
     {
@@ -2862,7 +2880,7 @@
       "source_file": "src/workspace/pdd-composer.js",
       "source_location": "L24",
       "id": "workspace_pdd_composer_pddcomposer",
-      "community": 9,
+      "community": 10,
       "norm_label": "pddcomposer"
     },
     {
@@ -2871,7 +2889,7 @@
       "source_file": "src/workspace/pdd-composer.js",
       "source_location": "L29",
       "id": "workspace_pdd_composer_pddcomposer_constructor",
-      "community": 9,
+      "community": 10,
       "norm_label": ".constructor()"
     },
     {
@@ -2880,71 +2898,80 @@
       "source_file": "src/workspace/pdd-composer.js",
       "source_location": "L41",
       "id": "workspace_pdd_composer_pddcomposer_assemble",
-      "community": 9,
+      "community": 10,
       "norm_label": ".assemble()"
     },
     {
       "label": ".assemblePhase1()",
       "file_type": "code",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L74",
+      "source_location": "L76",
       "id": "workspace_pdd_composer_pddcomposer_assemblephase1",
-      "community": 9,
+      "community": 10,
       "norm_label": ".assemblephase1()"
     },
     {
       "label": "._loadProductMeta()",
       "file_type": "code",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L95",
+      "source_location": "L97",
       "id": "workspace_pdd_composer_pddcomposer_loadproductmeta",
-      "community": 9,
+      "community": 10,
       "norm_label": "._loadproductmeta()"
     },
     {
       "label": "._loadPhase2Context()",
       "file_type": "code",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L109",
+      "source_location": "L111",
       "id": "workspace_pdd_composer_pddcomposer_loadphase2context",
-      "community": 9,
+      "community": 10,
       "norm_label": "._loadphase2context()"
     },
     {
       "label": "._loadDaciData()",
       "file_type": "code",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L118",
+      "source_location": "L120",
       "id": "workspace_pdd_composer_pddcomposer_loaddacidata",
-      "community": 9,
+      "community": 10,
       "norm_label": "._loaddacidata()"
     },
     {
       "label": "._loadAllRobotOutputs()",
       "file_type": "code",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L132",
+      "source_location": "L134",
       "id": "workspace_pdd_composer_pddcomposer_loadallrobotoutputs",
-      "community": 9,
+      "community": 10,
       "norm_label": "._loadallrobotoutputs()"
     },
     {
       "label": "._loadPhase1RobotOutputs()",
       "file_type": "code",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L152",
+      "source_location": "L154",
       "id": "workspace_pdd_composer_pddcomposer_loadphase1robotoutputs",
-      "community": 9,
+      "community": 10,
       "norm_label": "._loadphase1robotoutputs()"
     },
     {
       "label": "._tryParseJson()",
       "file_type": "code",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L172",
+      "source_location": "L174",
       "id": "workspace_pdd_composer_pddcomposer_tryparsejson",
-      "community": 9,
+      "community": 10,
       "norm_label": "._tryparsejson()"
+    },
+    {
+      "label": "._loadExperimentSelection()",
+      "file_type": "code",
+      "source_file": "src/workspace/pdd-composer.js",
+      "source_location": "L210",
+      "id": "workspace_pdd_composer_pddcomposer_loadexperimentselection",
+      "community": 10,
+      "norm_label": "._loadexperimentselection()"
     }
   ],
   "links": [
@@ -3063,8 +3090,8 @@
       "source_file": "robots/interview-robot.js",
       "source_location": "L579",
       "weight": 1.0,
-      "_src": "robots_interview_robot_interviewrobot_buildenrichedcontext",
-      "_tgt": "tests_persistence_test_test",
+      "_src": "tests_persistence_test_test",
+      "_tgt": "robots_interview_robot_interviewrobot_buildenrichedcontext",
       "source": "tests_persistence_test_test",
       "target": "robots_interview_robot_interviewrobot_buildenrichedcontext"
     },
@@ -3075,8 +3102,8 @@
       "source_file": "src/workspace/markdown-doc.js",
       "source_location": "L48",
       "weight": 1.0,
-      "_src": "workspace_markdown_doc_getsection",
-      "_tgt": "tests_persistence_test_test",
+      "_src": "tests_persistence_test_test",
+      "_tgt": "workspace_markdown_doc_getsection",
       "source": "tests_persistence_test_test",
       "target": "workspace_markdown_doc_getsection"
     },
@@ -3087,8 +3114,8 @@
       "source_file": "src/workspace/markdown-doc.js",
       "source_location": "L101",
       "weight": 1.0,
-      "_src": "workspace_markdown_doc_coerceyamlscalar",
-      "_tgt": "tests_persistence_test_test",
+      "_src": "tests_persistence_test_test",
+      "_tgt": "workspace_markdown_doc_coerceyamlscalar",
       "source": "tests_persistence_test_test",
       "target": "workspace_markdown_doc_coerceyamlscalar"
     },
@@ -3099,8 +3126,8 @@
       "source_file": "src/workspace/markdown-doc.js",
       "source_location": "L112",
       "weight": 1.0,
-      "_src": "workspace_markdown_doc_formatyamlvalue",
-      "_tgt": "tests_persistence_test_test",
+      "_src": "tests_persistence_test_test",
+      "_tgt": "workspace_markdown_doc_formatyamlvalue",
       "source": "tests_persistence_test_test",
       "target": "workspace_markdown_doc_formatyamlvalue"
     },
@@ -3123,8 +3150,8 @@
       "source_file": "robots/detective-robot.js",
       "source_location": "L144",
       "weight": 1.0,
-      "_src": "robots_detective_robot_detectiverobot_generatesearchqueries",
-      "_tgt": "utils_keywords_extractdomainkeywords",
+      "_src": "utils_keywords_extractdomainkeywords",
+      "_tgt": "robots_detective_robot_detectiverobot_generatesearchqueries",
       "source": "utils_keywords_extractdomainkeywords",
       "target": "robots_detective_robot_detectiverobot_generatesearchqueries"
     },
@@ -3135,8 +3162,8 @@
       "source_file": "robots/scout-robot.js",
       "source_location": "L134",
       "weight": 1.0,
-      "_src": "robots_scout_robot_scoutrobot_generatesearchqueries",
-      "_tgt": "utils_keywords_extractdomainkeywords",
+      "_src": "utils_keywords_extractdomainkeywords",
+      "_tgt": "robots_scout_robot_scoutrobot_generatesearchqueries",
       "source": "utils_keywords_extractdomainkeywords",
       "target": "robots_scout_robot_scoutrobot_generatesearchqueries"
     },
@@ -4191,8 +4218,8 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L35",
       "weight": 1.0,
-      "_src": "brain_brain_database_braindatabase_savedesignpreferences",
-      "_tgt": "utils_file_storage_savedata",
+      "_src": "utils_file_storage_savedata",
+      "_tgt": "brain_brain_database_braindatabase_savedesignpreferences",
       "source": "utils_file_storage_savedata",
       "target": "brain_brain_database_braindatabase_savedesignpreferences"
     },
@@ -4203,8 +4230,8 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L52",
       "weight": 1.0,
-      "_src": "brain_brain_database_braindatabase_saveanalysis",
-      "_tgt": "utils_file_storage_savedata",
+      "_src": "utils_file_storage_savedata",
+      "_tgt": "brain_brain_database_braindatabase_saveanalysis",
       "source": "utils_file_storage_savedata",
       "target": "brain_brain_database_braindatabase_saveanalysis"
     },
@@ -4215,8 +4242,8 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L83",
       "weight": 1.0,
-      "_src": "brain_brain_database_braindatabase_savefeedback",
-      "_tgt": "utils_file_storage_savedata",
+      "_src": "utils_file_storage_savedata",
+      "_tgt": "brain_brain_database_braindatabase_savefeedback",
       "source": "utils_file_storage_savedata",
       "target": "brain_brain_database_braindatabase_savefeedback"
     },
@@ -4227,8 +4254,8 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L117",
       "weight": 1.0,
-      "_src": "brain_brain_database_braindatabase_savelearning",
-      "_tgt": "utils_file_storage_savedata",
+      "_src": "utils_file_storage_savedata",
+      "_tgt": "brain_brain_database_braindatabase_savelearning",
       "source": "utils_file_storage_savedata",
       "target": "brain_brain_database_braindatabase_savelearning"
     },
@@ -4239,8 +4266,8 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L130",
       "weight": 1.0,
-      "_src": "brain_brain_database_braindatabase_clearall",
-      "_tgt": "utils_file_storage_savedata",
+      "_src": "utils_file_storage_savedata",
+      "_tgt": "brain_brain_database_braindatabase_clearall",
       "source": "utils_file_storage_savedata",
       "target": "brain_brain_database_braindatabase_clearall"
     },
@@ -4251,8 +4278,8 @@
       "source_file": "brain/brain-database.js",
       "source_location": "L18",
       "weight": 1.0,
-      "_src": "brain_brain_database_braindatabase_loadfromdisk",
-      "_tgt": "utils_file_storage_loaddata",
+      "_src": "utils_file_storage_loaddata",
+      "_tgt": "brain_brain_database_braindatabase_loadfromdisk",
       "source": "utils_file_storage_loaddata",
       "target": "brain_brain_database_braindatabase_loadfromdisk"
     },
@@ -4356,7 +4383,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L284",
+      "source_location": "L293",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_checkphase2gate",
@@ -4368,7 +4395,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L303",
+      "source_location": "L312",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_runsinglerobot",
@@ -4380,7 +4407,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L392",
+      "source_location": "L401",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_getanalysisstate",
@@ -4392,7 +4419,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L410",
+      "source_location": "L419",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_getnextrobot",
@@ -4404,7 +4431,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L439",
+      "source_location": "L448",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_savefeedback",
@@ -4416,7 +4443,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L495",
+      "source_location": "L504",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_getfullresults",
@@ -4428,7 +4455,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L510",
+      "source_location": "L519",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_analyzebusiness",
@@ -4440,7 +4467,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L539",
+      "source_location": "L548",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader",
       "_tgt": "leader_team_leader_teamleader_showsummary",
@@ -4536,7 +4563,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L352",
+      "source_location": "L361",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader_runsinglerobot",
       "_tgt": "leader_team_leader_teamleader_buildphase2context",
@@ -4582,9 +4609,21 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "leader/team-leader.js",
+      "source_location": "L273",
+      "weight": 1.0,
+      "_src": "leader_team_leader_teamleader_buildphase2context",
+      "_tgt": "workspace_context_store_contextstore_loadresearchcontext",
+      "source": "leader_team_leader_teamleader_buildphase2context",
+      "target": "workspace_context_store_contextstore_loadresearchcontext"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "leader/team-leader.js",
-      "source_location": "L343",
+      "source_location": "L352",
       "weight": 1.0,
       "_src": "leader_team_leader_teamleader_runsinglerobot",
       "_tgt": "leader_team_leader_teamleader_checkphase2gate",
@@ -5019,8 +5058,8 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L30",
       "weight": 1.0,
-      "_src": "brain_learning_engine_learningengine_hydratefrompersistedfeedback",
-      "_tgt": "brain_robot_memory_robotmemory_remember",
+      "_src": "brain_robot_memory_robotmemory_remember",
+      "_tgt": "brain_learning_engine_learningengine_hydratefrompersistedfeedback",
       "source": "brain_robot_memory_robotmemory_remember",
       "target": "brain_learning_engine_learningengine_hydratefrompersistedfeedback"
     },
@@ -5031,8 +5070,8 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L56",
       "weight": 1.0,
-      "_src": "brain_learning_engine_learningengine_learnfromsuccess",
-      "_tgt": "brain_robot_memory_robotmemory_remember",
+      "_src": "brain_robot_memory_robotmemory_remember",
+      "_tgt": "brain_learning_engine_learningengine_learnfromsuccess",
       "source": "brain_robot_memory_robotmemory_remember",
       "target": "brain_learning_engine_learningengine_learnfromsuccess"
     },
@@ -5043,8 +5082,8 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L68",
       "weight": 1.0,
-      "_src": "brain_learning_engine_learningengine_learnfromfailure",
-      "_tgt": "brain_robot_memory_robotmemory_remember",
+      "_src": "brain_robot_memory_robotmemory_remember",
+      "_tgt": "brain_learning_engine_learningengine_learnfromfailure",
       "source": "brain_robot_memory_robotmemory_remember",
       "target": "brain_learning_engine_learningengine_learnfromfailure"
     },
@@ -5055,8 +5094,8 @@
       "source_file": "brain/learning-engine.js",
       "source_location": "L74",
       "weight": 1.0,
-      "_src": "brain_learning_engine_learningengine_applylearning",
-      "_tgt": "brain_robot_memory_robotmemory_findsimilar",
+      "_src": "brain_robot_memory_robotmemory_findsimilar",
+      "_tgt": "brain_learning_engine_learningengine_applylearning",
       "source": "brain_robot_memory_robotmemory_findsimilar",
       "target": "brain_learning_engine_learningengine_applylearning"
     },
@@ -6648,7 +6687,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L55",
+      "source_location": "L65",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_js",
       "_tgt": "robots_user_stories_robot_userstoriesrobot",
@@ -6660,7 +6699,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L56",
+      "source_location": "L66",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_constructor",
@@ -6672,7 +6711,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L67",
+      "source_location": "L77",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_analyze",
@@ -6684,7 +6723,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L183",
+      "source_location": "L242",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_extractpersonacontext",
@@ -6696,7 +6735,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L216",
+      "source_location": "L275",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_extractfeaturecontext",
@@ -6708,7 +6747,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L252",
+      "source_location": "L311",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_extractplancontext",
@@ -6720,7 +6759,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L73",
+      "source_location": "L83",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot_analyze",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_extractpersonacontext",
@@ -6732,7 +6771,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L74",
+      "source_location": "L84",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot_analyze",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_extractfeaturecontext",
@@ -6744,7 +6783,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "robots/user-stories-robot.js",
-      "source_location": "L75",
+      "source_location": "L85",
       "weight": 1.0,
       "_src": "robots_user_stories_robot_userstoriesrobot_analyze",
       "_tgt": "robots_user_stories_robot_userstoriesrobot_extractplancontext",
@@ -7068,7 +7107,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/mcp-server.js",
-      "source_location": "L2039",
+      "source_location": "L2224",
       "weight": 1.0,
       "_src": "src_mcp_server_js",
       "_tgt": "src_mcp_server_main",
@@ -7116,7 +7155,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L221",
+      "source_location": "L255",
       "weight": 1.0,
       "_src": "src_workspace_context_store_js",
       "_tgt": "workspace_context_store_sanitisefilename",
@@ -7212,7 +7251,19 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L140",
+      "source_location": "L146",
+      "weight": 1.0,
+      "_src": "workspace_context_store_contextstore",
+      "_tgt": "workspace_context_store_contextstore_loadresearchcontext",
+      "source": "workspace_context_store_contextstore",
+      "target": "workspace_context_store_contextstore_loadresearchcontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/context-store.js",
+      "source_location": "L174",
       "weight": 1.0,
       "_src": "workspace_context_store_contextstore",
       "_tgt": "workspace_context_store_contextstore_saveinterviewanswers",
@@ -7224,7 +7275,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L165",
+      "source_location": "L199",
       "weight": 1.0,
       "_src": "workspace_context_store_contextstore",
       "_tgt": "workspace_context_store_contextstore_loadinterviewanswers",
@@ -7236,7 +7287,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L188",
+      "source_location": "L222",
       "weight": 1.0,
       "_src": "workspace_context_store_contextstore",
       "_tgt": "workspace_context_store_contextstore_appendtonotesfile",
@@ -7248,7 +7299,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/context-store.js",
-      "source_location": "L199",
+      "source_location": "L233",
       "weight": 1.0,
       "_src": "workspace_context_store_contextstore",
       "_tgt": "workspace_context_store_contextstore_extractnotecontent",
@@ -7326,6 +7377,18 @@
       "_tgt": "workspace_context_store_contextstore_loadindex",
       "source": "workspace_context_store_contextstore_loadindex",
       "target": "workspace_context_store_contextstore_get",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/context-store.js",
+      "source_location": "L148",
+      "weight": 1.0,
+      "_src": "workspace_context_store_contextstore_loadresearchcontext",
+      "_tgt": "workspace_context_store_contextstore_loadindex",
+      "source": "workspace_context_store_contextstore_loadindex",
+      "target": "workspace_context_store_contextstore_loadresearchcontext",
       "confidence_score": 1.0
     },
     {
@@ -7410,6 +7473,18 @@
       "_tgt": "workspace_context_store_contextstore_extractnotecontent",
       "source": "workspace_context_store_contextstore_get",
       "target": "workspace_context_store_contextstore_extractnotecontent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/context-store.js",
+      "source_location": "L157",
+      "weight": 1.0,
+      "_src": "workspace_context_store_contextstore_loadresearchcontext",
+      "_tgt": "workspace_context_store_contextstore_get",
+      "source": "workspace_context_store_contextstore_get",
+      "target": "workspace_context_store_contextstore_loadresearchcontext",
       "confidence_score": 1.0
     },
     {
@@ -7524,7 +7599,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/freshness-tracker.js",
-      "source_location": "L336",
+      "source_location": "L377",
       "weight": 1.0,
       "_src": "src_workspace_freshness_tracker_js",
       "_tgt": "workspace_freshness_tracker_dayssince",
@@ -7773,6 +7848,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/freshness-tracker.js",
+      "source_location": "L346",
+      "weight": 1.0,
+      "_src": "workspace_freshness_tracker_freshnesstracker",
+      "_tgt": "workspace_freshness_tracker_freshnesstracker_invalidateonresearch",
+      "source": "workspace_freshness_tracker_freshnesstracker",
+      "target": "workspace_freshness_tracker_freshnesstracker_invalidateonresearch",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/freshness-tracker.js",
@@ -7846,6 +7933,18 @@
     },
     {
       "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/freshness-tracker.js",
+      "source_location": "L358",
+      "weight": 1.0,
+      "_src": "workspace_freshness_tracker_freshnesstracker_invalidateonresearch",
+      "_tgt": "workspace_freshness_tracker_freshnesstracker_load",
+      "source": "workspace_freshness_tracker_freshnesstracker_load",
+      "target": "workspace_freshness_tracker_freshnesstracker_invalidateonresearch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src/workspace/freshness-tracker.js",
@@ -7890,6 +7989,18 @@
       "_tgt": "workspace_freshness_tracker_freshnesstracker_save",
       "source": "workspace_freshness_tracker_freshnesstracker_save",
       "target": "workspace_freshness_tracker_freshnesstracker_recordallinterviewanswers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/freshness-tracker.js",
+      "source_location": "L370",
+      "weight": 1.0,
+      "_src": "workspace_freshness_tracker_freshnesstracker_invalidateonresearch",
+      "_tgt": "workspace_freshness_tracker_freshnesstracker_save",
+      "source": "workspace_freshness_tracker_freshnesstracker_save",
+      "target": "workspace_freshness_tracker_freshnesstracker_invalidateonresearch",
       "confidence_score": 1.0
     },
     {
@@ -8415,8 +8526,8 @@
       "source_file": "src/workspace/pm-profile.js",
       "source_location": "L82",
       "weight": 1.0,
-      "_src": "workspace_pm_profile_pmprofile_readpersonaprofile",
-      "_tgt": "workspace_markdown_doc_parsemarkdowndoc",
+      "_src": "workspace_markdown_doc_parsemarkdowndoc",
+      "_tgt": "workspace_pm_profile_pmprofile_readpersonaprofile",
       "source": "workspace_markdown_doc_parsemarkdowndoc",
       "target": "workspace_pm_profile_pmprofile_readpersonaprofile"
     },
@@ -8427,8 +8538,8 @@
       "source_file": "src/workspace/pm-profile.js",
       "source_location": "L157",
       "weight": 1.0,
-      "_src": "workspace_pm_profile_pmprofile_save",
-      "_tgt": "workspace_markdown_doc_serialisemarkdowndoc",
+      "_src": "workspace_markdown_doc_serialisemarkdowndoc",
+      "_tgt": "workspace_pm_profile_pmprofile_save",
       "source": "workspace_markdown_doc_serialisemarkdowndoc",
       "target": "workspace_pm_profile_pmprofile_save"
     },
@@ -8439,8 +8550,8 @@
       "source_file": "src/workspace/pm-profile.js",
       "source_location": "L228",
       "weight": 1.0,
-      "_src": "workspace_pm_profile_pmprofile_createpersona",
-      "_tgt": "workspace_markdown_doc_serialisemarkdowndoc",
+      "_src": "workspace_markdown_doc_serialisemarkdowndoc",
+      "_tgt": "workspace_pm_profile_pmprofile_createpersona",
       "source": "workspace_markdown_doc_serialisemarkdowndoc",
       "target": "workspace_pm_profile_pmprofile_createpersona"
     },
@@ -8475,8 +8586,8 @@
       "source_file": "src/workspace/pm-profile.js",
       "source_location": "L86",
       "weight": 1.0,
-      "_src": "workspace_pm_profile_pmprofile_readpersonaprofile",
-      "_tgt": "workspace_markdown_doc_getsection",
+      "_src": "workspace_markdown_doc_getsection",
+      "_tgt": "workspace_pm_profile_pmprofile_readpersonaprofile",
       "source": "workspace_markdown_doc_getsection",
       "target": "workspace_pm_profile_pmprofile_readpersonaprofile"
     },
@@ -8487,8 +8598,8 @@
       "source_file": "src/workspace/pm-profile.js",
       "source_location": "L90",
       "weight": 1.0,
-      "_src": "workspace_pm_profile_pmprofile_readpersonaprofile",
-      "_tgt": "workspace_markdown_doc_getlistsection",
+      "_src": "workspace_markdown_doc_getlistsection",
+      "_tgt": "workspace_pm_profile_pmprofile_readpersonaprofile",
       "source": "workspace_markdown_doc_getlistsection",
       "target": "workspace_pm_profile_pmprofile_readpersonaprofile"
     },
@@ -9615,8 +9726,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L41",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_loadrobotresult",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getproductdir",
+      "_src": "workspace_workspace_manager_workspacemanager_getproductdir",
+      "_tgt": "workspace_asset_store_assetstore_loadrobotresult",
       "source": "workspace_workspace_manager_workspacemanager_getproductdir",
       "target": "workspace_asset_store_assetstore_loadrobotresult"
     },
@@ -9627,8 +9738,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L86",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_appendfeedback",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getproductdir",
+      "_src": "workspace_workspace_manager_workspacemanager_getproductdir",
+      "_tgt": "workspace_asset_store_assetstore_appendfeedback",
       "source": "workspace_workspace_manager_workspacemanager_getproductdir",
       "target": "workspace_asset_store_assetstore_appendfeedback"
     },
@@ -9651,8 +9762,8 @@
       "source_file": "src/workspace/pdd-composer.js",
       "source_location": "L97",
       "weight": 1.0,
-      "_src": "workspace_pdd_composer_pddcomposer_loadproductmeta",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getproductmarkdownpath",
+      "_src": "workspace_workspace_manager_workspacemanager_getproductmarkdownpath",
+      "_tgt": "workspace_pdd_composer_pddcomposer_loadproductmeta",
       "source": "workspace_workspace_manager_workspacemanager_getproductmarkdownpath",
       "target": "workspace_pdd_composer_pddcomposer_loadproductmeta"
     },
@@ -9694,6 +9805,18 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src/workspace/pdd-composer.js",
+      "source_location": "L212",
+      "weight": 1.0,
+      "_src": "workspace_pdd_composer_pddcomposer_loadexperimentselection",
+      "_tgt": "workspace_workspace_manager_workspacemanager_getcontextdir",
+      "source": "workspace_workspace_manager_workspacemanager_getcontextdir",
+      "target": "workspace_pdd_composer_pddcomposer_loadexperimentselection"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/workspace-manager.js",
       "source_location": "L124",
@@ -9723,8 +9846,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L27",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_saverobotresult",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_src": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_tgt": "workspace_asset_store_assetstore_saverobotresult",
       "source": "workspace_workspace_manager_workspacemanager_getassetsdir",
       "target": "workspace_asset_store_assetstore_saverobotresult"
     },
@@ -9735,8 +9858,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L65",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_list",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_src": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_tgt": "workspace_asset_store_assetstore_list",
       "source": "workspace_workspace_manager_workspacemanager_getassetsdir",
       "target": "workspace_asset_store_assetstore_list"
     },
@@ -9747,8 +9870,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L128",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_saverobotoutput",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_src": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_tgt": "workspace_asset_store_assetstore_saverobotoutput",
       "source": "workspace_workspace_manager_workspacemanager_getassetsdir",
       "target": "workspace_asset_store_assetstore_saverobotoutput"
     },
@@ -9759,8 +9882,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L144",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_loadlatestrobotoutput",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_src": "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "_tgt": "workspace_asset_store_assetstore_loadlatestrobotoutput",
       "source": "workspace_workspace_manager_workspacemanager_getassetsdir",
       "target": "workspace_asset_store_assetstore_loadlatestrobotoutput"
     },
@@ -9771,8 +9894,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L23",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_saverobotresult",
-      "_tgt": "workspace_workspace_manager_workspacemanager_ensureproductstructure",
+      "_src": "workspace_workspace_manager_workspacemanager_ensureproductstructure",
+      "_tgt": "workspace_asset_store_assetstore_saverobotresult",
       "source": "workspace_workspace_manager_workspacemanager_ensureproductstructure",
       "target": "workspace_asset_store_assetstore_saverobotresult"
     },
@@ -9783,8 +9906,8 @@
       "source_file": "src/workspace/asset-store.js",
       "source_location": "L124",
       "weight": 1.0,
-      "_src": "workspace_asset_store_assetstore_saverobotoutput",
-      "_tgt": "workspace_workspace_manager_workspacemanager_ensureproductstructure",
+      "_src": "workspace_workspace_manager_workspacemanager_ensureproductstructure",
+      "_tgt": "workspace_asset_store_assetstore_saverobotoutput",
       "source": "workspace_workspace_manager_workspacemanager_ensureproductstructure",
       "target": "workspace_asset_store_assetstore_saverobotoutput"
     },
@@ -9795,8 +9918,8 @@
       "source_file": "src/workspace/pdd-composer.js",
       "source_location": "L111",
       "weight": 1.0,
-      "_src": "workspace_pdd_composer_pddcomposer_loadphase2context",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getphase2contextpath",
+      "_src": "workspace_workspace_manager_workspacemanager_getphase2contextpath",
+      "_tgt": "workspace_pdd_composer_pddcomposer_loadphase2context",
       "source": "workspace_workspace_manager_workspacemanager_getphase2contextpath",
       "target": "workspace_pdd_composer_pddcomposer_loadphase2context"
     },
@@ -9807,8 +9930,8 @@
       "source_file": "src/workspace/pdd-composer.js",
       "source_location": "L120",
       "weight": 1.0,
-      "_src": "workspace_pdd_composer_pddcomposer_loaddacidata",
-      "_tgt": "workspace_workspace_manager_workspacemanager_getdacipath",
+      "_src": "workspace_workspace_manager_workspacemanager_getdacipath",
+      "_tgt": "workspace_pdd_composer_pddcomposer_loaddacidata",
       "source": "workspace_workspace_manager_workspacemanager_getdacipath",
       "target": "workspace_pdd_composer_pddcomposer_loaddacidata"
     },
@@ -10008,7 +10131,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer",
       "_tgt": "workspace_pdd_composer_pddcomposer_assemblephase1",
@@ -10020,7 +10143,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L95",
+      "source_location": "L97",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer",
       "_tgt": "workspace_pdd_composer_pddcomposer_loadproductmeta",
@@ -10032,7 +10155,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L109",
+      "source_location": "L111",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer",
       "_tgt": "workspace_pdd_composer_pddcomposer_loadphase2context",
@@ -10044,7 +10167,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L118",
+      "source_location": "L120",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer",
       "_tgt": "workspace_pdd_composer_pddcomposer_loaddacidata",
@@ -10056,7 +10179,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L132",
+      "source_location": "L134",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer",
       "_tgt": "workspace_pdd_composer_pddcomposer_loadallrobotoutputs",
@@ -10068,7 +10191,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L152",
+      "source_location": "L154",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer",
       "_tgt": "workspace_pdd_composer_pddcomposer_loadphase1robotoutputs",
@@ -10080,12 +10203,24 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L172",
+      "source_location": "L174",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer",
       "_tgt": "workspace_pdd_composer_pddcomposer_tryparsejson",
       "source": "workspace_pdd_composer_pddcomposer",
       "target": "workspace_pdd_composer_pddcomposer_tryparsejson",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/pdd-composer.js",
+      "source_location": "L210",
+      "weight": 1.0,
+      "_src": "workspace_pdd_composer_pddcomposer",
+      "_tgt": "workspace_pdd_composer_pddcomposer_loadexperimentselection",
+      "source": "workspace_pdd_composer_pddcomposer",
+      "target": "workspace_pdd_composer_pddcomposer_loadexperimentselection",
       "confidence_score": 1.0
     },
     {
@@ -10140,7 +10275,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L76",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "workspace_pdd_composer_pddcomposer_assemble",
+      "_tgt": "workspace_pdd_composer_pddcomposer_loadexperimentselection",
+      "source": "workspace_pdd_composer_pddcomposer_assemble",
+      "target": "workspace_pdd_composer_pddcomposer_loadexperimentselection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src/workspace/pdd-composer.js",
+      "source_location": "L78",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer_assemblephase1",
       "_tgt": "workspace_pdd_composer_pddcomposer_loadproductmeta",
@@ -10152,7 +10299,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src/workspace/pdd-composer.js",
-      "source_location": "L77",
+      "source_location": "L79",
       "weight": 1.0,
       "_src": "workspace_pdd_composer_pddcomposer_assemblephase1",
       "_tgt": "workspace_pdd_composer_pddcomposer_loadphase1robotoutputs",
