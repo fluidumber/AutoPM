@@ -17,9 +17,10 @@
 
 /**
  * @typedef {Object} Phase2Context
- * @property {string} [personaOverride]  - PM-supplied persona clarifications or corrections
- * @property {string} [featureOverride]  - PM-supplied feature clarifications or corrections
- * @property {string} [scopeOverride]    - PM-supplied scope boundaries
+ * @property {string}  [personaOverride]         - PM-supplied persona clarifications or corrections
+ * @property {string}  [featureOverride]         - PM-supplied feature clarifications or corrections
+ * @property {string}  [scopeOverride]           - PM-supplied scope boundaries
+ * @property {number}  [experimentClusterCount]  - Number of solution clusters to generate (default: 1)
  */
 
 /**
@@ -30,6 +31,7 @@
  * @property {string[]}      [brandTerms]    - Brand-name sanitisation terms
  * @property {Phase1Outputs} [phase1Outputs] - Loaded Phase 1 robot output text
  * @property {Phase2Context} [phase2Context] - Phase 2 PM-provided context manifest
+ * @property {string|null}   [researchContext] - Aggregated external research from ContextStore
  */
 
 /**
@@ -39,6 +41,14 @@
  * @property {string} story       - "As a [persona], I want [goal], so that [reason]."
  * @property {string} description - 2-3 sentence acceptance criteria
  * @property {"MUST_HAVE"|"SHOULD_HAVE"|"COULD_HAVE"|"WONT_HAVE"|"PHASE_2"} moscow - MoSCoW priority
+ */
+
+/**
+ * @typedef {Object} ExperimentCluster
+ * @property {string}      clusterId    - e.g. "cluster-A", "cluster-B"
+ * @property {string}      hypothesis   - The solution hypothesis this cluster tests
+ * @property {UserStory[]} userStories  - Stories for this cluster
+ * @property {Object}      moscowDistribution - { mustHave, shouldHave, couldHave, phase2 }
  */
 
 /**
@@ -74,6 +84,9 @@ class UserStoriesRobot {
         const featureContext = this._extractFeatureContext(context);
         const planContext    = this._extractPlanContext(context);
         const phase2Notes    = context.phase2Context || {};
+        const researchContext = context.researchContext || null;
+        const clusterCount   = Math.max(1, Math.min(5, phase2Notes.experimentClusterCount || 1));
+        const isMultiCluster = clusterCount > 1;
         const hasPhase1Outputs = !!(
             context.phase1Outputs?.people ||
             context.phase1Outputs?.feature
@@ -121,6 +134,17 @@ class UserStoriesRobot {
 
                     // ── No re-prompting ────────────────────────────────────
                     "NO RE-PROMPTING: Do not ask the PM for information already in the Phase 1 outputs. If data is ambiguous, make the best inference and note it in Derivation Assumptions.",
+
+                    // ── External research context ─────────────────────────
+                    researchContext
+                        ? "EXTERNAL RESEARCH: The PM has attached external research data (surveys, user interviews, competitive analysis, or experiment feedback). This data is provided in the researchContext field. Treat it as supplementary evidence — use it to validate, challenge, or refine the personas, features, and MoSCoW priorities derived from Phase 1 robots. If the research contradicts a Phase 1 assumption, note the conflict in Derivation Assumptions and explain which source you prioritised and why."
+                        : "EXTERNAL RESEARCH: No external research has been attached. Proceed with Phase 1 robot outputs as the sole source of truth.",
+
+                    // ── Experiment clusters ───────────────────────────────
+                    ...(isMultiCluster ? [
+                        `EXPERIMENT CLUSTERS: Generate ${clusterCount} distinct solution clusters, each exploring a DIFFERENT strategic hypothesis for solving the core problem. Each cluster must have: (1) a unique clusterId (e.g. 'cluster-A', 'cluster-B'), (2) a clear hypothesis statement describing the solution approach, (3) its own complete set of user stories, (4) its own MoSCoW distribution. The clusters should represent genuinely different solution strategies — not minor variations. Example: Cluster A might emphasise automation while Cluster B emphasises human-in-the-loop control. Each cluster should be independently viable.`,
+                        `CLUSTER DIFFERENTIATION: Clusters must differ in their solution approach, not just in which features they include. Each hypothesis should be testable — the PM will take these to users for validation. If research context is available, use it to inform which hypotheses are worth testing.`,
+                    ] : []),
                 ],
 
                 requiredSections: [
@@ -141,30 +165,65 @@ class UserStoriesRobot {
                     featureContext,
                     planContext: planContext || null,
 
+                    // External research (tributary input)
+                    researchContext: researchContext || null,
+
                     // Phase 2 PM overrides (may be empty)
                     phase2Notes: Object.keys(phase2Notes).length > 0 ? phase2Notes : null,
+
+                    // Experiment cluster config
+                    experimentClusterCount: clusterCount,
                 },
 
                 outputFormat: {
-                    description: "Return a single JSON object. No markdown fences. No commentary outside the JSON.",
-                    schema: {
-                        phase1Synthesis:       "string — 3-5 bullet points (prefix each with \\n• ), covering personas identified, features used, MoSCoW signals, and any data gaps",
-                        derivationAssumptions: "string — 3-5 bullet points (prefix each with \\n• ), listing assumptions the PM can review and override via feedback",
-                        userStories: [
-                            {
-                                id:          "string — US-NNN format, sequential, e.g. US-001",
-                                persona:     "string — exact persona name from people robot output",
-                                story:       "string — 'As a [persona], I want [specific goal], so that [concrete reason].'",
-                                description: "string — 2-3 sentences of acceptance criteria",
-                                moscow:      "MUST_HAVE | SHOULD_HAVE | COULD_HAVE | WONT_HAVE | PHASE_2",
-                            },
-                        ],
-                        totalCount:     "integer — total number of stories in userStories array",
-                        mustHaveCount:  "integer — number of MUST_HAVE stories",
-                        shouldHaveCount: "integer — number of SHOULD_HAVE stories",
-                        couldHaveCount: "integer — number of COULD_HAVE stories",
-                        phase2Count:    "integer — number of PHASE_2 stories",
-                    },
+                    description: isMultiCluster
+                        ? `Return a single JSON object containing ${clusterCount} experiment clusters. No markdown fences. No commentary outside the JSON.`
+                        : "Return a single JSON object. No markdown fences. No commentary outside the JSON.",
+                    schema: isMultiCluster
+                        ? {
+                            phase1Synthesis:       "string — 3-5 bullet points (prefix each with \\n• )",
+                            derivationAssumptions: "string — 3-5 bullet points (prefix each with \\n• )",
+                            experimentClusters: [
+                                {
+                                    clusterId:   "string — e.g. 'cluster-A'",
+                                    hypothesis:  "string — 1-2 sentences describing the solution approach this cluster tests",
+                                    userStories: [
+                                        {
+                                            id:          "string — US-A-001 format (cluster letter + sequence)",
+                                            persona:     "string — exact persona name",
+                                            story:       "string — 'As a [persona], I want [goal], so that [reason].'",
+                                            description: "string — 2-3 sentences of acceptance criteria",
+                                            moscow:      "MUST_HAVE | SHOULD_HAVE | COULD_HAVE | WONT_HAVE | PHASE_2",
+                                        },
+                                    ],
+                                    moscowDistribution: {
+                                        mustHaveCount:   "integer",
+                                        shouldHaveCount: "integer",
+                                        couldHaveCount:  "integer",
+                                        phase2Count:     "integer",
+                                    },
+                                },
+                            ],
+                            totalClusters: "integer",
+                        }
+                        : {
+                            phase1Synthesis:       "string — 3-5 bullet points (prefix each with \\n• ), covering personas identified, features used, MoSCoW signals, and any data gaps",
+                            derivationAssumptions: "string — 3-5 bullet points (prefix each with \\n• ), listing assumptions the PM can review and override via feedback",
+                            userStories: [
+                                {
+                                    id:          "string — US-NNN format, sequential, e.g. US-001",
+                                    persona:     "string — exact persona name from people robot output",
+                                    story:       "string — 'As a [persona], I want [specific goal], so that [concrete reason].'",
+                                    description: "string — 2-3 sentences of acceptance criteria",
+                                    moscow:      "MUST_HAVE | SHOULD_HAVE | COULD_HAVE | WONT_HAVE | PHASE_2",
+                                },
+                            ],
+                            totalCount:      "integer — total number of stories in userStories array",
+                            mustHaveCount:   "integer — number of MUST_HAVE stories",
+                            shouldHaveCount: "integer — number of SHOULD_HAVE stories",
+                            couldHaveCount:  "integer — number of COULD_HAVE stories",
+                            phase2Count:     "integer — number of PHASE_2 stories",
+                        },
                     critical: "The JSON object is the complete deliverable. Do not wrap it in markdown. Do not add prose before or after the JSON.",
                 },
             },

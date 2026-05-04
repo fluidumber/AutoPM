@@ -267,10 +267,19 @@ class TeamLeader {
             phase2Context.daciData = null;
         }
 
+        // Load aggregated research context (external research, surveys, experiment feedback)
+        let researchContext = null;
+        try {
+            researchContext = await this.contextStore.loadResearchContext(productSlug);
+        } catch {
+            // No research entries — expected for many products
+        }
+
         return {
             ...baseContext,
             phase1Outputs,
             phase2Context,
+            researchContext,
         };
     }
 

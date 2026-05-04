@@ -988,16 +988,24 @@ server.tool(
 future analyses — robots see them alongside interview answers.
 
 Types:
-  note            — ad-hoc note or observation
-  url             — a link with optional commentary
-  document        — a longer writeup (stored as its own file in context/documents/)
-  analyst-report  — third-party research report pasted as text
+  note                — ad-hoc note or observation
+  url                 — a link with optional commentary
+  document            — a longer writeup (stored as its own file in context/documents/)
+  analyst-report      — third-party research report pasted as text
+  research            — external user research (interview transcripts, persona studies, etc.)
+  survey-result       — results from user surveys or questionnaires
+  experiment-feedback — feedback from A/B tests, prototype testing, or multivariate experiments
 
-Notes and URLs are appended to notes.md. Documents and analyst reports are
-saved as individual markdown files in context/documents/.`,
+Notes and URLs are appended to notes.md. Documents, analyst reports, research,
+survey results, and experiment feedback are saved as individual markdown files
+in context/documents/.
+
+IMPORTANT: Adding research, survey-result, experiment-feedback, or analyst-report
+entries will automatically mark affected robots as stale so they re-run with the
+new evidence on the next invocation.`,
     {
         productSlug: z.string().describe("Product slug to attach context to"),
-        type: z.enum(["note", "url", "document", "analyst-report"]).describe("Context entry type"),
+        type: z.enum(["note", "url", "document", "analyst-report", "research", "survey-result", "experiment-feedback"]).describe("Context entry type"),
         title: z.string().describe("Short human-readable title for this entry"),
         content: z.string().describe("The note body, URL, or document contents"),
         source: z.string().optional().describe("Original source URL or attribution"),
@@ -1015,13 +1023,24 @@ saved as individual markdown files in context/documents/.`,
 
         try {
             const saved = await teamLeader.contextStore.add(productSlug, { type, title, content, source });
+
+            // Trigger staleness invalidation for research-flavoured types
+            const RESEARCH_TYPES = ["research", "survey-result", "experiment-feedback", "analyst-report"];
+            let invalidatedRobots = [];
+            if (RESEARCH_TYPES.includes(type)) {
+                invalidatedRobots = await teamLeader.freshness.invalidateOnResearch(productSlug, type);
+            }
+
             return {
                 content: [{
                     type: "text",
                     text: JSON.stringify({
                         saved: true,
                         entry: saved,
-                        message: `Context entry '${title}' saved to product '${productSlug}'.`,
+                        invalidatedRobots,
+                        message: invalidatedRobots.length > 0
+                            ? `Context entry '${title}' saved. Robots marked stale due to new ${type}: ${invalidatedRobots.join(", ")}. Re-run these robots to incorporate the new evidence.`
+                            : `Context entry '${title}' saved to product '${productSlug}'.`,
                     }, null, 2)
                 }]
             };
@@ -1044,7 +1063,7 @@ server.tool(
     `List all context entries attached to a product. Optionally filter by type.`,
     {
         productSlug: z.string().describe("Product slug"),
-        type: z.enum(["note", "url", "document", "analyst-report"]).optional().describe("Filter by entry type"),
+        type: z.enum(["note", "url", "document", "analyst-report", "research", "survey-result", "experiment-feedback"]).optional().describe("Filter by entry type"),
     },
     async ({ productSlug, type }) => {
         const product = await productRegistry.get(productSlug);
@@ -2032,6 +2051,172 @@ and guide them to their next step without asking open-ended questions.`,
                 }, null, 2)
             }]
         };
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool: ADD-RESEARCH — convenience wrapper for adding external research
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "add-research",
+    `Add external research data to a product. This is a convenience wrapper
+around 'context-add' specifically for research-flavoured content.
+
+Use this when the PM wants to:
+  - Upload user interview transcripts or notes
+  - Paste survey results or analysis findings
+  - Record feedback from prototype testing or A/B experiments
+  - Add competitive intelligence or analyst reports
+
+The research data will be automatically aggregated and fed to all Phase 2
+robots via the enrichedContext.researchContext field. Adding research also
+marks affected robots as stale so they re-run with the new evidence.
+
+WORKFLOW:
+  1. PM provides research content → call this tool
+  2. Check which robots are now stale → call 'freshness-check'
+  3. Re-run stale robots → call 'run-robot' with forceRerun: true`,
+    {
+        productSlug: z.string().describe("Product slug to attach research to"),
+        researchType: z.enum(["research", "survey-result", "experiment-feedback", "analyst-report"])
+            .describe("Type of research: 'research' for user studies/transcripts, 'survey-result' for survey data, 'experiment-feedback' for A/B test results, 'analyst-report' for third-party reports"),
+        title: z.string().describe("Short title, e.g. 'Q2 User Interview Findings' or 'Checkout Flow A/B Test Results'"),
+        content: z.string().describe("The full research content — paste transcripts, survey summaries, or findings"),
+        source: z.string().optional().describe("Source attribution, e.g. 'UserTesting.com session 2026-04-15'"),
+    },
+    async ({ productSlug, researchType, title, content, source }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}. Call 'product-create' first.` }, null, 2)
+                }]
+            };
+        }
+
+        try {
+            const saved = await teamLeader.contextStore.add(productSlug, {
+                type: researchType,
+                title,
+                content,
+                source,
+            });
+
+            const invalidatedRobots = await teamLeader.freshness.invalidateOnResearch(productSlug, researchType);
+
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        saved: true,
+                        entry: saved,
+                        researchType,
+                        invalidatedRobots,
+                        message: invalidatedRobots.length > 0
+                            ? `Research '${title}' saved. The following robots are now stale and should be re-run to incorporate the new evidence: ${invalidatedRobots.join(", ")}.`
+                            : `Research '${title}' saved to product '${productSlug}'.`,
+                        nextSteps: [
+                            "Call 'freshness-check' to see the updated staleness state.",
+                            "Re-run stale robots with 'run-robot' (forceRerun: true) to incorporate the new research.",
+                        ],
+                    }, null, 2)
+                }]
+            };
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: err.message }, null, 2)
+                }]
+            };
+        }
+    }
+);
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool: SELECT-EXPERIMENT — converge from multiple experiment clusters
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "select-experiment",
+    `Select the winning experiment cluster (or cherry-pick stories) after
+reviewing multi-cluster output from the user-stories robot.
+
+When UserStoriesRobot generates multiple experiment clusters (because
+experimentClusterCount > 1 in phase2Context), the PM reviews the competing
+solution hypotheses and selects the best approach.
+
+Three selection modes:
+  1. WHOLE CLUSTER: Pass a single 'clusterId' to accept one cluster entirely.
+  2. CHERRY-PICK: Pass an array of 'storyIds' from any cluster to build a hybrid.
+  3. CLEAR: Pass neither to remove any previous selection.
+
+The selection is stored in context/experiment-selection.json and read by
+'generate-pdd' when assembling the final PDD.`,
+    {
+        productSlug: z.string().describe("Product slug"),
+        clusterId: z.string().optional().describe("The winning cluster ID, e.g. 'cluster-A'. Mutually exclusive with storyIds."),
+        storyIds: z.array(z.string()).optional().describe("Cherry-picked story IDs from any cluster, e.g. ['US-A-001', 'US-B-003']. Mutually exclusive with clusterId."),
+        rationale: z.string().optional().describe("PM's rationale for this selection — stored for traceability"),
+    },
+    async ({ productSlug, clusterId, storyIds, rationale }) => {
+        const product = await productRegistry.get(productSlug);
+        if (!product) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: `Unknown product: ${productSlug}` }, null, 2)
+                }]
+            };
+        }
+
+        if (clusterId && storyIds?.length) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        error: "Provide either 'clusterId' (whole cluster) OR 'storyIds' (cherry-pick), not both.",
+                    }, null, 2)
+                }]
+            };
+        }
+
+        const selection = {
+            selectedAt: new Date().toISOString(),
+            mode: clusterId ? "whole-cluster" : (storyIds?.length ? "cherry-pick" : "cleared"),
+            clusterId: clusterId || null,
+            storyIds: storyIds || [],
+            rationale: rationale || null,
+        };
+
+        try {
+            const selPath = workspace.getContextDir(productSlug) + "/experiment-selection.json";
+            await workspace.ensureProductStructure(productSlug);
+            await fs.writeFile(selPath, JSON.stringify(selection, null, 2), "utf-8");
+
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        saved: true,
+                        selection,
+                        message: selection.mode === "cleared"
+                            ? "Experiment selection cleared. PDD will use all stories."
+                            : selection.mode === "whole-cluster"
+                                ? `Selected cluster '${clusterId}'. PDD will use only stories from this cluster.`
+                                : `Cherry-picked ${storyIds.length} stories across clusters. PDD will use only these stories.`,
+                        nextStep: "Call 'generate-pdd' to assemble the PDD with the selected experiment cluster.",
+                    }, null, 2)
+                }]
+            };
+        } catch (err) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({ error: err.message }, null, 2)
+                }]
+            };
+        }
     }
 );
 

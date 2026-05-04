@@ -141,6 +141,14 @@
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation.",
       "timestamp": "2026-04-25T16:14:33.406Z"
+    },
+    {
+      "analysisId": "analysis-1777620233994",
+      "robotName": "detective",
+      "rating": 4,
+      "notes": "Good output. Improvement requested: Detective should ask deeper questions about the user's own product before/while analyzing competitors, especially for platform/product categories that are 10+ years old. It should explicitly challenge whether the named category has become commoditized and whether the product should reframe/rebrand the category, e.g. CDP -> Customer Intelligence Platform (CIP), where value is not only customer data plumbing but the intelligence and actions derived from it. It should also pressure-test moat beyond the obvious differentiator; for Lucidya, Arabic is important but competitors may catch up, so the analysis should identify additional moats such as proprietary CX interaction data, workflow embedding, enterprise/government distribution, governance/data residency, recommendation loops, and cross-product activation. This category-challenge section should be mandatory for mature product/platform categories.",
+      "productSlug": null,
+      "timestamp": "2026-05-01T08:36:40.849Z"
     }
   ],
   "errors": [],

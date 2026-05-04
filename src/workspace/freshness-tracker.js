@@ -331,6 +331,47 @@ export class FreshnessTracker {
     async getResolvedPolicy({ personaSlug = null, productSlug = null } = {}) {
         return resolvePolicy(this.workspace, { personaSlug, productSlug });
     }
+
+    /**
+     * Mark robots as stale when new external research is added.
+     *
+     * The mapping is intentionally conservative — only robots with a direct
+     * data dependency on the research type are invalidated. The PM can always
+     * force-rerun any robot regardless.
+     *
+     * @param {string} slug - product slug
+     * @param {"research"|"survey-result"|"experiment-feedback"|"analyst-report"} researchType
+     * @returns {Promise<string[]>} list of robot names that were invalidated
+     */
+    async invalidateOnResearch(slug, researchType) {
+        // Map research types to the robots whose outputs they directly affect
+        const RESEARCH_ROBOT_MAP = {
+            "research":            ["people", "feature", "detective", "user-stories", "customer-journeys"],
+            "survey-result":       ["people", "feature", "priority", "user-stories"],
+            "experiment-feedback": ["user-stories", "scope-spec", "feasibility-design"],
+            "analyst-report":      ["scout", "detective", "money", "gtm-readiness"],
+        };
+
+        const robotsToInvalidate = RESEARCH_ROBOT_MAP[researchType] || [];
+        if (robotsToInvalidate.length === 0) return [];
+
+        const data = await this._load(slug);
+        const invalidated = [];
+
+        for (const robot of robotsToInvalidate) {
+            if (data.robots[robot]) {
+                // Set lastRun to epoch so it appears stale against any policy window
+                data.robots[robot].lastRun = "1970-01-01T00:00:00.000Z";
+                invalidated.push(robot);
+            }
+        }
+
+        if (invalidated.length > 0) {
+            await this._save(slug, data);
+        }
+
+        return invalidated;
+    }
 }
 
 function daysSince(iso) {

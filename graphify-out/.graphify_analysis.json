@@ -1,0 +1,533 @@
+{
+  "communities": {
+    "0": [
+      "leader_gate_traversal_js",
+      "leader_gate_traversal_traversegates",
+      "leader_team_leader_teamleader_buildphase2context",
+      "src_mcp_server_js",
+      "src_mcp_server_main",
+      "src_mcp_server_readactivesession",
+      "src_workspace_asset_store_js",
+      "src_workspace_product_registry_js",
+      "src_workspace_workspace_manager_js",
+      "workspace_asset_store_assetstore",
+      "workspace_asset_store_assetstore_appendfeedback",
+      "workspace_asset_store_assetstore_constructor",
+      "workspace_asset_store_assetstore_list",
+      "workspace_asset_store_assetstore_loadlatestrobotoutput",
+      "workspace_asset_store_assetstore_renderfeedbackblock",
+      "workspace_asset_store_assetstore_rendermarkdown",
+      "workspace_asset_store_assetstore_saverobotoutput",
+      "workspace_asset_store_assetstore_saverobotresult",
+      "workspace_product_registry_productregistry",
+      "workspace_product_registry_productregistry_buildbody",
+      "workspace_product_registry_productregistry_constructor",
+      "workspace_product_registry_productregistry_create",
+      "workspace_product_registry_productregistry_list",
+      "workspace_product_registry_productregistry_update",
+      "workspace_product_registry_productregistry_writeproductmarkdown",
+      "workspace_workspace_manager_slugify",
+      "workspace_workspace_manager_workspacemanager",
+      "workspace_workspace_manager_workspacemanager_constructor",
+      "workspace_workspace_manager_workspacemanager_ensureproductstructure",
+      "workspace_workspace_manager_workspacemanager_ensureworkspace",
+      "workspace_workspace_manager_workspacemanager_getactivesessionpath",
+      "workspace_workspace_manager_workspacemanager_getassetsdir",
+      "workspace_workspace_manager_workspacemanager_getdacipath",
+      "workspace_workspace_manager_workspacemanager_getfreshnesspath",
+      "workspace_workspace_manager_workspacemanager_getlegacypmprofilepath",
+      "workspace_workspace_manager_workspacemanager_getpdddir",
+      "workspace_workspace_manager_workspacemanager_getpendingpromotionpath",
+      "workspace_workspace_manager_workspacemanager_getphase2contextpath",
+      "workspace_workspace_manager_workspacemanager_getpmprofilepath",
+      "workspace_workspace_manager_workspacemanager_getproductdir",
+      "workspace_workspace_manager_workspacemanager_getproductmarkdownpath",
+      "workspace_workspace_manager_workspacemanager_getproductsdir",
+      "workspace_workspace_manager_workspacemanager_getproductstalenessoverridepath",
+      "workspace_workspace_manager_workspacemanager_getroot",
+      "workspace_workspace_manager_workspacemanager_haspmprofile",
+      "workspace_workspace_manager_workspacemanager_hasproduct"
+    ],
+    "1": [
+      "src_workspace_markdown_doc_js",
+      "src_workspace_pm_profile_js",
+      "tests_persistence_test_js",
+      "tests_persistence_test_test",
+      "workspace_markdown_doc_coerceyamlscalar",
+      "workspace_markdown_doc_escaperegex",
+      "workspace_markdown_doc_formatyamlvalue",
+      "workspace_markdown_doc_getlistsection",
+      "workspace_markdown_doc_getsection",
+      "workspace_markdown_doc_parsemarkdowndoc",
+      "workspace_markdown_doc_parsesimpleyaml",
+      "workspace_markdown_doc_serialisemarkdowndoc",
+      "workspace_pm_profile_pmprofile",
+      "workspace_pm_profile_pmprofile_addproduct",
+      "workspace_pm_profile_pmprofile_buildbody",
+      "workspace_pm_profile_pmprofile_constructor",
+      "workspace_pm_profile_pmprofile_createpersona",
+      "workspace_pm_profile_pmprofile_getactivepersonaslug",
+      "workspace_pm_profile_pmprofile_listpersonas",
+      "workspace_pm_profile_pmprofile_load",
+      "workspace_pm_profile_pmprofile_migratelegacyifneeded",
+      "workspace_pm_profile_pmprofile_readpersonaprofile",
+      "workspace_pm_profile_pmprofile_removeproduct",
+      "workspace_pm_profile_pmprofile_save",
+      "workspace_pm_profile_pmprofile_setactivepersona",
+      "workspace_pm_profile_pmprofile_switchpersona",
+      "workspace_workspace_manager_workspacemanager_getactivepersonafile",
+      "workspace_workspace_manager_workspacemanager_getpersonadir",
+      "workspace_workspace_manager_workspacemanager_getpersonaprofilepath",
+      "workspace_workspace_manager_workspacemanager_getprofilesdir"
+    ],
+    "2": [
+      "leader_team_leader_js",
+      "leader_team_leader_teamleader",
+      "leader_team_leader_teamleader_answerinterviewquestion",
+      "leader_team_leader_teamleader_constructor",
+      "leader_team_leader_teamleader_getanalysisstate",
+      "leader_team_leader_teamleader_getfullresults",
+      "leader_team_leader_teamleader_getnextrobot",
+      "leader_team_leader_teamleader_skipinterviewquestion",
+      "leader_team_leader_teamleader_startanalysis",
+      "leader_team_leader_teamleader_startinterview",
+      "robots_interview_robot_interviewrobot",
+      "robots_interview_robot_interviewrobot_analyseanswer",
+      "robots_interview_robot_interviewrobot_answercoversquestion",
+      "robots_interview_robot_interviewrobot_buildcompletionresponse",
+      "robots_interview_robot_interviewrobot_buildenrichedcontext",
+      "robots_interview_robot_interviewrobot_buildnextresponse",
+      "robots_interview_robot_interviewrobot_buildquestionbank",
+      "robots_interview_robot_interviewrobot_constructor",
+      "robots_interview_robot_interviewrobot_countsegments",
+      "robots_interview_robot_interviewrobot_derivesearchpriority",
+      "robots_interview_robot_interviewrobot_extractbrandterms",
+      "robots_interview_robot_interviewrobot_extractcompetitorlist",
+      "robots_interview_robot_interviewrobot_getprogress",
+      "robots_interview_robot_interviewrobot_pickfollowup",
+      "robots_interview_robot_interviewrobot_processanswer",
+      "robots_interview_robot_interviewrobot_skipquestion",
+      "robots_interview_robot_interviewrobot_startinterview",
+      "robots_interview_robot_js",
+      "workspace_product_registry_productregistry_get"
+    ],
+    "3": [
+      "utils_pdd_renderer_bulletlist",
+      "utils_pdd_renderer_escapehtml",
+      "utils_pdd_renderer_extractvegalitespecs",
+      "utils_pdd_renderer_inlinehtml",
+      "utils_pdd_renderer_js",
+      "utils_pdd_renderer_markdowntohtml",
+      "utils_pdd_renderer_mdtable",
+      "utils_pdd_renderer_renderappendix",
+      "utils_pdd_renderer_rendercustomerjourneys",
+      "utils_pdd_renderer_renderdaci",
+      "utils_pdd_renderer_renderdataprivacy",
+      "utils_pdd_renderer_renderfeasibilitydesign",
+      "utils_pdd_renderer_renderfeasibilitytech",
+      "utils_pdd_renderer_rendergtmreadiness",
+      "utils_pdd_renderer_renderhtml",
+      "utils_pdd_renderer_renderkeycontacts",
+      "utils_pdd_renderer_renderkpis",
+      "utils_pdd_renderer_rendermarkdown",
+      "utils_pdd_renderer_rendermeta",
+      "utils_pdd_renderer_rendernarrativesection",
+      "utils_pdd_renderer_renderrisks",
+      "utils_pdd_renderer_renderscope",
+      "utils_pdd_renderer_rendersectionstatus",
+      "utils_pdd_renderer_renderuserstories",
+      "utils_pdd_renderer_rendervegalitespecshtml",
+      "utils_pdd_renderer_safe",
+      "utils_pdd_renderer_safearray"
+    ],
+    "4": [
+      "brain_brain_database_braindatabase",
+      "brain_brain_database_braindatabase_clearall",
+      "brain_brain_database_braindatabase_constructor",
+      "brain_brain_database_braindatabase_getallanalyses",
+      "brain_brain_database_braindatabase_getanalysiscount",
+      "brain_brain_database_braindatabase_getdesignpreferences",
+      "brain_brain_database_braindatabase_getfeedbackforrobot",
+      "brain_brain_database_braindatabase_getrobotaveragerating",
+      "brain_brain_database_braindatabase_loadfromdisk",
+      "brain_brain_database_braindatabase_saveanalysis",
+      "brain_brain_database_braindatabase_savedesignpreferences",
+      "brain_brain_database_braindatabase_savefeedback",
+      "brain_brain_database_braindatabase_savelearning",
+      "brain_brain_database_js",
+      "leader_team_leader_teamleader_analyzebusiness",
+      "robots_feasibility_design_robot_feasibilitydesignrobot",
+      "robots_feasibility_design_robot_feasibilitydesignrobot_analyze",
+      "robots_feasibility_design_robot_feasibilitydesignrobot_constructor",
+      "robots_feasibility_design_robot_feasibilitydesignrobot_extractfeaturecontext",
+      "robots_feasibility_design_robot_feasibilitydesignrobot_extractpersonacontext",
+      "robots_feasibility_design_robot_js",
+      "utils_file_storage_ensuredatadir",
+      "utils_file_storage_js",
+      "utils_file_storage_listsaveddata",
+      "utils_file_storage_loaddata",
+      "utils_file_storage_savedata"
+    ],
+    "5": [
+      "leader_team_leader_teamleader_checkphase2gate",
+      "leader_team_leader_teamleader_runsinglerobot",
+      "src_workspace_freshness_tracker_js",
+      "workspace_asset_store_assetstore_loadrobotresult",
+      "workspace_freshness_tracker_clearpolicycache",
+      "workspace_freshness_tracker_dayssince",
+      "workspace_freshness_tracker_freshnesstracker",
+      "workspace_freshness_tracker_freshnesstracker_constructor",
+      "workspace_freshness_tracker_freshnesstracker_getinterviewfreshness",
+      "workspace_freshness_tracker_freshnesstracker_getraw",
+      "workspace_freshness_tracker_freshnesstracker_getresolvedpolicy",
+      "workspace_freshness_tracker_freshnesstracker_getrobotfreshness",
+      "workspace_freshness_tracker_freshnesstracker_getstoredanswers",
+      "workspace_freshness_tracker_freshnesstracker_load",
+      "workspace_freshness_tracker_freshnesstracker_recordallinterviewanswers",
+      "workspace_freshness_tracker_freshnesstracker_recordinterviewanswer",
+      "workspace_freshness_tracker_freshnesstracker_recordrobotrun",
+      "workspace_freshness_tracker_freshnesstracker_save",
+      "workspace_freshness_tracker_resolvepolicy",
+      "workspace_workspace_manager_workspacemanager_getpersonastalenessoverridepath"
+    ],
+    "6": [
+      "brain_learning_engine_js",
+      "brain_learning_engine_learningengine",
+      "brain_learning_engine_learningengine_applylearning",
+      "brain_learning_engine_learningengine_constructor",
+      "brain_learning_engine_learningengine_getimprovementhints",
+      "brain_learning_engine_learningengine_hydratefrompersistedfeedback",
+      "brain_learning_engine_learningengine_learnfromfailure",
+      "brain_learning_engine_learningengine_learnfromsuccess",
+      "brain_robot_memory_js",
+      "brain_robot_memory_robotmemory",
+      "brain_robot_memory_robotmemory_constructor",
+      "brain_robot_memory_robotmemory_findsimilar",
+      "brain_robot_memory_robotmemory_getbest",
+      "brain_robot_memory_robotmemory_remember",
+      "brain_robot_memory_robotmemory_showall",
+      "leader_team_leader_teamleader_hydratelearner",
+      "leader_team_leader_teamleader_savefeedback",
+      "leader_team_leader_teamleader_showsummary",
+      "productflow_run_main",
+      "run_js"
+    ],
+    "7": [
+      "src_workspace_context_store_js",
+      "workspace_context_store_contextstore",
+      "workspace_context_store_contextstore_add",
+      "workspace_context_store_contextstore_appendtonotesfile",
+      "workspace_context_store_contextstore_constructor",
+      "workspace_context_store_contextstore_extractnotecontent",
+      "workspace_context_store_contextstore_get",
+      "workspace_context_store_contextstore_indexpath",
+      "workspace_context_store_contextstore_list",
+      "workspace_context_store_contextstore_loadindex",
+      "workspace_context_store_contextstore_loadinterviewanswers",
+      "workspace_context_store_contextstore_saveindex",
+      "workspace_context_store_contextstore_saveinterviewanswers",
+      "workspace_context_store_sanitisefilename",
+      "workspace_workspace_manager_workspacemanager_getcontextdir"
+    ],
+    "8": [
+      "robots_detective_robot_detectiverobot",
+      "robots_detective_robot_detectiverobot_analyze",
+      "robots_detective_robot_detectiverobot_constructor",
+      "robots_detective_robot_detectiverobot_extractcompetitorlist",
+      "robots_detective_robot_detectiverobot_generatesearchqueries",
+      "robots_detective_robot_js",
+      "robots_scout_robot_js",
+      "robots_scout_robot_scoutrobot",
+      "robots_scout_robot_scoutrobot_analyze",
+      "robots_scout_robot_scoutrobot_constructor",
+      "robots_scout_robot_scoutrobot_generatesearchqueries",
+      "utils_keywords_extractdomainkeywords",
+      "utils_keywords_js"
+    ],
+    "9": [
+      "src_workspace_pdd_composer_js",
+      "workspace_pdd_composer_pddcomposer",
+      "workspace_pdd_composer_pddcomposer_assemble",
+      "workspace_pdd_composer_pddcomposer_assemblephase1",
+      "workspace_pdd_composer_pddcomposer_constructor",
+      "workspace_pdd_composer_pddcomposer_loadallrobotoutputs",
+      "workspace_pdd_composer_pddcomposer_loaddacidata",
+      "workspace_pdd_composer_pddcomposer_loadphase1robotoutputs",
+      "workspace_pdd_composer_pddcomposer_loadphase2context",
+      "workspace_pdd_composer_pddcomposer_loadproductmeta",
+      "workspace_pdd_composer_pddcomposer_tryparsejson"
+    ],
+    "10": [
+      "robots_risks_registry_robot_js",
+      "robots_risks_registry_robot_risksregistryrobot",
+      "robots_risks_registry_robot_risksregistryrobot_analyze",
+      "robots_risks_registry_robot_risksregistryrobot_constructor",
+      "robots_risks_registry_robot_risksregistryrobot_extractfeasibilitycontext",
+      "robots_risks_registry_robot_risksregistryrobot_extractgtmcontext",
+      "robots_risks_registry_robot_risksregistryrobot_extractplancontext"
+    ],
+    "11": [
+      "robots_kpis_robot_js",
+      "robots_kpis_robot_kpisrobot",
+      "robots_kpis_robot_kpisrobot_analyze",
+      "robots_kpis_robot_kpisrobot_constructor",
+      "robots_kpis_robot_kpisrobot_extractmoneycontext",
+      "robots_kpis_robot_kpisrobot_extractplancontext",
+      "robots_kpis_robot_kpisrobot_extractprioritycontext"
+    ],
+    "12": [
+      "robots_user_stories_robot_js",
+      "robots_user_stories_robot_userstoriesrobot",
+      "robots_user_stories_robot_userstoriesrobot_analyze",
+      "robots_user_stories_robot_userstoriesrobot_constructor",
+      "robots_user_stories_robot_userstoriesrobot_extractfeaturecontext",
+      "robots_user_stories_robot_userstoriesrobot_extractpersonacontext",
+      "robots_user_stories_robot_userstoriesrobot_extractplancontext"
+    ],
+    "13": [
+      "robots_feasibility_tech_robot_feasibilitytechrobot",
+      "robots_feasibility_tech_robot_feasibilitytechrobot_analyze",
+      "robots_feasibility_tech_robot_feasibilitytechrobot_constructor",
+      "robots_feasibility_tech_robot_feasibilitytechrobot_extractfeaturecontext",
+      "robots_feasibility_tech_robot_feasibilitytechrobot_extractscopecontext",
+      "robots_feasibility_tech_robot_js"
+    ],
+    "14": [
+      "robots_gtm_readiness_robot_gtmreadinessrobot",
+      "robots_gtm_readiness_robot_gtmreadinessrobot_analyze",
+      "robots_gtm_readiness_robot_gtmreadinessrobot_constructor",
+      "robots_gtm_readiness_robot_gtmreadinessrobot_extractmoneycontext",
+      "robots_gtm_readiness_robot_gtmreadinessrobot_extractplancontext",
+      "robots_gtm_readiness_robot_js"
+    ],
+    "15": [
+      "robots_scope_spec_robot_js",
+      "robots_scope_spec_robot_scopespecrobot",
+      "robots_scope_spec_robot_scopespecrobot_analyze",
+      "robots_scope_spec_robot_scopespecrobot_constructor",
+      "robots_scope_spec_robot_scopespecrobot_extractfeaturecontext",
+      "robots_scope_spec_robot_scopespecrobot_extractplancontext"
+    ],
+    "16": [
+      "robots_customer_journeys_robot_customerjourneysrobot",
+      "robots_customer_journeys_robot_customerjourneysrobot_analyze",
+      "robots_customer_journeys_robot_customerjourneysrobot_constructor",
+      "robots_customer_journeys_robot_customerjourneysrobot_extractfeaturecontext",
+      "robots_customer_journeys_robot_customerjourneysrobot_extractpersonacontext",
+      "robots_customer_journeys_robot_js"
+    ],
+    "17": [
+      "robots_data_privacy_robot_dataprivacyrobot",
+      "robots_data_privacy_robot_dataprivacyrobot_analyze",
+      "robots_data_privacy_robot_dataprivacyrobot_constructor",
+      "robots_data_privacy_robot_dataprivacyrobot_extractfeasibilitycontext",
+      "robots_data_privacy_robot_dataprivacyrobot_extractfeaturecontext",
+      "robots_data_privacy_robot_js"
+    ],
+    "18": [
+      "bin_productflow_analyzeproduct",
+      "bin_productflow_initproject",
+      "bin_productflow_js",
+      "bin_productflow_showhelp",
+      "bin_productflow_startmcpserver"
+    ],
+    "19": [
+      "robots_plan_robot_js",
+      "robots_plan_robot_planrobot",
+      "robots_plan_robot_planrobot_analyze",
+      "robots_plan_robot_planrobot_constructor",
+      "robots_plan_robot_planrobot_derivephases"
+    ],
+    "20": [
+      "robots_people_robot_js",
+      "robots_people_robot_peoplerobot",
+      "robots_people_robot_peoplerobot_analyze",
+      "robots_people_robot_peoplerobot_constructor",
+      "robots_people_robot_peoplerobot_derivesegments"
+    ],
+    "21": [
+      "robots_feature_robot_featurerobot",
+      "robots_feature_robot_featurerobot_analyze",
+      "robots_feature_robot_featurerobot_constructor",
+      "robots_feature_robot_featurerobot_derivesegments",
+      "robots_feature_robot_js"
+    ],
+    "22": [
+      "robots_daci_stakeholders_robot_dacistakeholdersrobot",
+      "robots_daci_stakeholders_robot_dacistakeholdersrobot_analyze",
+      "robots_daci_stakeholders_robot_dacistakeholdersrobot_constructor",
+      "robots_daci_stakeholders_robot_dacistakeholdersrobot_derivesectionstatus",
+      "robots_daci_stakeholders_robot_js"
+    ],
+    "23": [
+      "utils_presentation_generator_buildhtml",
+      "utils_presentation_generator_escapehtml",
+      "utils_presentation_generator_generatepresentation",
+      "utils_presentation_generator_js"
+    ],
+    "24": [
+      "robots_money_robot_js",
+      "robots_money_robot_moneyrobot",
+      "robots_money_robot_moneyrobot_analyze",
+      "robots_money_robot_moneyrobot_constructor"
+    ],
+    "25": [
+      "robots_priority_robot_js",
+      "robots_priority_robot_priorityrobot",
+      "robots_priority_robot_priorityrobot_analyze",
+      "robots_priority_robot_priorityrobot_constructor"
+    ],
+    "26": [
+      "tests_workspace_test_js",
+      "tests_workspace_test_test"
+    ]
+  },
+  "cohesion": {
+    "0": 0.08,
+    "1": 0.16,
+    "2": 0.12,
+    "3": 0.22,
+    "4": 0.11,
+    "5": 0.21,
+    "6": 0.13,
+    "7": 0.28,
+    "8": 0.19,
+    "9": 0.29,
+    "10": 0.43,
+    "11": 0.43,
+    "12": 0.43,
+    "13": 0.47,
+    "14": 0.47,
+    "15": 0.47,
+    "16": 0.47,
+    "17": 0.47,
+    "18": 0.4,
+    "19": 0.5,
+    "20": 0.5,
+    "21": 0.5,
+    "22": 0.5,
+    "23": 0.83,
+    "24": 0.5,
+    "25": 0.5,
+    "26": 1.0
+  },
+  "gods": [
+    {
+      "id": "workspace_workspace_manager_workspacemanager",
+      "label": "WorkspaceManager",
+      "degree": 26
+    },
+    {
+      "id": "utils_pdd_renderer_rendermarkdown",
+      "label": "renderMarkdown()",
+      "degree": 17
+    },
+    {
+      "id": "robots_interview_robot_interviewrobot",
+      "label": "InterviewRobot",
+      "degree": 17
+    },
+    {
+      "id": "leader_team_leader_teamleader",
+      "label": "TeamLeader",
+      "degree": 16
+    },
+    {
+      "id": "workspace_pm_profile_pmprofile",
+      "label": "PMProfile",
+      "degree": 14
+    },
+    {
+      "id": "utils_pdd_renderer_mdtable",
+      "label": "mdTable()",
+      "degree": 13
+    },
+    {
+      "id": "brain_brain_database_braindatabase",
+      "label": "BrainDatabase",
+      "degree": 13
+    },
+    {
+      "id": "workspace_context_store_contextstore",
+      "label": "ContextStore",
+      "degree": 12
+    },
+    {
+      "id": "workspace_freshness_tracker_freshnesstracker",
+      "label": "FreshnessTracker",
+      "degree": 12
+    },
+    {
+      "id": "workspace_freshness_tracker_resolvepolicy",
+      "label": "resolvePolicy()",
+      "degree": 10
+    }
+  ],
+  "surprises": [
+    {
+      "source": "formatYamlValue()",
+      "target": "test()",
+      "source_files": [
+        "src/workspace/markdown-doc.js",
+        "tests/persistence.test.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; peripheral node `formatYamlValue()` unexpectedly reaches hub `test()`"
+    },
+    {
+      "source": "getSection()",
+      "target": "test()",
+      "source_files": [
+        "src/workspace/markdown-doc.js",
+        "tests/persistence.test.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories"
+    },
+    {
+      "source": "coerceYamlScalar()",
+      "target": "test()",
+      "source_files": [
+        "src/workspace/markdown-doc.js",
+        "tests/persistence.test.js"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `TeamLeader` connect `Community 2` to `Community 0`, `Community 4`, `Community 5`, `Community 6`?",
+      "why": "High betweenness centrality (0.082) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `WorkspaceManager` connect `Community 0` to `Community 1`, `Community 5`, `Community 7`?",
+      "why": "High betweenness centrality (0.066) - this node is a cross-community bridge."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 2` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 4` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.11 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 6` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.13 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

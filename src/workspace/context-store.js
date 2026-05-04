@@ -16,7 +16,7 @@ const INDEX_FILE = "index.json";
 /**
  * Allowed context entry types.
  */
-export const CONTEXT_TYPES = ["note", "url", "document", "analyst-report"];
+export const CONTEXT_TYPES = ["note", "url", "document", "analyst-report", "research", "survey-result", "experiment-feedback"];
 
 export class ContextStore {
     /**
@@ -130,6 +130,40 @@ export class ContextStore {
             }
         }
         return entry;
+    }
+
+    /**
+     * Aggregate all research-flavoured context entries into a single text block.
+     *
+     * This is the "tributary" method — it gathers external research, survey
+     * results, and experiment feedback so robots can consume them as part of
+     * the enrichedContext.  Entries are sorted chronologically (newest last)
+     * and separated by clear headers so the LLM can parse provenance.
+     *
+     * @param {string} slug
+     * @returns {Promise<string|null>} aggregated text, or null if no research entries exist
+     */
+    async loadResearchContext(slug) {
+        const researchTypes = ["research", "survey-result", "experiment-feedback", "analyst-report"];
+        const index = await this._loadIndex(slug);
+        const relevant = index.entries
+            .filter(e => researchTypes.includes(e.type))
+            .sort((a, b) => (a.addedAt || "").localeCompare(b.addedAt || ""));
+
+        if (relevant.length === 0) return null;
+
+        const blocks = [];
+        for (const entry of relevant) {
+            const full = await this.get(slug, entry.id);
+            const body = full?.content || "(content unavailable)";
+            blocks.push(
+                `--- [${entry.type.toUpperCase()}] ${entry.title} (${entry.addedAt || "unknown date"}) ---\n` +
+                (entry.source ? `Source: ${entry.source}\n` : "") +
+                body
+            );
+        }
+
+        return blocks.join("\n\n");
     }
 
     /**
