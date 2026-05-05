@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductFlow - Experiment Selector</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-hover: rgba(255, 255, 255, 0.08);
+            --surface-selected: rgba(99, 102, 241, 0.15);
+            --border: rgba(255, 255, 255, 0.05);
+            --border-selected: rgba(99, 102, 241, 0.5);
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --moscow-must: #ef4444;
+            --moscow-should: #f59e0b;
+            --moscow-could: #10b981;
+            --moscow-wont: #64748b;
+            --moscow-phase2: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        header {
+            padding: 2rem 4rem;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .mode-toggle {
+            display: flex;
+            background: var(--surface);
+            padding: 0.25rem;
+            border-radius: 99px;
+            border: 1px solid var(--border);
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.5rem 1.25rem;
+            border-radius: 99px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        main {
+            padding: 3rem 4rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .clusters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .cluster-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cluster-card.selectable:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .cluster-card.selected {
+            background: var(--surface-selected);
+            border-color: var(--border-selected);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.1);
+        }
+
+        .cluster-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent), #8b5cf6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cluster-card.selected::before {
+            opacity: 1;
+        }
+
+        .cluster-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .cluster-id {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .cluster-hypothesis {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .stories-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .story-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .story-card.selectable:hover {
+            background: var(--surface-hover);
+            border-color: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .story-card.selected {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--accent);
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .story-id {
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        .tag {
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag.MUST_HAVE { background: rgba(239, 68, 68, 0.15); color: var(--moscow-must); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .tag.SHOULD_HAVE { background: rgba(245, 158, 11, 0.15); color: var(--moscow-should); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .tag.COULD_HAVE { background: rgba(16, 185, 129, 0.15); color: var(--moscow-could); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .tag.WONT_HAVE { background: rgba(100, 116, 139, 0.15); color: var(--moscow-wont); border: 1px solid rgba(100, 116, 139, 0.3); }
+        .tag.PHASE_2 { background: rgba(139, 92, 246, 0.15); color: var(--moscow-phase2); border: 1px solid rgba(139, 92, 246, 0.3); }
+
+        .story-persona {
+            color: #a5b4fc;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .story-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .story-desc {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
+            border-radius: 8px;
+            border-left: 2px solid var(--border);
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-color);
+            border: 1px solid var(--border-selected);
+            padding: 1.5rem 2.5rem;
+            border-radius: 99px;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(99, 102, 241, 0.2);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1000;
+        }
+
+        .floating-action.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .selection-count {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .btn-export {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 99px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-export:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 0 15px var(--accent-glow);
+            transform: scale(1.05);
+        }
+
+        .btn-export:active {
+            transform: scale(0.95);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: #10b981;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateX(150%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>ProductFlow Discovery</h1>
+            <div class="subtitle" id="product-name">Experiment Cluster Selection</div>
+        </div>
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="btn-mode-cluster" onclick="setMode('cluster')">Whole Cluster</button>
+            <button class="mode-btn" id="btn-mode-cherry" onclick="setMode('cherry')">Cherry Pick</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="clusters-grid" id="clusters-grid">
+            <!-- Injected by JS -->
+        </div>
+    </main>
+
+    <div class="floating-action" id="floating-action">
+        <div class="selection-count" id="selection-count">0 Selected</div>
+        <button class="btn-export" onclick="exportSelection()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy Instruction for Claude
+        </button>
+    </div>
+
+    <div class="toast" id="toast">Instruction copied to clipboard! Paste it in Claude.</div>
+
+    <script>
+        // Data injected by ProductFlow MCP
+        const DATA = /*INJECT_JSON_HERE*/null;
+
+        let currentMode = 'cluster'; // 'cluster' or 'cherry'
+        let selectedClusterId = null;
+        let selectedStoryIds = new Set();
+
+        function render() {
+            if (!DATA || !DATA.experimentClusters) return;
+            
+            const grid = document.getElementById('clusters-grid');
+            grid.innerHTML = '';
+
+            DATA.experimentClusters.forEach(cluster => {
+                const isSelectedCluster = selectedClusterId === cluster.clusterId;
+                
+                const card = document.createElement('div');
+                card.className = `cluster-card ${currentMode === 'cluster' ? 'selectable' : ''} ${isSelectedCluster ? 'selected' : ''}`;
+                if (currentMode === 'cluster') {
+                    card.onclick = () => toggleCluster(cluster.clusterId);
+                }
+
+                const header = document.createElement('div');
+                header.className = 'cluster-header';
+                header.innerHTML = `
+                    <div class="cluster-id">${cluster.clusterId.toUpperCase()}</div>
+                    <div class="cluster-hypothesis">${cluster.hypothesis}</div>
+                `;
+                card.appendChild(header);
+
+                const storiesContainer = document.createElement('div');
+                storiesContainer.className = 'stories-container';
+
+                cluster.userStories.forEach(story => {
+                    const isSelectedStory = selectedStoryIds.has(story.id);
+                    const storyCard = document.createElement('div');
+                    
+                    // In cherry mode, stories are selectable. In cluster mode, they inherit cluster selection.
+                    let storyClasses = 'story-card';
+                    if (currentMode === 'cherry') storyClasses += ' selectable';
+                    if (currentMode === 'cherry' && isSelectedStory) storyClasses += ' selected';
+                    if (currentMode === 'cluster' && isSelectedCluster) storyClasses += ' selected';
+                    
+                    storyCard.className = storyClasses;
+
+                    if (currentMode === 'cherry') {
+                        storyCard.onclick = (e) => {
+                            e.stopPropagation();
+                            toggleStory(story.id);
+                        };
+                    }
+
+                    storyCard.innerHTML = `
+                        <div class="story-meta">
+                            <span class="story-id">${story.id}</span>
+                            <span class="tag ${story.moscow}">${story.moscow.replace('_', ' ')}</span>
+                        </div>
+                        <div class="story-persona">🗣 ${story.persona}</div>
+                        <div class="story-text">${story.story}</div>
+                        <div class="story-desc">${story.description}</div>
+                    `;
+                    storiesContainer.appendChild(storyCard);
+                });
+
+                card.appendChild(storiesContainer);
+                grid.appendChild(card);
+            });
+
+            updateFloatingAction();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('btn-mode-cluster').classList.toggle('active', mode === 'cluster');
+            document.getElementById('btn-mode-cherry').classList.toggle('active', mode === 'cherry');
+            
+            // Clear selections when switching modes
+            selectedClusterId = null;
+            selectedStoryIds.clear();
+            
+            render();
+        }
+
+        function toggleCluster(id) {
+            selectedClusterId = selectedClusterId === id ? null : id;
+            render();
+        }
+
+        function toggleStory(id) {
+            if (selectedStoryIds.has(id)) {
+                selectedStoryIds.delete(id);
+            } else {
+                selectedStoryIds.add(id);
+            }
+            render();
+        }
+
+        function updateFloatingAction() {
+            const floater = document.getElementById('floating-action');
+            const countLabel = document.getElementById('selection-count');
+            
+            let isVisible = false;
+            
+            if (currentMode === 'cluster') {
+                if (selectedClusterId) {
+                    isVisible = true;
+                    countLabel.innerText = `Selected ${selectedClusterId.toUpperCase()}`;
+                }
+            } else {
+                if (selectedStoryIds.size > 0) {
+                    isVisible = true;
+                    countLabel.innerText = `${selectedStoryIds.size} Stories Selected`;
+                }
+            }
+            
+            if (isVisible) {
+                floater.classList.add('visible');
+            } else {
+                floater.classList.remove('visible');
+            }
+        }
+
+        function exportSelection() {
+            let command = "";
+            
+            if (currentMode === 'cluster') {
+                command = `Please run the select-experiment tool with mode: "whole-cluster" and clusterId: "${selectedClusterId}"`;
+            } else {
+                const ids = Array.from(selectedStoryIds).map(id => `"${id}"`).join(", ");
+                command = `Please run the select-experiment tool with mode: "cherry-pick" and storyIds: [${ids}]`;
+            }
+
+            navigator.clipboard.writeText(command).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            });
+        }
+
+        // Initial render if data exists
+        if (DATA) render();
+    </script>
+</body>
+</html>

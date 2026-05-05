@@ -1289,6 +1289,19 @@ Phase 2 robots (user-stories, scope-spec, etc.) read these output files to deriv
 
         try {
             const relPath = await teamLeader.assetStore.saveRobotOutput(productSlug, robotName, markdownText);
+            const absPath = `${teamLeader.workspace.getAssetsDir(productSlug)}/${relPath.split("/").pop()}`;
+            
+            let viewerPath = null;
+            if (robotName === "user-stories") {
+                try {
+                    const { generateExperimentViewer } = await import("./ui/generate-viewer.js");
+                    const jsonData = JSON.parse(markdownText);
+                    viewerPath = await generateExperimentViewer(absPath, jsonData);
+                } catch (e) {
+                    // Ignore parsing/generation errors
+                }
+            }
+
             return {
                 content: [{
                     type: "text",
@@ -1297,8 +1310,11 @@ Phase 2 robots (user-stories, scope-spec, etc.) read these output files to deriv
                         robotName,
                         productSlug,
                         relPath,
-                        absPath: `${teamLeader.workspace.getAssetsDir(productSlug)}/${relPath.split("/").pop()}`,
-                        message: `${robotName} output saved. Phase 2 robots will use this file.`,
+                        absPath,
+                        viewerPath,
+                        message: viewerPath
+                            ? `${robotName} output saved. A stunning visual experiment selector was generated at: ${viewerPath}. IMPORTANT: Tell the user to open this HTML file in their browser, make their selection, and paste the copied command back here.`
+                            : `${robotName} output saved. Phase 2 robots will use this file.`,
                     }, null, 2)
                 }]
             };
