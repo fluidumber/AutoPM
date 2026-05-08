@@ -93,8 +93,8 @@ class TeamLeader {
 
         // Create brain
         this.memory = new RobotMemory();
-        this.learner = new LearningEngine(this.memory);
         this.database = new BrainDatabase();
+        this.learner  = new LearningEngine(this.memory, this.database);
 
         // Workspace layer (product-scoped persistence). Optional — sessions
         // without a productSlug fall back to purely in-memory behaviour.
@@ -465,18 +465,13 @@ class TeamLeader {
         // Persist rating to brain database for long-term learning
         await this.database.saveFeedback(analysisId, robotName, rating, notes);
 
-        // Feed into learning engine
-        if (rating >= 4) {
-            this.learner.learnFromSuccess(
-                `${robotName}: ${notes || "good output"}`,
-                rating / 5
-            );
-        } else {
-            this.learner.learnFromFailure(
-                `${robotName}: needs improvement`,
-                notes || "low rating"
-            );
-        }
+        // Feed into learning engine (tiered hypothesis system)
+        await this.learner.recordFeedback(
+            robotName,
+            rating,
+            notes || "",
+            session?.productSlug || null
+        );
 
         // Append rating block to the prompt-payload asset file so the history
         // file reflects the PM's assessment alongside the original analysis.

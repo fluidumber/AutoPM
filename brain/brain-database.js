@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { saveData, loadData } from "../utils/file-storage.js";
 
 class BrainDatabase {
@@ -18,11 +19,13 @@ class BrainDatabase {
         const saved = await loadData("brain-database.json");
         if (saved) {
             this.data = {
-                analyses: saved.analyses || [],
-                learnings: saved.learnings || [],
-                feedback: saved.feedback || [],
-                errors: saved.errors || [],
-                designPreferences: saved.designPreferences || null,
+                analyses:           saved.analyses           || [],
+                learnings:          saved.learnings          || [],
+                feedback:           saved.feedback           || [],
+                errors:             saved.errors             || [],
+                designPreferences:  saved.designPreferences  || null,
+                knowledgeLayer:     saved.knowledgeLayer     || { entries: [] },
+                processImprovements: saved.processImprovements || [],
             };
             console.log(`🧠 Loaded ${saved.analyses.length} previous analyses`);
         }
@@ -117,6 +120,120 @@ class BrainDatabase {
         await saveData("brain-database.json", this.data);
     }
 
+    // ── Knowledge Layer ──────────────────────────────────────────────
+
+    /**
+     * Insert or update a knowledge entry. Generates a UUID if entry.id is absent.
+     *
+     * @param {object} entry
+     * @param {string} [entry.id]
+     * @param {string} entry.robotName
+     * @param {string} entry.content
+     * @param {'observation'|'hypothesis'|'rule'} entry.tier
+     * @param {number} entry.confirmations
+     * @param {number} entry.contradictions
+     * @param {number} entry.promotionThreshold
+     * @param {string[]} entry.productSlugs
+     * @returns {Promise<object>} the saved entry
+     */
+    async upsertKnowledgeEntry(entry) {
+        const entries = this.data.knowledgeLayer.entries;
+        const id      = entry.id || randomUUID();
+        const now     = new Date().toISOString();
+        const idx     = entries.findIndex(e => e.id === id);
+
+        const saved = {
+            ...entry,
+            id,
+            createdAt: idx >= 0 ? entries[idx].createdAt : now,
+            updatedAt: now,
+        };
+
+        if (idx >= 0) {
+            entries[idx] = saved;
+        } else {
+            entries.push(saved);
+        }
+
+        await saveData("brain-database.json", this.data);
+        return saved;
+    }
+
+    /**
+     * Return knowledge entries for a robot. If productSlug is given, returns
+     * entries that either belong to that product or have no product scope.
+     *
+     * @param {string} robotName
+     * @param {string|null} [productSlug]
+     * @returns {object[]}
+     */
+    getKnowledgeForRobot(robotName, productSlug = null) {
+        const entries = this.data.knowledgeLayer.entries.filter(e => e.robotName === robotName);
+        if (!productSlug) return entries;
+        return entries.filter(e =>
+            !e.productSlugs?.length || e.productSlugs.includes(productSlug)
+        );
+    }
+
+    /**
+     * Demote a knowledge entry one tier (rule → hypothesis → observation).
+     * Increments contradictions and saves.
+     *
+     * @param {string} entryId
+     * @returns {Promise<object|null>}
+     */
+    async demoteEntry(entryId) {
+        const entries = this.data.knowledgeLayer.entries;
+        const idx     = entries.findIndex(e => e.id === entryId);
+        if (idx < 0) return null;
+
+        const entry = entries[idx];
+        const tierDown = { rule: "hypothesis", hypothesis: "observation" };
+        entry.tier          = tierDown[entry.tier] ?? entry.tier;
+        entry.contradictions = (entry.contradictions || 0) + 1;
+        entry.updatedAt     = new Date().toISOString();
+        entries[idx]        = entry;
+
+        await saveData("brain-database.json", this.data);
+        return entry;
+    }
+
+    // ── Process Improvements ─────────────────────────────────────────
+
+    /**
+     * Persist a new process improvement suggestion.
+     *
+     * @param {{ type: string, robotName: string|null, evidence: string[], frequency: number, status: string }} suggestion
+     * @returns {Promise<object>}
+     */
+    async saveProcessImprovement(suggestion) {
+        const entry = {
+            ...suggestion,
+            id:          randomUUID(),
+            suggestedAt: new Date().toISOString(),
+            status:      suggestion.status || "pending",
+        };
+        this.data.processImprovements.push(entry);
+        await saveData("brain-database.json", this.data);
+        return entry;
+    }
+
+    /** @returns {object[]} */
+    getPendingProcessImprovements() {
+        return (this.data.processImprovements || []).filter(s => s.status === "pending");
+    }
+
+    /**
+     * Mark a suggestion as sent (after email dispatch).
+     * @param {string} id
+     */
+    async markSuggestionSent(id) {
+        const idx = (this.data.processImprovements || []).findIndex(s => s.id === id);
+        if (idx < 0) return;
+        this.data.processImprovements[idx].status = "sent";
+        await saveData("brain-database.json", this.data);
+    }
+
     // ── Reset ────────────────────────────────────────────────────────
 
     async clearAll() {
@@ -126,6 +243,8 @@ class BrainDatabase {
             feedback: [],
             errors: [],
             designPreferences: null,
+            knowledgeLayer: { entries: [] },
+            processImprovements: [],
         };
         await saveData("brain-database.json", this.data);
     }

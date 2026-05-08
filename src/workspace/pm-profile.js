@@ -88,8 +88,10 @@ export class PMProfile {
                 preferredFrameworks: getSection(body, "Preferred Frameworks"),
                 analysisDepth:      getSection(body, "Analysis Depth"),
                 productsOwned:      getListSection(body, "Products Owned"),
-                updated:            frontmatter.updated || null,
-                version:            frontmatter.version || 1,
+                updated:            frontmatter.updated      || null,
+                version:            frontmatter.version      || 1,
+                eulaAccepted:       frontmatter.eulaAccepted ?? false,
+                eulaVersion:        frontmatter.eulaVersion  ?? null,
             };
         } catch {
             return null;
@@ -145,11 +147,15 @@ export class PMProfile {
             preferredFrameworks: data.preferredFrameworks ?? existing.preferredFrameworks ?? "",
             analysisDepth:      data.analysisDepth      ?? existing.analysisDepth      ?? "",
             productsOwned:      data.productsOwned      ?? existing.productsOwned      ?? [],
+            eulaAccepted:       data.eulaAccepted       ?? existing.eulaAccepted       ?? false,
+            eulaVersion:        data.eulaVersion        ?? existing.eulaVersion        ?? null,
         };
 
         const frontmatter = {
-            updated: new Date().toISOString(),
-            version: (existing.version || 0) + 1,
+            updated:      new Date().toISOString(),
+            version:      (existing.version || 0) + 1,
+            eulaAccepted: merged.eulaAccepted,
+            eulaVersion:  merged.eulaVersion,
         };
 
         await fs.writeFile(
@@ -159,6 +165,14 @@ export class PMProfile {
         );
 
         return { ...merged, personaSlug: slug, updated: frontmatter.updated, version: frontmatter.version };
+    }
+
+    /**
+     * Accept the EULA for the active persona. Convenience wrapper around save().
+     * @param {string} version - e.g. "1.0"
+     */
+    async acceptEula(version) {
+        return this.save({ eulaAccepted: true, eulaVersion: version });
     }
 
     /**
