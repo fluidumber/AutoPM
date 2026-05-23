@@ -109,7 +109,7 @@ console.log("\nContextStore:");
 await test("exports the allowed context types", () => {
     assert.deepEqual(
         [...CONTEXT_TYPES].sort(),
-        ["analyst-report", "document", "note", "url"],
+        ["analyst-report", "document", "experiment-feedback", "note", "research", "survey-result", "url"],
     );
 });
 
@@ -180,6 +180,23 @@ await test("document entry is saved as a separate file", async () => {
 
     const full = await contextStore.get("demo", saved.id);
     assert.ok(full.content.includes("Deep dive"));
+});
+
+await test("survey-result entry is saved and available in research context", async () => {
+    const saved = await contextStore.add("demo", {
+        type: "survey-result",
+        title: "PM validation survey",
+        content: "# Survey results\n\n8/10 PMs want assumption validation.",
+        source: "Design partner survey",
+    });
+    assert.ok(saved.filename, "filename should be set for survey results");
+
+    const full = await contextStore.get("demo", saved.id);
+    assert.ok(full.content.includes("assumption validation"));
+
+    const researchContext = await contextStore.loadResearchContext("demo");
+    assert.ok(researchContext.includes("[SURVEY-RESULT] PM validation survey"));
+    assert.ok(researchContext.includes("8/10 PMs"));
 });
 
 await test("saveInterviewAnswers + loadInterviewAnswers round-trip", async () => {

@@ -5,7 +5,7 @@
     "type": "module",
     "main": "src/mcp-server.js",
     "bin": {
-        "productflow": "./bin/productflow.js"
+        "autopm": "./bin/productflow.js"
     },
     "scripts": {
         "mcp": "node src/mcp-server.js",

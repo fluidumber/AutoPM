@@ -28,7 +28,7 @@ const notificationService = new NotificationService(teamLeader.database);
 const processAdvisor      = new ProcessAdvisor(teamLeader.database, notificationService);
 
 const server = new McpServer({
-    name: "productflow",
+    name: "autopm",
     version: "2.0.0",
 });
 
@@ -43,6 +43,161 @@ async function readActiveSession() {
         return null;
     }
 }
+
+// ═════════════════════════════════════════════════════════════════════
+// Tool 0: GREET — session orientation (call this FIRST)
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "greet",
+    `Call this tool FIRST at the start of every new AutoPM session, before any other tool.
+
+It returns a complete picture of the PM's current environment:
+  - Where AutoPM stores data on disk (workspace root, profiles dir, products dir)
+  - Which PM personas exist and which is currently active
+  - EULA acceptance status for the active persona
+  - Which products already exist in the workspace
+  - A step-by-step workflow guide so the PM knows exactly what to do next
+
+Use the response to orient the conversation:
+  1. If no persona exists → greet the user, explain AutoPM, and guide them through 'pm-profile-save' + 'accept-terms'
+  2. If a persona exists but EULA is not accepted → surface the terms summary and guide them to 'accept-terms'
+  3. If persona + EULA are set up → list existing products and ask which one to work on (or offer to create a new one)
+  4. Once a product is chosen → guide through interview → run-robot (Phase 1) → feedback loop → promote-to-phase-2 → Phase 2 robots → generate-pdd / generate-presentation
+
+Never skip this tool at session start — it prevents wasted effort from running robots without a persona or EULA acceptance.`,
+    {},
+    async () => {
+        await workspace.ensureWorkspace();
+
+        // ── 1. Personas ──────────────────────────────────────────────
+        const personas    = await pmProfile.listPersonas();
+        const activePersona = personas.find(p => p.isActive) || null;
+
+        // ── 2. EULA status ───────────────────────────────────────────
+        let eulaStatus = "no-profile";
+        let eulaVersion = null;
+        if (activePersona) {
+            const profile = await pmProfile.load();
+            eulaStatus  = profile?.eulaAccepted ? "accepted" : "pending";
+            eulaVersion = profile?.eulaVersion  || null;
+        }
+
+        // ── 3. Products ──────────────────────────────────────────────
+        let products = [];
+        try {
+            products = await productRegistry.list();
+        } catch { /* products dir may not exist yet */ }
+
+        // ── 4. Workspace paths (shown so user knows where data lives) ─
+        const paths = {
+            workspaceRoot: workspace.getRoot(),
+            profilesDir:   workspace.getProfilesDir(),
+            productsDir:   workspace.getProductsDir(),
+            activeSession: workspace.getActiveSessionPath(),
+            note:          "Override workspace root by setting the PRODUCTFLOW_HOME env var before starting the server.",
+        };
+
+        // ── 5. Derive the right next step ────────────────────────────
+        let nextStep;
+        if (personas.length === 0) {
+            nextStep = "No PM profile found. Introduce yourself to the PM, explain AutoPM, then call 'pm-profile-save' to create their profile. After saving, call 'accept-terms' to accept the Terms of Service before running any robots.";
+        } else if (!activePersona) {
+            nextStep = `${personas.length} persona(s) exist but none is active. Call 'pm-persona-switch' to activate one, or 'pm-profile-save' to create a new default persona.`;
+        } else if (eulaStatus !== "accepted") {
+            nextStep = `Persona '${activePersona.slug}' is active but the Terms of Service have not been accepted. Summarise the terms from docs/EULA.md, then call 'accept-terms' with agreedToTerms: true to proceed.`;
+        } else if (products.length === 0) {
+            nextStep = `All set! No products exist yet. Ask the PM what product they want to analyse, then call 'product-create' to scaffold it, followed by 'interview' to begin the discovery session.`;
+        } else {
+            const slugList = products.map(p => `'${p.slug}' (${p.name})`).join(", ");
+            nextStep = `All set! Existing products: ${slugList}. Ask the PM which product they want to work on today, or whether to create a new one via 'product-create'.`;
+        }
+
+        // ── 6. Workflow reference ─────────────────────────────────────
+        const workflow = {
+            summary: "AutoPM uses a two-phased robot pipeline. Phase 1 validates your market strategy; Phase 2 defines how to build it.",
+            onboarding: [
+                "1. pm-profile-save   — Create your PM persona (name, role, industry, frameworks)",
+                "2. accept-terms      — Accept the AutoPM Terms of Service (once per persona)",
+                "3. product-create    — Scaffold a new product workspace",
+            ],
+            phase1: {
+                label: "Strategic Discovery (run in order, one robot at a time)",
+                robots: [
+                    "interview     — Dynamic PM interview to lock in your product idea and context",
+                    "run-robot: scout      — Market demand (TAM/SAM/SOM, growth signals)",
+                    "run-robot: detective  — Competitive landscape (gaps, moat, positioning)",
+                    "run-robot: people     — User personas (segments, pain points, JTBD)",
+                    "run-robot: money      — Financial model (unit economics, 3-scenario projections)",
+                    "run-robot: feature    — Feature breakdown (MoSCoW-tagged)",
+                    "run-robot: plan       — Product roadmap (phased 12-18 month plan)",
+                    "run-robot: priority   — Feature prioritisation (RICE scoring)",
+                ],
+                tip: "After each robot, ask the PM to rate the output 1-5 and call 'feedback' before moving on. This improves future runs.",
+            },
+            phase1Outputs: [
+                "generate-presentation — Stakeholder-ready HTML pitch deck from Phase 1 outputs",
+                "promote-to-phase-2    — Gate check: confirm all Phase 1 robots are fresh, then unlock Phase 2",
+            ],
+            phase2: {
+                label: "Execution Definition (requires promote-to-phase-2 first)",
+                robots: [
+                    "run-robot: user-stories       — MoSCoW-tagged user stories",
+                    "run-robot: scope-spec         — Scope, assumptions, constraints",
+                    "run-robot: feasibility-tech   — Architecture, vendors, infrastructure",
+                    "run-robot: feasibility-design — Design principles, wireflow, accessibility",
+                    "run-robot: customer-journeys  — End-to-end journey narratives per persona",
+                    "run-robot: data-privacy       — GDPR, SOC 2, InfoSec impact matrix",
+                    "run-robot: gtm-readiness      — CX stage matrix, rollout waves, pricing",
+                    "run-robot: risks-registry     — Risk register with mitigations",
+                    "run-robot: kpis               — Adoption, retention, revenue KPIs",
+                    "run-robot: daci-stakeholders  — DACI table + key contacts",
+                ],
+            },
+            phase2Outputs: [
+                "generate-pdd — Assemble the full Product Definition Document (PDD) from all outputs",
+            ],
+            utilities: [
+                "robots-list          — See all robots with average ratings from past feedback",
+                "history              — Past analysis runs",
+                "get-process-suggestions — View AI-generated suggestions to improve the robot pipeline",
+                "start-session        — Begin a tracked session for a product (shows gate status)",
+                "context-add          — Attach research, surveys, or notes to a product",
+            ],
+        };
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    welcome:       "👋 Welcome to AutoPM — your agentic Product Management co-pilot.",
+                    version:       "2.0.0",
+                    paths,
+                    personas: {
+                        count:   personas.length,
+                        list:    personas,
+                        active:  activePersona?.slug || null,
+                    },
+                    eula: {
+                        status:  eulaStatus,
+                        version: eulaVersion,
+                        termsFile: "docs/EULA.md",
+                    },
+                    products: {
+                        count: products.length,
+                        list:  products.map(p => ({
+                            slug:     p.slug,
+                            name:     p.name,
+                            stage:    p.stage,
+                            updated:  p.updated,
+                        })),
+                    },
+                    nextStep,
+                    workflow,
+                }, null, 2),
+            }],
+        };
+    }
+);
 
 // ═════════════════════════════════════════════════════════════════════
 // Tool 1: INTERVIEW — get PM questions for context gathering

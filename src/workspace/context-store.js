@@ -17,6 +17,7 @@ const INDEX_FILE = "index.json";
  * Allowed context entry types.
  */
 export const CONTEXT_TYPES = ["note", "url", "document", "analyst-report", "research", "survey-result", "experiment-feedback"];
+const FILE_BACKED_CONTEXT_TYPES = ["document", "analyst-report", "research", "survey-result", "experiment-feedback"];
 
 export class ContextStore {
     /**
@@ -48,7 +49,7 @@ export class ContextStore {
      * Add a context entry for a product.
      * @param {string} slug
      * @param {object} entry
-     * @param {"note"|"url"|"document"|"analyst-report"} entry.type
+     * @param {"note"|"url"|"document"|"analyst-report"|"research"|"survey-result"|"experiment-feedback"} entry.type
      * @param {string} entry.title - short human-readable label
      * @param {string} entry.content - the body (for notes/urls) or filename (for documents)
      * @param {string} [entry.source] - original URL or source reference
@@ -79,7 +80,7 @@ export class ContextStore {
         // Route storage based on type
         if (entry.type === "note" || entry.type === "url") {
             await this._appendToNotesFile(slug, saved, entry.content);
-        } else if (entry.type === "document" || entry.type === "analyst-report") {
+        } else if (FILE_BACKED_CONTEXT_TYPES.includes(entry.type)) {
             // Save the content as a file under documents/
             const safeName = sanitiseFilename(entry.title);
             const filename = `${timestamp.slice(0, 10)}-${safeName}.md`;

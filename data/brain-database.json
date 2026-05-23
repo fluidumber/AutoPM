@@ -149,8 +149,471 @@
       "notes": "Good output. Improvement requested: Detective should ask deeper questions about the user's own product before/while analyzing competitors, especially for platform/product categories that are 10+ years old. It should explicitly challenge whether the named category has become commoditized and whether the product should reframe/rebrand the category, e.g. CDP -> Customer Intelligence Platform (CIP), where value is not only customer data plumbing but the intelligence and actions derived from it. It should also pressure-test moat beyond the obvious differentiator; for Lucidya, Arabic is important but competitors may catch up, so the analysis should identify additional moats such as proprietary CX interaction data, workflow embedding, enterprise/government distribution, governance/data residency, recommendation loops, and cross-product activation. This category-challenge section should be mandatory for mature product/platform categories.",
       "productSlug": null,
       "timestamp": "2026-05-01T08:36:40.849Z"
+    },
+    {
+      "analysisId": "analysis-1777640606525",
+      "robotName": "people",
+      "rating": 5,
+      "notes": "User responded 'Great' after reviewing the People/JTBD output. Treating this as approval. Output covered multi-stakeholder personas, JTBD, buyer/user deltas, adoption equation, and Phase 2 implications.",
+      "productSlug": null,
+      "timestamp": "2026-05-04T16:37:06.833Z"
+    },
+    {
+      "analysisId": "analysis-1777950724847",
+      "robotName": "scope-spec",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceed to next Phase 2 robots.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:24:54.287Z"
+    },
+    {
+      "analysisId": "analysis-1777950906675",
+      "robotName": "feasibility-tech",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceed to next Phase 2 robots.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:24:57.813Z"
+    },
+    {
+      "analysisId": "analysis-1777951507235",
+      "robotName": "feasibility-design",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:30:12.997Z"
+    },
+    {
+      "analysisId": "analysis-1777951661097",
+      "robotName": "customer-journeys",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:30:16.823Z"
+    },
+    {
+      "analysisId": "analysis-1777951823507",
+      "robotName": "data-privacy",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:31:56.312Z"
+    },
+    {
+      "analysisId": "analysis-1777951925558",
+      "robotName": "gtm-readiness",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:33:58.712Z"
+    },
+    {
+      "analysisId": "analysis-1777952057379",
+      "robotName": "risks-registry",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:36:21.141Z"
+    },
+    {
+      "analysisId": "analysis-1777952187436",
+      "robotName": "kpis",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:37:47.666Z"
+    },
+    {
+      "analysisId": "analysis-1777952280876",
+      "robotName": "daci-stakeholders",
+      "rating": 4,
+      "notes": "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+      "productSlug": null,
+      "timestamp": "2026-05-05T03:39:30.390Z"
+    },
+    {
+      "analysisId": "analysis-1778322454423",
+      "robotName": "scout",
+      "rating": 3,
+      "notes": "Scout output was directionally useful but confidence was still intuitively suggested rather than empirically calculated. Future Scout outputs should create an evidence equation based on discovered vectors with explicit weights, explain why vectors and weights were chosen, show a clear decision flow visual, include charts where useful, identify when direct data is unavailable and use clearly labeled proxies, and include a PM review gate where the PM can acknowledge, reject, or append evidence before final confidence is calculated.",
+      "productSlug": null,
+      "timestamp": "2026-05-09T10:54:45.227Z"
+    },
+    {
+      "analysisId": "analysis-1778322454423",
+      "robotName": "scout",
+      "rating": 3,
+      "notes": "Revised Scout output is greatly improved, but still needs a permanent workflow change. After evidence vectors and calculated confidence are shown, Scout should ask the PM to provide validation evidence. At this point the PM may have answers, may acknowledge/reject/append vectors, or may need to go do discovery. If the PM wants to do discovery, AutoPM should help create a survey plan or Google Form-style validation instrument to capture evidence. There are now two classes of PM asks required for meaningful confidence: (1) rate the Scout output and acknowledge/reject/append evidence vectors; (2) provide or collect validation evidence for weak/missing vectors. For Google Forms, do not collect Google username/password; use OAuth or existing Google integration/API credentials if survey creation is automated.",
+      "productSlug": null,
+      "timestamp": "2026-05-09T11:11:11.511Z"
+    },
+    {
+      "analysisId": "analysis-1779534460100",
+      "robotName": "detective",
+      "rating": 4,
+      "notes": "Solid output. Improvement requested: add a SWOT analysis in a quadrant visual to make the competitive analysis more executive-ready and easier to scan. Detective outputs should include a visual SWOT quadrant where useful.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T12:21:32.545Z"
+    },
+    {
+      "analysisId": "analysis-1779539004367",
+      "robotName": "people",
+      "rating": 4,
+      "notes": "Great output, solid 4/5. Improvement requested: People should end by asking whether Design or PM teams already have mapped personas. This should happen after the robot's first-pass output, not before, to avoid biasing the analysis. If existing personas are provided, People should add them as enrichment or reconciliation to the final output. Also, persona cards should support/generated image portraits next to each persona to create the classic persona-document feel.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T13:18:37.904Z"
+    },
+    {
+      "analysisId": "analysis-1779542476190",
+      "robotName": "money",
+      "rating": 4,
+      "notes": "Great output. Improvement requested: Money must always produce an editable Excel financial model as one of its artifacts, not only narrative markdown. The workbook should include clear assumptions, formula-driven calculations, scenarios, source notes, checks, and editable formulas so the PM can adjust drivers later. Financial modeling is mandatory for Money outputs.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T13:26:12.622Z"
+    },
+    {
+      "analysisId": "analysis-1779542476190",
+      "robotName": "money",
+      "rating": 5,
+      "notes": "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T14:07:43.022Z"
+    },
+    {
+      "analysisId": "analysis-1779545295382",
+      "robotName": "feature",
+      "rating": 4,
+      "notes": "User rated Feature output a solid 4/5. No specific improvement note provided in this turn. Maintain the MoSCoW breakdown quality; future improvement can be collected if the PM identifies what made it miss the final point.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T14:12:33.216Z"
+    },
+    {
+      "analysisId": "analysis-1779545568324",
+      "robotName": "plan",
+      "rating": 4,
+      "notes": "Solid 4/5. Improvement requested: every robot output should include a visual flow/diagram, not only prose and tables. This has been suggested in previous ProductFlow runs for other products and is still missing across outputs. For Plan specifically, include a visual roadmap flow/timeline that shows phase progression, gates, dependencies, and revenue milestones.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T14:18:01.780Z"
+    },
+    {
+      "analysisId": "analysis-1779545972086",
+      "robotName": "priority",
+      "rating": 4,
+      "notes": "Priority rated 4/5. Improvement requested: reduce the font size / visual density of item labels inside the Effort vs Impact Prioritization quadrant. Also, this same kind of quadrant visualization should have been included in the Detective output, e.g. for competitive positioning or differentiation vs market maturity. Future robot outputs should ensure visuals are not only present but readable and presentation-safe.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T14:24:13.513Z"
+    },
+    {
+      "analysisId": "analysis-1779547218429",
+      "robotName": "user-stories",
+      "rating": 3,
+      "notes": "User rated user-stories 3/5. Major miss: the robot should generate multiple blocks/clusters of user stories and ask the PM to choose a specific block or a mix before locking the execution backlog. This appears to have been missed. Future user-stories output should include alternative story blocks, e.g. local cockpit core, review/feedback loop, stakeholder artifact flow, and then a recommended mix/selection prompt.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T14:45:32.757Z"
+    },
+    {
+      "analysisId": "analysis-1779547849487",
+      "robotName": "scope-spec",
+      "rating": 4,
+      "notes": "PM rated scope-spec 4/5: good output. Preserve the selected story mix and clear MVP boundary style in future scope specs.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T14:53:37.048Z"
+    },
+    {
+      "analysisId": "analysis-1779548033951",
+      "robotName": "feasibility-tech",
+      "rating": 4,
+      "notes": "PM rated feasibility-tech 4/5. Good output with room for improvement. PM agreed with local Express + workspace-reader architecture, React/Vite direction, local-only first, existing ProductFlow repo/modules, npm dev flow, and no hosted backend. PM explicitly chose direct ProductFlow feedback persistence instead of a local queue because feedback should affect the actual learning loop and future outputs immediately.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T15:23:41.671Z"
+    },
+    {
+      "analysisId": "analysis-1779549838834",
+      "robotName": "feasibility-design",
+      "rating": 4,
+      "notes": "PM rated feasibility-design 4/5. Good enough to proceed. Design output can be used as a prompt source for vibe-coding or design-generation tools such as Vercel v0 or Claude Design to create a high-fidelity mockup frontend before wiring real ProductFlow APIs.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T15:39:49.900Z"
+    },
+    {
+      "analysisId": "analysis-1779550801994",
+      "robotName": "customer-journeys",
+      "rating": 4,
+      "notes": "PM rated customer-journeys 4/5. Proceed with 3 deep MVP journeys, deferred Sarah full stakeholder journey, feedback completion as the stronger activation milestone, and Money workbook as a core trust moment.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T15:44:40.080Z"
+    },
+    {
+      "analysisId": "analysis-1779551092846",
+      "robotName": "data-privacy",
+      "rating": 4,
+      "notes": "PM rated data-privacy 4/5: sounds good. Preserve local-only privacy posture, localhost/path allowlist/markdown sanitization/direct feedback guardrails, manual external mockup use with redaction, and deferred hosted certification/compliance until SaaS/team features are selected.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T16:06:56.981Z"
+    },
+    {
+      "analysisId": "analysis-1779552430158",
+      "robotName": "gtm-readiness",
+      "rating": 4,
+      "notes": "PM rated gtm-readiness 4/5. Proceed with local MVP design-partner preview, free local MVP, local-only GA definition, technical PM builders in Wave 1, broader PM users in Wave 2, and pricing interviews only after activation proof.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T16:09:53.075Z"
+    },
+    {
+      "analysisId": "analysis-1779552607158",
+      "robotName": "risks-registry",
+      "rating": 4,
+      "notes": "PM rated risks-registry 4/5 and requested moving to KPIs. Proceed with schema reliability first, direct feedback as a core preview risk, technical PM builders in Wave 1, and capture-not-build hosted demand.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T16:18:49.467Z"
+    },
+    {
+      "analysisId": "analysis-1779553143408",
+      "robotName": "kpis",
+      "rating": 4,
+      "notes": "PM rated KPIs 4/5 and requested completing final DACI. Proceed with Weekly Activated Product Workspaces as North Star, feedback required for activation, local event log for MVP measurement, and revenue readiness rather than revenue optimization for local preview.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T16:22:07.159Z"
+    },
+    {
+      "analysisId": "analysis-1779553358572",
+      "robotName": "daci-stakeholders",
+      "rating": 4,
+      "notes": "PM rated DACI 4/5. Keep machine-readable JSON separate from human-facing markdown. Proceed with Anand as acting approver for local MVP, placeholders acceptable for draft PDD, and design partners as contributors pending confirmation.",
+      "productSlug": null,
+      "timestamp": "2026-05-23T16:31:52.021Z"
     }
   ],
   "errors": [],
-  "designPreferences": null
+  "designPreferences": {
+    "themeStyle": "Corporate Minimalist",
+    "primaryColor": "#2563eb",
+    "fontFamily": "Inter"
+  },
+  "knowledgeLayer": {
+    "entries": [
+      {
+        "robotName": "detective",
+        "content": "detective: Solid output. Improvement requested: add a SWOT analysis in a quadrant visual to make the competitive analysis more executive-ready and easier to scan. Detective outputs should include a visual SWOT quadrant where useful.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "4a91c4bc-3dc3-4b7e-8fe8-68a9e49d9677",
+        "createdAt": "2026-05-23T12:21:32.550Z",
+        "updatedAt": "2026-05-23T12:21:32.550Z"
+      },
+      {
+        "robotName": "people",
+        "content": "people: Great output, solid 4/5. Improvement requested: People should end by asking whether Design or PM teams already have mapped personas. This should happen after the robot's first-pass output, not before, to avoid biasing the analysis. If existing personas are provided, People should add them as enrichment or reconciliation to the final output. Also, persona cards should support/generated image portraits next to each persona to create the classic persona-document feel.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "8184c90d-bd72-463b-85a4-5859bb0d6191",
+        "createdAt": "2026-05-23T13:18:37.906Z",
+        "updatedAt": "2026-05-23T13:18:37.906Z"
+      },
+      {
+        "robotName": "money",
+        "content": "money: Great output. Improvement requested: Money must always produce an editable Excel financial model as one of its artifacts, not only narrative markdown. The workbook should include clear assumptions, formula-driven calculations, scenarios, source notes, checks, and editable formulas so the PM can adjust drivers later. Financial modeling is mandatory for Money outputs.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "f85a6f9e-c17d-49a8-b23c-70ca3a0bcd74",
+        "createdAt": "2026-05-23T13:26:12.623Z",
+        "updatedAt": "2026-05-23T13:26:12.623Z"
+      },
+      {
+        "robotName": "money",
+        "content": "money: User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "ddfd7e36-5d9c-4e41-9edc-abcf4e6c9212",
+        "createdAt": "2026-05-23T14:07:43.024Z",
+        "updatedAt": "2026-05-23T14:07:43.024Z"
+      },
+      {
+        "robotName": "feature",
+        "content": "feature: User rated Feature output a solid 4/5. No specific improvement note provided in this turn. Maintain the MoSCoW breakdown quality; future improvement can be collected if the PM identifies what made it miss the final point.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "3e98ada4-8a89-446e-bb48-b385d43529e2",
+        "createdAt": "2026-05-23T14:12:33.218Z",
+        "updatedAt": "2026-05-23T14:12:33.218Z"
+      },
+      {
+        "robotName": "plan",
+        "content": "plan: Solid 4/5. Improvement requested: every robot output should include a visual flow/diagram, not only prose and tables. This has been suggested in previous ProductFlow runs for other products and is still missing across outputs. For Plan specifically, include a visual roadmap flow/timeline that shows phase progression, gates, dependencies, and revenue milestones.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "5baace02-872b-4f37-8831-15d942190500",
+        "createdAt": "2026-05-23T14:18:01.781Z",
+        "updatedAt": "2026-05-23T14:18:01.781Z"
+      },
+      {
+        "robotName": "priority",
+        "content": "priority: Priority rated 4/5. Improvement requested: reduce the font size / visual density of item labels inside the Effort vs Impact Prioritization quadrant. Also, this same kind of quadrant visualization should have been included in the Detective output, e.g. for competitive positioning or differentiation vs market maturity. Future robot outputs should ensure visuals are not only present but readable and presentation-safe.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "050da613-d00a-422e-befe-90d5ac4921c6",
+        "createdAt": "2026-05-23T14:24:13.514Z",
+        "updatedAt": "2026-05-23T14:24:13.514Z"
+      },
+      {
+        "robotName": "scope-spec",
+        "content": "scope-spec: PM rated scope-spec 4/5: good output. Preserve the selected story mix and clear MVP boundary style in future scope specs.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "2f98fed2-a581-4716-939b-bde4f2b192a3",
+        "createdAt": "2026-05-23T14:53:37.050Z",
+        "updatedAt": "2026-05-23T14:53:37.050Z"
+      },
+      {
+        "robotName": "feasibility-tech",
+        "content": "feasibility-tech: PM rated feasibility-tech 4/5. Good output with room for improvement. PM agreed with local Express + workspace-reader architecture, React/Vite direction, local-only first, existing ProductFlow repo/modules, npm dev flow, and no hosted backend. PM explicitly chose direct ProductFlow feedback persistence instead of a local queue because feedback should affect the actual learning loop and future outputs immediately.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "d5fcdc8b-dea6-4c43-b189-2bcb1315ff7d",
+        "createdAt": "2026-05-23T15:23:41.677Z",
+        "updatedAt": "2026-05-23T15:23:41.677Z"
+      },
+      {
+        "robotName": "feasibility-design",
+        "content": "feasibility-design: PM rated feasibility-design 4/5. Good enough to proceed. Design output can be used as a prompt source for vibe-coding or design-generation tools such as Vercel v0 or Claude Design to create a high-fidelity mockup frontend before wiring real ProductFlow APIs.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "73854712-0fe2-48ef-a912-7d9172b518f9",
+        "createdAt": "2026-05-23T15:39:49.902Z",
+        "updatedAt": "2026-05-23T15:39:49.902Z"
+      },
+      {
+        "robotName": "customer-journeys",
+        "content": "customer-journeys: PM rated customer-journeys 4/5. Proceed with 3 deep MVP journeys, deferred Sarah full stakeholder journey, feedback completion as the stronger activation milestone, and Money workbook as a core trust moment.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "864f342b-0d0d-4e8c-ad94-9e2c4fa423c2",
+        "createdAt": "2026-05-23T15:44:40.082Z",
+        "updatedAt": "2026-05-23T15:44:40.082Z"
+      },
+      {
+        "robotName": "data-privacy",
+        "content": "data-privacy: PM rated data-privacy 4/5: sounds good. Preserve local-only privacy posture, localhost/path allowlist/markdown sanitization/direct feedback guardrails, manual external mockup use with redaction, and deferred hosted certification/compliance until SaaS/team features are selected.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "32b3fbbe-e0d2-41b9-9841-33d9f0cd49d1",
+        "createdAt": "2026-05-23T16:06:56.983Z",
+        "updatedAt": "2026-05-23T16:06:56.983Z"
+      },
+      {
+        "robotName": "gtm-readiness",
+        "content": "gtm-readiness: PM rated gtm-readiness 4/5. Proceed with local MVP design-partner preview, free local MVP, local-only GA definition, technical PM builders in Wave 1, broader PM users in Wave 2, and pricing interviews only after activation proof.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "fc89fd78-a183-4260-b682-26074bef68cd",
+        "createdAt": "2026-05-23T16:09:53.078Z",
+        "updatedAt": "2026-05-23T16:09:53.078Z"
+      },
+      {
+        "robotName": "risks-registry",
+        "content": "risks-registry: PM rated risks-registry 4/5 and requested moving to KPIs. Proceed with schema reliability first, direct feedback as a core preview risk, technical PM builders in Wave 1, and capture-not-build hosted demand.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "efece7bd-8bd7-4b3a-8a47-086a929a5675",
+        "createdAt": "2026-05-23T16:18:49.468Z",
+        "updatedAt": "2026-05-23T16:18:49.468Z"
+      },
+      {
+        "robotName": "kpis",
+        "content": "kpis: PM rated KPIs 4/5 and requested completing final DACI. Proceed with Weekly Activated Product Workspaces as North Star, feedback required for activation, local event log for MVP measurement, and revenue readiness rather than revenue optimization for local preview.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "dfe0090b-a0a3-47d8-9dfb-b06d91380303",
+        "createdAt": "2026-05-23T16:22:07.160Z",
+        "updatedAt": "2026-05-23T16:22:07.160Z"
+      },
+      {
+        "robotName": "daci-stakeholders",
+        "content": "daci-stakeholders: PM rated DACI 4/5. Keep machine-readable JSON separate from human-facing markdown. Proceed with Anand as acting approver for local MVP, placeholders acceptable for draft PDD, and design partners as contributors pending confirmation.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "50dead7d-4ab4-4dc4-a33f-361588961153",
+        "createdAt": "2026-05-23T16:31:52.022Z",
+        "updatedAt": "2026-05-23T16:31:52.022Z"
+      }
+    ]
+  },
+  "processImprovements": []
 }
