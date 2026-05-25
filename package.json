@@ -10,6 +10,7 @@
     "scripts": {
         "mcp": "node src/mcp-server.js",
         "start": "node src/mcp-server.js",
+        "http": "node src/http-server.js",
         "test": "node tests/workspace.test.js && node tests/persistence.test.js",
         "demo": "node run.js"
     },

@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "description": "Project-default staleness windows for all ProductFlow artifacts. Override per-persona in ~/.productflow/profiles/<slug>/staleness-overrides.json or per-product in ~/.productflow/products/<slug>/staleness-overrides.json.",
+  "robots": {
+    "scout":              { "windowDays": 90,  "phase": 1, "rationale": "Market conditions shift quarterly" },
+    "detective":          { "windowDays": 60,  "phase": 1, "rationale": "Competitive landscape moves faster than market sizing" },
+    "people":             { "windowDays": 180, "phase": 1, "rationale": "Personas are stable; refresh semi-annually" },
+    "money":              { "windowDays": 90,  "phase": 1, "rationale": "Financial models need quarterly refresh" },
+    "feature":            { "windowDays": 30,  "phase": 1, "rationale": "Feature scope changes with each planning cycle" },
+    "plan":               { "windowDays": 30,  "phase": 1, "rationale": "Roadmap adjusts monthly" },
+    "priority":           { "windowDays": 30,  "phase": 1, "rationale": "Prioritisation re-runs with each sprint" },
+    "user-stories":       { "windowDays": 30,  "phase": 2, "rationale": "Stories tied to sprint scope" },
+    "scope-spec":         { "windowDays": 30,  "phase": 2, "rationale": "Scope changes with each planning cycle" },
+    "feasibility-tech":   { "windowDays": 60,  "phase": 2, "rationale": "Tech decisions evolve with architecture reviews" },
+    "feasibility-design": { "windowDays": 60,  "phase": 2, "rationale": "Design principles re-evaluated each cycle" },
+    "customer-journeys":  { "windowDays": 90,  "phase": 2, "rationale": "Journey maps are semi-stable" },
+    "data-privacy":       { "windowDays": 90,  "phase": 2, "rationale": "Compliance requirements shift infrequently" },
+    "gtm-readiness":      { "windowDays": 30,  "phase": 2, "rationale": "GTM plans adjust with launch timing" },
+    "risks-registry":     { "windowDays": 30,  "phase": 2, "rationale": "Risk landscape changes with each sprint" },
+    "kpis":               { "windowDays": 90,  "phase": 2, "rationale": "KPI targets refresh with OKR cycles" },
+    "daci-stakeholders":  { "windowDays": 180, "phase": 2, "rationale": "Stakeholder structure is semi-stable" }
+  },
+  "interviewAnswers": {
+    "windowDays": 180,
+    "rationale": "PM context is stable for 6 months"
+  }
+}
