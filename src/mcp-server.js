@@ -373,8 +373,12 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
             .string()
             .optional()
             .describe("The ID of the Feature (optional, for specific Phase 2 scoping)."),
+        askId: z
+            .string()
+            .optional()
+            .describe("Optional Ask ID for scoped Ask runs. Defaults to 'core'."),
     },
-    async ({ analysisId, robotName, enrichedContext, productSlug, forceRerun, epicId, featureId }) => {
+    async ({ analysisId, robotName, enrichedContext, productSlug, forceRerun, epicId, featureId, askId }) => {
         // Parse context safely exactly once
         let context;
         if (typeof enrichedContext === "string") {
@@ -437,6 +441,7 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
         // Run the robot
         const result = await teamLeader.runSingleRobot(sessionId, robotName, {
             forceRerun: !!forceRerun,
+            askId: askId || "core",
             epicId: epicId || null,
             featureId: featureId || null,
         });
@@ -1433,8 +1438,9 @@ The response also includes the staleness window in days per robot so the
 user can make informed decisions.`,
     {
         productSlug: z.string().describe("Product slug"),
+        askId: z.string().optional().describe("Ask ID. Defaults to 'core'."),
     },
-    async ({ productSlug }) => {
+    async ({ productSlug, askId = "core" }) => {
         const product = await productRegistry.get(productSlug);
         if (!product) {
             return {
@@ -1446,7 +1452,7 @@ user can make informed decisions.`,
         }
 
         const [robotFreshness, interviewFreshness] = await Promise.all([
-            teamLeader.freshness.getRobotFreshness(productSlug),
+            teamLeader.freshness.getRobotFreshness(productSlug, { askId }),
             teamLeader.freshness.getInterviewFreshness(productSlug),
         ]);
 
@@ -2367,6 +2373,24 @@ and guide them to their next step without asking open-ended questions.`,
             if (product) productName = product.name;
         }
 
+        // Construct intelligent instructions for the AI
+        const instructions = [];
+        if (!productSlug) {
+            instructions.push("No product selected. Inform the PM of the available products listed above. Ask them to choose an existing product or use 'product-create' to scaffold a new one.");
+        } else {
+            instructions.push(`Current gate: ${report.highestConsecutivePassed === "none" ? "No gates passed yet" : report.highestConsecutivePassed + " of G8"}.`);
+            instructions.push(`Next action: ${report.nextAction}`);
+            
+            if (report.existingAsks && report.existingAsks.length > 0) {
+                instructions.push("This product has existing Asks/Epics. Inform the PM of the existing Asks and ask if they want to augment an existing one or start a new one (using 'ask-create').");
+            } else {
+                instructions.push("This product does not have specific Asks/Epics yet. The 'core' ask is default. You may ask the PM if they want to create a structured Ask using 'ask-create'.");
+            }
+
+            instructions.push("If the PM provides a NEW hypothesis/ask, evaluate whether existing Phase 1 outputs sufficiently cover this hypothesis. If they do, state your opinion to the PM and ask if they agree to skip directly to Phase 2 under the new askId. If they do not, inform the PM that Phase 1 should be re-run for this specific askId.");
+            instructions.push("Guide the PM forward clearly based on the above logic without asking unnecessarily open-ended questions.");
+        }
+
         return {
             content: [{
                 type: "text",
@@ -2375,11 +2399,7 @@ and guide them to their next step without asking open-ended questions.`,
                     productSlug:    productSlug || null,
                     productName,
                     ...report,
-                    instructions: [
-                        `Current gate: ${report.highestConsecutivePassed === "none" ? "No gates passed yet" : report.highestConsecutivePassed + " of G8"}.`,
-                        `Next action: ${report.nextAction}`,
-                        "Present a brief gate summary to the PM (✅ completed gates, 👉 next step) and guide them forward without asking open-ended questions.",
-                    ],
+                    instructions
                 }, null, 2)
             }]
         };

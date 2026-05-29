@@ -104,9 +104,14 @@ export class WorkspaceManager {
         return path.join(this.getProductDir(slug), "assets");
     }
 
+    /** Path to an ask's specific assets directory. */
+    getAskAssetsDir(slug, askId) {
+        return path.join(this.getAssetsDir(slug), "asks", askId || "core");
+    }
+
     /** Path to an epic/feature specific assets directory. */
-    getEpicFeatureDir(slug, epicId, featureId) {
-        let base = path.join(this.getAssetsDir(slug), "epics", epicId);
+    getEpicFeatureDir(slug, askId, epicId, featureId) {
+        let base = path.join(this.getAskAssetsDir(slug, askId), "epics", epicId);
         if (featureId) {
             base = path.join(base, "features", featureId);
         }
@@ -254,6 +259,61 @@ export class WorkspaceManager {
             return true;
         } catch {
             return false;
+        }
+    }
+
+    // ── Listing Helpers ───────────────────────────────────────────────
+
+    /**
+     * List all existing product slugs in the workspace.
+     * @returns {Promise<string[]>} Array of product slugs
+     */
+    async listProducts() {
+        try {
+            const dirs = await fs.readdir(this.getProductsDir(), { withFileTypes: true });
+            return dirs.filter(d => d.isDirectory()).map(d => d.name);
+        } catch {
+            return [];
+        }
+    }
+
+    /**
+     * List all Asks/Epics for a product by reading the `assets/asks/` directories
+     * and parsing their `ask.md` frontmatter.
+     * @param {string} slug 
+     * @returns {Promise<Array<{askId: string, hypothesis: string}>>}
+     */
+    async listAsks(slug) {
+        const asksDir = path.join(this.getAssetsDir(slug), "asks");
+        try {
+            const dirs = await fs.readdir(asksDir, { withFileTypes: true });
+            const asks = [];
+            
+            for (const d of dirs) {
+                if (d.isDirectory()) {
+                    const askId = d.name;
+                    const askFilePath = path.join(asksDir, askId, "ask.md");
+                    try {
+                        const content = await fs.readFile(askFilePath, "utf-8");
+                        const hypothesisMatch = content.match(/## Hypothesis\n([\s\S]*?)(?=\n##|$)/);
+                        asks.push({
+                            askId,
+                            hypothesis: hypothesisMatch ? hypothesisMatch[1].trim() : "No hypothesis provided",
+                            type: askId === "core" ? "core" : "ask"
+                        });
+                    } catch {
+                        // If no ask.md is found, still list it but with a placeholder
+                        asks.push({
+                            askId,
+                            hypothesis: "Legacy or unscaffolded ask",
+                            type: askId === "core" ? "core" : "ask"
+                        });
+                    }
+                }
+            }
+            return asks;
+        } catch {
+            return [];
         }
     }
 }

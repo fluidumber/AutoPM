@@ -238,7 +238,7 @@ class TeamLeader {
      * @param {string} [featureId]
      * @returns {Promise<Object>} extended context with phase1Outputs + phase2Context
      */
-    async _buildPhase2Context(productSlug, baseContext, epicId = null, featureId = null) {
+    async _buildPhase2Context(productSlug, baseContext, { epicId = null, featureId = null, askId = "core" } = {}) {
         // Load Claude's generated output text for ALL robots — Phase 1 and Phase 2.
         // Phase 2 robots like risks-registry read feasibility-tech-output and
         // gtm-readiness-output, so we must load every available output file.
@@ -246,7 +246,7 @@ class TeamLeader {
         const phase1Outputs = {};
         const allRobots = [...ROBOT_ORDER, ...ROBOT_ORDER_PHASE_2];
         for (const robot of allRobots) {
-            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, epicId, featureId);
+            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId, epicId, featureId });
             if (text) {
                 phase1Outputs[robot] = text;
             }
@@ -313,10 +313,11 @@ class TeamLeader {
      * @param {string} robotName
      * @param {object} [opts]
      * @param {boolean} [opts.forceRerun=false] - run even if a fresh asset exists
+     * @param {string} [opts.askId="core"] - ask level scoping
      * @param {string} [opts.epicId=null] - for feature-based scoping
      * @param {string} [opts.featureId=null] - for feature-based scoping
      */
-    async runSingleRobot(analysisId, robotName, { forceRerun = false, epicId = null, featureId = null } = {}) {
+    async runSingleRobot(analysisId, robotName, { forceRerun = false, askId = "core", epicId = null, featureId = null } = {}) {
         const session = this.sessions.get(analysisId);
         if (!session) throw new Error(`Unknown analysis ID: ${analysisId}`);
 
@@ -325,7 +326,7 @@ class TeamLeader {
 
         // If this session is product-scoped, check for a fresh cached result first.
         if (session.productSlug && !forceRerun) {
-            const freshnessState = await this.freshness.getRobotFreshness(session.productSlug, epicId, featureId);
+            const freshnessState = await this.freshness.getRobotFreshness(session.productSlug, askId, epicId, featureId);
             const robotState = freshnessState[robotName];
             if (robotState?.status === "fresh") {
                 const cached = await this.assetStore.loadRobotResult(session.productSlug, robotState.assetPath);
@@ -365,8 +366,8 @@ class TeamLeader {
                 );
             }
             // Build extended context from Phase 1 outputs + Phase 2 manifest
-            analysisContext = await this._buildPhase2Context(session.productSlug, session.enrichedContext, epicId, featureId);
-            const scopeLabel = epicId ? `Epic: ${epicId}` : "product-level";
+            analysisContext = await this._buildPhase2Context(session.productSlug, session.enrichedContext, { epicId, featureId, askId });
+            const scopeLabel = epicId ? `Ask: ${askId}, Epic: ${epicId}` : `Ask: ${askId}`;
             console.log(`🔗 Phase 2 context built for '${robotName}' (${scopeLabel}) — ` +
                 `Outputs loaded: [${Object.keys(analysisContext.phase1Outputs).join(", ")}]`);
         }
@@ -392,10 +393,9 @@ class TeamLeader {
                     session.productSlug,
                     robotName,
                     result,
-                    epicId,
-                    featureId
+                    { askId, epicId, featureId }
                 );
-                await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath, epicId, featureId);
+                await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath, askId, epicId, featureId);
                 console.log(`💾 Saved ${robotName} analysis to ${assetPath}`);
             } catch (err) {
                 console.error(`Failed to persist ${robotName} result: ${err.message}`);

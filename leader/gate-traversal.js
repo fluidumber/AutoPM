@@ -207,6 +207,9 @@ export async function traverseGates({ workspace, freshness }, productSlug) {
         ? GATE_NEXT_ACTIONS[nextBlocker]
         : "All gates passed. The product workflow is complete.";
 
+    const existingAsks = hasProduct ? await workspace.listAsks(productSlug) : [];
+    const availableProducts = !hasProduct ? await workspace.listProducts() : [];
+
     return {
         productSlug,
         gates,
@@ -215,6 +218,8 @@ export async function traverseGates({ workspace, freshness }, productSlug) {
         highestConsecutivePassed: highestConsecutive,
         nextBlocker,
         nextAction,
+        existingAsks,
+        availableProducts,
         phase2: {
             completedRobots: completedPhase2,
             remainingRobots: PHASE2_ROBOTS.filter(r => !completedPhase2.includes(r)),
