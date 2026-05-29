@@ -70,6 +70,26 @@ await test("recordRobotRun marks robot as fresh", async () => {
     assert.equal(state.scout.staleAfterDays, ROBOT_STALENESS_DAYS.scout);
 });
 
+await test("product-level freshness rolls up epic-scoped robot runs", async () => {
+    await freshness.recordRobotRun(
+        "demo",
+        "user-stories",
+        "assets/epics/legacy-epic/2026-04-24-user-stories.md",
+        "legacy-epic",
+    );
+
+    const productState = await freshness.getRobotFreshness("demo");
+    assert.equal(productState["user-stories"].status, "fresh");
+    assert.equal(productState["user-stories"].epicId, "legacy-epic");
+    assert.equal(
+        productState["user-stories"].assetPath,
+        "assets/epics/legacy-epic/2026-04-24-user-stories.md",
+    );
+
+    const scopedState = await freshness.getRobotFreshness("demo", "legacy-epic");
+    assert.equal(scopedState["user-stories"].status, "fresh");
+});
+
 await test("detects stale robot run via back-dated lastRun", async () => {
     // Manually rewrite freshness.json to simulate an old run
     const fpath = workspace.getFreshnessPath("demo");
@@ -226,6 +246,21 @@ await test("saveRobotResult writes a dated markdown file", async () => {
     assert.ok(body.includes("```json"));
 });
 
+await test("saveRobotResult keeps the legacy feedback options signature", async () => {
+    const relPath = await assetStore.saveRobotResult(
+        "demo",
+        "plan",
+        { productIdea: "XpertIN AI" },
+        { feedback: { rating: 5, notes: "Useful" } },
+    );
+
+    assert.ok(relPath.startsWith("assets/"));
+    assert.ok(!relPath.includes("epics"));
+    const body = await fs.readFile(path.join(workspace.getProductDir("demo"), relPath), "utf-8");
+    assert.ok(body.includes("User Feedback"));
+    assert.ok(body.includes("Useful"));
+});
+
 await test("loadRobotResult parses JSON block back into object", async () => {
     const relPath = await assetStore.saveRobotResult("demo", "detective", {
         productIdea: "XpertIN AI",
@@ -263,6 +298,18 @@ await test("appendFeedback adds a feedback block and is idempotent", async () =>
     assert.equal(matches.length, 1, "only one feedback block should remain");
     assert.ok(body.includes("Even better"));
     assert.ok(!body.includes("Great!"));
+});
+
+await test("loadLatestRobotOutput finds epic-scoped outputs from product-level calls", async () => {
+    await assetStore.saveRobotOutput(
+        "demo",
+        "scope-spec",
+        "# Scope spec from epic",
+        "legacy-epic",
+    );
+
+    const loaded = await assetStore.loadLatestRobotOutput("demo", "scope-spec");
+    assert.equal(loaded, "# Scope spec from epic");
 });
 
 // ── Cleanup ───────────────────────────────────────────────────────

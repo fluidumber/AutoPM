@@ -100,10 +100,10 @@ class UserStoriesRobot {
 
                 mandate: [
                     // ── STEP 1: Phase 1 synthesis ──────────────────────────
-                    "PHASE 1 SYNTHESIS FIRST: Before writing any user stories, output a 'Phase 1 Synthesis' section. In 3-5 bullet points, state: (1) which personas you identified and which you are using, (2) which features you are deriving stories from and why, (3) the key MoSCoW signals from the feature robot (mvpCriticalPath, must-have vs nice-to-have vs future splits), (4) any gaps in Phase 1 data and how you are handling them. Label this section clearly so the PM can review your reasoning.",
+                    "PHASE 1 SYNTHESIS FIRST: Your JSON output must contain a 'phase1Synthesis' key. The value should be a single string containing 3-5 bullet points stating: (1) which personas you identified and which you are using, (2) which features you are deriving stories from and why, (3) the key MoSCoW signals from the feature robot, (4) any gaps in Phase 1 data and how you are handling them.",
 
                     // ── STEP 2: Derivation assumptions ────────────────────
-                    "DERIVATION ASSUMPTIONS: After the Phase 1 Synthesis, output a 'Derivation Assumptions' section listing 3-5 assumptions you are making (e.g. persona priority order, MoSCoW boundary decisions, feature → story mapping choices). Each assumption should be reviewable — if the PM disagrees, they note it in feedback for a re-run.",
+                    "DERIVATION ASSUMPTIONS: Your JSON output must contain a 'derivationAssumptions' key. The value should be a single string containing 3-5 bullet points listing assumptions you are making (e.g. persona priority order, MoSCoW boundary decisions, feature → story mapping choices).",
 
                     // ── Personas ───────────────────────────────────────────
                     "PERSONAS: Use ONLY the personas found in the people robot output. Do not invent new personas. Each story must map to exactly one persona. If the people robot output is unavailable, infer personas from the product context — but flag this clearly in Phase 1 Synthesis.",
@@ -130,7 +130,7 @@ class UserStoriesRobot {
                     "DESCRIPTION: Each story must include a description field with 2-3 sentences of acceptance criteria: what 'done' looks like, what the system does, and any key edge cases or constraints the implementer must handle.",
 
                     // ── PM override instructions ───────────────────────────
-                    "PM OVERRIDE INSTRUCTIONS: End the output with a brief 'How to Override' note (outside the JSON, as a markdown comment) explaining: to change a persona, update the people robot output and re-run; to change feature priorities, update the feature robot and re-run; to add a new story directly, use the feedback field.",
+                    "PM OVERRIDE INSTRUCTIONS: Do NOT output any text, markdown, or comments outside the JSON object. The JSON object must be the only thing in your response.",
 
                     // ── No re-prompting ────────────────────────────────────
                     "NO RE-PROMPTING: Do not ask the PM for information already in the Phase 1 outputs. If data is ambiguous, make the best inference and note it in Derivation Assumptions.",
@@ -148,9 +148,9 @@ class UserStoriesRobot {
                 ],
 
                 requiredSections: [
-                    "phase1Synthesis",
-                    "derivationAssumptions",
-                    "userStories",
+                    "JSON object with phase1Synthesis",
+                    "JSON object with derivationAssumptions",
+                    "JSON object with userStories",
                 ],
 
                 productContext: {

@@ -21,13 +21,20 @@ export async function generateExperimentViewer(jsonPath, jsonData) {
         const templatePath = path.join(__dirname, 'experiment-viewer-template.html');
         const templateContent = await fs.readFile(templatePath, 'utf-8');
 
-        // Inject the JSON data into the template
+        const parts = jsonPath.split(path.sep);
+        const productsIndex = parts.indexOf('products');
+        const productSlug = productsIndex >= 0 ? parts[productsIndex + 1] : "unknown";
+
+        // Inject the JSON data and slug into the template
         const htmlContent = templateContent.replace(
             '/*INJECT_JSON_HERE*/null',
             JSON.stringify(jsonData)
         ).replace(
             '/*INJECT_JSON_HERE*/{}',
             JSON.stringify(jsonData)
+        ).replace(
+            '/*INJECT_SLUG_HERE*/""',
+            `"${productSlug}"`
         );
 
         // Save right next to the JSON file

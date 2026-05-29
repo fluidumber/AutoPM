@@ -4,6 +4,7 @@ import ScoutRobot from "../robots/scout-robot.js";
 import DetectiveRobot from "../robots/detective-robot.js";
 import PeopleRobot from "../robots/people-robot.js";
 import MoneyRobot from "../robots/money-robot.js";
+import EpicRobot from "../robots/epic-robot.js";
 import FeatureRobot from "../robots/feature-robot.js";
 import PlanRobot from "../robots/plan-robot.js";
 import PriorityRobot from "../robots/priority-robot.js";
@@ -38,6 +39,7 @@ const ROBOT_ORDER = [
     "detective",
     "people",
     "money",
+    "epic",
     "feature",
     "plan",
     "priority",
@@ -58,10 +60,10 @@ const ROBOT_ORDER_PHASE_2 = [
 ];
 
 /**
- * Gate rule: ALL Phase 1 robots must be fresh before any Phase 2 robot
- * can run.  This is the full set — no exceptions.
+ * Gate rule: the original strategic Phase 1 robots must be fresh before any
+ * Phase 2 robot can run. Epic is an optional scoping layer, not a blocker.
  */
-const PHASE2_GATE_ROBOTS = ROBOT_ORDER;
+const PHASE2_GATE_ROBOTS = ["scout", "detective", "people", "money", "feature", "plan", "priority"];
 
 class TeamLeader {
     constructor() {
@@ -73,6 +75,7 @@ class TeamLeader {
             detective: new DetectiveRobot(),
             people:    new PeopleRobot(),
             money:     new MoneyRobot(),
+            epic:      new EpicRobot(),
             feature:   new FeatureRobot(),
             plan:      new PlanRobot(),
             priority:  new PriorityRobot(),
@@ -231,9 +234,11 @@ class TeamLeader {
      *
      * @param {string} productSlug
      * @param {Object} baseContext - the session's enrichedContext
+     * @param {string} [epicId]
+     * @param {string} [featureId]
      * @returns {Promise<Object>} extended context with phase1Outputs + phase2Context
      */
-    async _buildPhase2Context(productSlug, baseContext) {
+    async _buildPhase2Context(productSlug, baseContext, epicId = null, featureId = null) {
         // Load Claude's generated output text for ALL robots — Phase 1 and Phase 2.
         // Phase 2 robots like risks-registry read feasibility-tech-output and
         // gtm-readiness-output, so we must load every available output file.
@@ -241,7 +246,7 @@ class TeamLeader {
         const phase1Outputs = {};
         const allRobots = [...ROBOT_ORDER, ...ROBOT_ORDER_PHASE_2];
         for (const robot of allRobots) {
-            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot);
+            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, epicId, featureId);
             if (text) {
                 phase1Outputs[robot] = text;
             }
@@ -308,8 +313,10 @@ class TeamLeader {
      * @param {string} robotName
      * @param {object} [opts]
      * @param {boolean} [opts.forceRerun=false] - run even if a fresh asset exists
+     * @param {string} [opts.epicId=null] - for feature-based scoping
+     * @param {string} [opts.featureId=null] - for feature-based scoping
      */
-    async runSingleRobot(analysisId, robotName, { forceRerun = false } = {}) {
+    async runSingleRobot(analysisId, robotName, { forceRerun = false, epicId = null, featureId = null } = {}) {
         const session = this.sessions.get(analysisId);
         if (!session) throw new Error(`Unknown analysis ID: ${analysisId}`);
 
@@ -318,7 +325,7 @@ class TeamLeader {
 
         // If this session is product-scoped, check for a fresh cached result first.
         if (session.productSlug && !forceRerun) {
-            const freshnessState = await this.freshness.getRobotFreshness(session.productSlug);
+            const freshnessState = await this.freshness.getRobotFreshness(session.productSlug, epicId, featureId);
             const robotState = freshnessState[robotName];
             if (robotState?.status === "fresh") {
                 const cached = await this.assetStore.loadRobotResult(session.productSlug, robotState.assetPath);
@@ -358,9 +365,10 @@ class TeamLeader {
                 );
             }
             // Build extended context from Phase 1 outputs + Phase 2 manifest
-            analysisContext = await this._buildPhase2Context(session.productSlug, session.enrichedContext);
-            console.log(`🔗 Phase 2 context built for '${robotName}' — ` +
-                `Phase 1 outputs loaded: [${Object.keys(analysisContext.phase1Outputs).join(", ")}]`);
+            analysisContext = await this._buildPhase2Context(session.productSlug, session.enrichedContext, epicId, featureId);
+            const scopeLabel = epicId ? `Epic: ${epicId}` : "product-level";
+            console.log(`🔗 Phase 2 context built for '${robotName}' (${scopeLabel}) — ` +
+                `Outputs loaded: [${Object.keys(analysisContext.phase1Outputs).join(", ")}]`);
         }
 
         // Gather improvement hints from past feedback
@@ -383,9 +391,11 @@ class TeamLeader {
                 const assetPath = await this.assetStore.saveRobotResult(
                     session.productSlug,
                     robotName,
-                    result
+                    result,
+                    epicId,
+                    featureId
                 );
-                await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath);
+                await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath, epicId, featureId);
                 console.log(`💾 Saved ${robotName} analysis to ${assetPath}`);
             } catch (err) {
                 console.error(`Failed to persist ${robotName} result: ${err.message}`);
@@ -463,7 +473,7 @@ class TeamLeader {
         }
 
         // Persist rating to brain database for long-term learning
-        await this.database.saveFeedback(analysisId, robotName, rating, notes);
+        await this.database.saveFeedback(analysisId, robotName, rating, notes, session?.productSlug || null);
 
         // Feed into learning engine (tiered hypothesis system)
         await this.learner.recordFeedback(

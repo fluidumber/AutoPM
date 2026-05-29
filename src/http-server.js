@@ -129,13 +129,13 @@ function computeRobotStatus(robotEntry, robotKey, phase, phase1Promoted) {
 async function buildRobotRuns(slug, phase1Promoted) {
     const fresh = await readFreshness(slug);
     const out   = {};
+    const epics = {};
     
     await brainDatabase.ready;
     const allFb = brainDatabase.data?.feedback || [];
 
-    for (const robotKey of ALL_ROBOTS) {
-        const phase = PHASE_1_ROBOTS.includes(robotKey) ? 1 : 2;
-        out[robotKey] = computeRobotStatus(fresh.robots?.[robotKey], robotKey, phase, phase1Promoted);
+    for (const robotKey of PHASE_1_ROBOTS) {
+        out[robotKey] = computeRobotStatus(fresh.robots?.[robotKey], robotKey, 1, phase1Promoted);
         
         const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
         if (fb.length > 0) {
@@ -144,7 +144,54 @@ async function buildRobotRuns(slug, phase1Promoted) {
             out[robotKey].feedback = { rating: avg, count: fb.length };
         }
     }
-    return out;
+
+    // Extract epic names if epic robot has run
+    const epicOutput = await assetStore.loadLatestRobotOutput(slug, "epic");
+    let epicNames = {};
+    if (epicOutput) {
+        let jsonStr = epicOutput;
+        const jsonMatch = epicOutput.match(/```json\s*([\s\S]*?)\s*```/);
+        if (jsonMatch) jsonStr = jsonMatch[1];
+        else {
+            const braceStart = epicOutput.indexOf('{');
+            const braceEnd = epicOutput.lastIndexOf('}');
+            if (braceStart !== -1 && braceEnd !== -1) jsonStr = epicOutput.substring(braceStart, braceEnd + 1);
+        }
+        try {
+            const parsed = JSON.parse(jsonStr);
+            if (parsed && Array.isArray(parsed.epics)) {
+                for (const e of parsed.epics) epicNames[e.id] = e.name;
+            } else if (parsed && Array.isArray(parsed)) {
+                for (const e of parsed) epicNames[e.id] = e.name;
+            }
+        } catch(e) {}
+    }
+
+    for (const [epicId, epicData] of Object.entries(fresh.epics || {})) {
+        epics[epicId] = { robots: {}, features: {}, name: epicNames[epicId] || null };
+        for (const robotKey of PHASE_2_ROBOTS) {
+            epics[epicId].robots[robotKey] = computeRobotStatus(epicData.robots?.[robotKey], robotKey, 2, phase1Promoted);
+            const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
+            if (fb.length > 0) {
+                const sum = fb.reduce((acc, f) => acc + f.rating, 0);
+                const avg = Math.round((sum / fb.length) * 10) / 10;
+                epics[epicId].robots[robotKey].feedback = { rating: avg, count: fb.length };
+            }
+        }
+    }
+
+    for (const robotKey of PHASE_2_ROBOTS) {
+        let bestEntry = null;
+        for (const epicId of Object.keys(epics)) {
+            const entry = epics[epicId].robots[robotKey];
+            if (!bestEntry || entry.status === "fresh" || (entry.status === "stale" && bestEntry.status === "missing")) {
+                bestEntry = entry;
+            }
+        }
+        out[robotKey] = bestEntry || computeRobotStatus(null, robotKey, 2, phase1Promoted);
+    }
+
+    return { robotRuns: out, epics };
 }
 
 async function countInterviewAnswers(slug) {
@@ -352,23 +399,41 @@ async function buildArtifacts(slug) {
     let files = [];
     try { files = await fs.readdir(assetsDir); } catch { files = []; }
 
+    const epicsDir = path.join(assetsDir, "epics");
+    try {
+        const epics = await fs.readdir(epicsDir);
+        for (const epic of epics) {
+            const epicPath = path.join(epicsDir, epic);
+            const st = await fs.stat(epicPath).catch(() => null);
+            if (st && st.isDirectory()) {
+                const epicFiles = await fs.readdir(epicPath);
+                for (const ef of epicFiles) {
+                    files.push(path.posix.join("epics", epic, ef));
+                }
+            }
+        }
+    } catch { }
+
     let id = 1;
     for (const f of files.sort()) {
         const abs = path.join(assetsDir, f);
         const st  = await fs.stat(abs).catch(() => null);
         if (!st || st.isDirectory()) continue;
 
-        const dateMatch  = f.match(/^(\d{4}-\d{2}-\d{2})-(.+?)(?:-output)?\.(md|xlsx)$/);
+        const basename = path.basename(f);
+        const dateMatch  = basename.match(/^(\d{4}-\d{2}-\d{2})-(.+?)(?:-output)?\.(md|xlsx|html|json)$/);
         const robot      = dateMatch?.[2] || "unknown";
         const isXlsx     = f.endsWith(".xlsx");
+        const isHtml     = f.endsWith(".html");
+        const isJson     = f.endsWith(".json");
         const isOutput   = f.includes("-output.");
 
         out.push({
             id:    `art-${id++}`,
-            type:  isXlsx ? "xlsx" : "markdown",
+            type:  isXlsx ? "xlsx" : isHtml ? "html" : isJson ? "json" : "markdown",
             robot: robot,
-            title: `${robot}${isOutput ? " — output" : ""}${isXlsx ? " workbook" : ""}`,
-            filename:  f,
+            title: `${robot}${isOutput ? " — output" : ""}${isXlsx ? " workbook" : ""}${isHtml ? " viewer" : ""}${isJson ? " data" : ""}`,
+            filename:  basename,
             path:      `products/${slug}/assets/${f}`,
             generated: dateMatch ? new Date(`${dateMatch[1]}T12:00:00Z`).toISOString() : st.mtime.toISOString(),
             size:      await fileSize(abs),
@@ -615,7 +680,7 @@ async function enrichProduct(p, activePersona) {
         readFreshness(slug).then(() => null), // warm
     ]);
 
-    const robotRuns = await buildRobotRuns(slug, phase1Promoted);
+    const { robotRuns, epics } = await buildRobotRuns(slug, phase1Promoted);
     const hasPdd    = await pathExists(await pddLatestPath(slug));
     const pres      = await presentationPath(slug);
 
@@ -646,6 +711,7 @@ async function enrichProduct(p, activePersona) {
         // detail bundle
         gates,
         robotRuns,
+        epics,
     };
 }
 
@@ -657,11 +723,15 @@ const app = express();
 // CORS — local dev only
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin",  req.headers.origin || "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     if (req.method === "OPTIONS") return res.sendStatus(204);
     next();
 });
+
+// Serve Cockpit UI static assets
+app.use(express.static(path.join(__dirname, "ui/cockpit")));
+app.use(express.json());
 
 app.get("/api/health", (_, res) => {
     res.json({ ok: true, version: "1.0.0", binding: BINDING, startedAt: STARTED });
@@ -713,9 +783,72 @@ app.get("/api/artifact", async (req, res) => {
     const abs = path.join(workspace.getRoot(), rel.replace(/^products\//, "products/"));
     try {
         const body = await fs.readFile(abs, "utf-8");
-        res.type("text/markdown").send(body);
+        const ext = path.extname(abs).toLowerCase();
+        if (ext === '.html') {
+            res.type("text/html");
+        } else if (ext === '.json') {
+            res.type("application/json");
+        } else {
+            res.type("text/markdown");
+        }
+        res.send(body);
     } catch (err) {
         res.status(404).json({ error: "not found", path: rel });
+    }
+});
+
+// ────────────────────────────────────────────────────────────────────
+// Write Endpoints
+// ────────────────────────────────────────────────────────────────────
+
+app.post("/api/select-experiment", async (req, res) => {
+    try {
+        const { productSlug, mode, clusterId, storyIds, rationale } = req.body;
+        if (!productSlug || !mode) {
+            return res.status(400).json({ error: "Missing required fields: productSlug, mode" });
+        }
+
+        const selPath = path.join(workspace.getContextDir(productSlug), "experiment-selection.json");
+        const payload = {
+            productSlug,
+            mode,
+            clusterId: clusterId || null,
+            storyIds: storyIds || [],
+            rationale: rationale || "Selected via Cockpit UI",
+            timestamp: new Date().toISOString(),
+        };
+
+        await fs.mkdir(path.dirname(selPath), { recursive: true });
+        await fs.writeFile(selPath, JSON.stringify(payload, null, 2), "utf-8");
+
+        res.json({ success: true, path: selPath, payload });
+    } catch (err) {
+        console.error("[/api/select-experiment] error:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post("/api/feedback", async (req, res) => {
+    try {
+        const { productSlug, robot, rating, notes } = req.body;
+        if (!robot || typeof rating !== "number") {
+            return res.status(400).json({ error: "Missing required fields: robot, rating (number)" });
+        }
+
+        await brainDatabase.ready;
+        // analysisId can be null, we'll pass a generated uuid or null
+        await brainDatabase.saveFeedback(
+            null, 
+            robot, 
+            rating, 
+            notes || "", 
+            productSlug || null
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error("[/api/feedback] error:", err);
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -725,10 +858,10 @@ app.get("/api/artifact", async (req, res) => {
 app.listen(PORT, "127.0.0.1", () => {
     console.log("");
     console.log("┌──────────────────────────────────────────────────────────┐");
-    console.log("│  ProductFlow Cockpit · HTTP API                          │");
+    console.log("│  ProductFlow Cockpit Server                              │");
     console.log("├──────────────────────────────────────────────────────────┤");
     console.log(`│  Workspace : ${workspace.getRoot().padEnd(43)} │`);
-    console.log(`│  Listening : http://${BINDING}${" ".repeat(40 - BINDING.length)} │`);
+    console.log(`│  Cockpit UI: http://${BINDING}${" ".repeat(40 - BINDING.length)} │`);
     console.log(`│  Health    : http://${BINDING}/api/health${" ".repeat(28 - BINDING.length)} │`);
     console.log(`│  Bundle    : http://${BINDING}/api/bundle${" ".repeat(28 - BINDING.length)} │`);
     console.log("├──────────────────────────────────────────────────────────┤");

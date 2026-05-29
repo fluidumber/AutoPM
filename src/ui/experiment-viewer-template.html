@@ -347,6 +347,7 @@
     <script>
         // Data injected by ProductFlow MCP
         const DATA = /*INJECT_JSON_HERE*/null;
+        const PRODUCT_SLUG = /*INJECT_SLUG_HERE*/"";
 
         let currentMode = 'cluster'; // 'cluster' or 'cherry'
         let selectedClusterId = null;
@@ -467,21 +468,37 @@
             }
         }
 
-        function exportSelection() {
-            let command = "";
-            
-            if (currentMode === 'cluster') {
-                command = `Please run the select-experiment tool with mode: "whole-cluster" and clusterId: "${selectedClusterId}"`;
-            } else {
-                const ids = Array.from(selectedStoryIds).map(id => `"${id}"`).join(", ");
-                command = `Please run the select-experiment tool with mode: "cherry-pick" and storyIds: [${ids}]`;
-            }
+        async function exportSelection() {
+            const payload = {
+                productSlug: PRODUCT_SLUG,
+                mode: currentMode === 'cluster' ? 'whole-cluster' : 'cherry-pick',
+                clusterId: currentMode === 'cluster' ? selectedClusterId : null,
+                storyIds: currentMode === 'cherry' ? Array.from(selectedStoryIds) : [],
+                rationale: "Selected via Cockpit UI"
+            };
 
-            navigator.clipboard.writeText(command).then(() => {
+            try {
+                const response = await fetch('/api/select-experiment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error("Failed to save selection");
+
                 const toast = document.getElementById('toast');
+                toast.innerText = "Selection saved to workspace! You can now ask Claude to proceed.";
+                toast.style.background = "#10b981"; // Success green
                 toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 3000);
-            });
+                setTimeout(() => toast.classList.remove('show'), 4000);
+            } catch (err) {
+                console.error(err);
+                const toast = document.getElementById('toast');
+                toast.innerText = "Error saving selection. Ensure http-server is running.";
+                toast.style.background = "#ef4444"; // Error red
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 4000);
+            }
         }
 
         // Initial render if data exists

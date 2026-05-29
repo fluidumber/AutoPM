@@ -104,6 +104,15 @@ export class WorkspaceManager {
         return path.join(this.getProductDir(slug), "assets");
     }
 
+    /** Path to an epic/feature specific assets directory. */
+    getEpicFeatureDir(slug, epicId, featureId) {
+        let base = path.join(this.getAssetsDir(slug), "epics", epicId);
+        if (featureId) {
+            base = path.join(base, "features", featureId);
+        }
+        return base;
+    }
+
     /**
      * Ensure the workspace root and top-level structure exist. Idempotent.
      */

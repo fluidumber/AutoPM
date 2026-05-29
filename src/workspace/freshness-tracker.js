@@ -153,11 +153,12 @@ export class FreshnessTracker {
             const raw    = await fs.readFile(p, "utf-8");
             const parsed = JSON.parse(raw);
             return {
-                robots:          parsed.robots          || {},
+                robots:           parsed.robots           || {},
+                epics:            parsed.epics            || {},
                 interviewAnswers: parsed.interviewAnswers || {},
             };
         } catch {
-            return { robots: {}, interviewAnswers: {} };
+            return { robots: {}, epics: {}, interviewAnswers: {} };
         }
     }
 
@@ -173,18 +174,36 @@ export class FreshnessTracker {
      * @param {string} slug - product slug
      * @param {string} robotName
      * @param {string} assetPath - relative path to the saved asset
+     * @param {string} [epicId]
+     * @param {string} [featureId]
      * @param {{ personaSlug?: string|null }} [opts]
      */
-    async recordRobotRun(slug, robotName, assetPath, { personaSlug = null } = {}) {
+    async recordRobotRun(slug, robotName, assetPath, epicId = null, featureId = null, opts = {}) {
+        ({ epicId, featureId, opts } = normalizeScopeArgs(epicId, featureId, opts));
+        const { personaSlug = null } = opts;
         const policy = await resolvePolicy(this.workspace, { personaSlug, productSlug: slug });
         const data   = await this._load(slug);
-        data.robots[robotName] = {
+        
+        const runData = {
             lastRun:       new Date().toISOString(),
             assetPath,
             staleAfterDays: policy.robots[robotName] ?? 60,
         };
+
+        if (epicId) {
+            data.epics[epicId] = data.epics[epicId] || { robots: {}, features: {} };
+            if (featureId) {
+                data.epics[epicId].features[featureId] = data.epics[epicId].features[featureId] || { robots: {} };
+                data.epics[epicId].features[featureId].robots[robotName] = runData;
+            } else {
+                data.epics[epicId].robots[robotName] = runData;
+            }
+        } else {
+            data.robots[robotName] = runData;
+        }
+
         await this._save(slug, data);
-        return data.robots[robotName];
+        return runData;
     }
 
     /**
@@ -231,21 +250,26 @@ export class FreshnessTracker {
     }
 
     /**
-     * Get freshness state for every robot of a product.
+     * Get freshness state for every robot of a product (or scoped epic/feature).
      *
      * Returns a map: robotName -> { status, ageDays, lastRun, assetPath, staleAfterDays, policyWindow, provenanceSource }
      *   status: "fresh" | "stale" | "missing"
      *
      * @param {string} slug
+     * @param {string} [epicId]
+     * @param {string} [featureId]
      * @param {{ personaSlug?: string|null }} [opts]
      */
-    async getRobotFreshness(slug, { personaSlug = null } = {}) {
+    async getRobotFreshness(slug, epicId = null, featureId = null, opts = {}) {
+        ({ epicId, featureId, opts } = normalizeScopeArgs(epicId, featureId, opts));
+        const { personaSlug = null } = opts;
         const policy = await resolvePolicy(this.workspace, { personaSlug, productSlug: slug });
         const data   = await this._load(slug);
         const out    = {};
 
         for (const robot of Object.keys(ROBOT_STALENESS_DAYS)) {
-            const entry      = data.robots[robot];
+            const entry = pickLatestEntry(collectRobotEntries(data, robot, epicId, featureId));
+
             const policyWin  = policy.robots[robot] ?? 60;
             const provenance = policy.provenance[robot] ?? "compiled-default";
 
@@ -274,6 +298,8 @@ export class FreshnessTracker {
                 ageDays,
                 lastRun:          entry.lastRun,
                 assetPath:        entry.assetPath,
+                epicId:           entry.epicId ?? null,
+                featureId:        entry.featureId ?? null,
                 staleAfterDays:   entry.staleAfterDays,   // window recorded at run time
                 policyWindow:     policyWin,               // current resolved window
                 provenanceSource: provenance,
@@ -364,14 +390,93 @@ export class FreshnessTracker {
                 data.robots[robot].lastRun = "1970-01-01T00:00:00.000Z";
                 invalidated.push(robot);
             }
+
+            for (const epicData of Object.values(data.epics || {})) {
+                if (epicData.robots?.[robot]) {
+                    epicData.robots[robot].lastRun = "1970-01-01T00:00:00.000Z";
+                    invalidated.push(robot);
+                }
+
+                for (const featureData of Object.values(epicData.features || {})) {
+                    if (featureData.robots?.[robot]) {
+                        featureData.robots[robot].lastRun = "1970-01-01T00:00:00.000Z";
+                        invalidated.push(robot);
+                    }
+                }
+            }
         }
 
-        if (invalidated.length > 0) {
+        const uniqueInvalidated = [...new Set(invalidated)];
+        if (uniqueInvalidated.length > 0) {
             await this._save(slug, data);
         }
 
-        return invalidated;
+        return uniqueInvalidated;
     }
+}
+
+function normalizeScopeArgs(epicId, featureId, opts) {
+    if (isPlainObject(epicId)) {
+        return { epicId: null, featureId: null, opts: epicId };
+    }
+    if (isPlainObject(featureId)) {
+        return { epicId, featureId: null, opts: featureId };
+    }
+    return { epicId: epicId || null, featureId: featureId || null, opts: opts || {} };
+}
+
+function isPlainObject(value) {
+    return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function collectRobotEntries(data, robot, epicId = null, featureId = null) {
+    const entries = [];
+
+    if (!epicId && data.robots?.[robot]) {
+        entries.push({ ...data.robots[robot], epicId: null, featureId: null });
+    }
+
+    if (epicId) {
+        const epic = data.epics?.[epicId];
+        if (!epic) return entries;
+
+        if (featureId) {
+            const featureEntry = epic.features?.[featureId]?.robots?.[robot];
+            if (featureEntry) entries.push({ ...featureEntry, epicId, featureId });
+        }
+
+        const epicEntry = epic.robots?.[robot];
+        if (epicEntry) entries.push({ ...epicEntry, epicId, featureId: null });
+        return entries;
+    }
+
+    for (const [eid, epic] of Object.entries(data.epics || {})) {
+        const epicEntry = epic.robots?.[robot];
+        if (epicEntry) entries.push({ ...epicEntry, epicId: eid, featureId: null });
+
+        for (const [fid, feature] of Object.entries(epic.features || {})) {
+            const featureEntry = feature.robots?.[robot];
+            if (featureEntry) entries.push({ ...featureEntry, epicId: eid, featureId: fid });
+        }
+    }
+
+    return entries;
+}
+
+function pickLatestEntry(entries) {
+    let latest = null;
+    let latestTime = -Infinity;
+
+    for (const entry of entries) {
+        const time = new Date(entry.lastRun).getTime();
+        if (!Number.isFinite(time)) continue;
+        if (time > latestTime) {
+            latest = entry;
+            latestTime = time;
+        }
+    }
+
+    return latest;
 }
 
 function daysSince(iso) {

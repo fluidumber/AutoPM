@@ -36,14 +36,15 @@ export class PDDComposer {
      * Loads all available robot outputs, product metadata, and Phase 2 context.
      *
      * @param {string} slug - product slug
+     * @param {string|null} [epicId] - Optional epic scope for Phase 2 outputs.
      * @returns {Promise<PDDAssemblyPayload>}
      */
-    async assemble(slug) {
+    async assemble(slug, epicId = null) {
         const [productMeta, phase2Context, daciData, robotOutputs, experimentSelection] = await Promise.all([
             this._loadProductMeta(slug),
             this._loadPhase2Context(slug),
             this._loadDaciData(slug),
-            this._loadAllRobotOutputs(slug),
+            this._loadAllRobotOutputs(slug, epicId),
             this._loadExperimentSelection(slug),
         ]);
 
@@ -53,6 +54,7 @@ export class PDDComposer {
 
         return {
             slug,
+            epicId,
             productMeta,
             phase2Context,
             daciData,
@@ -131,11 +133,11 @@ export class PDDComposer {
      * { raw: string, json: object|null, missing: false }.
      * Only robots that have an output file on disk are included.
      */
-    async _loadAllRobotOutputs(slug) {
+    async _loadAllRobotOutputs(slug, epicId = null) {
         const outputs = {};
 
         await Promise.all(ASSEMBLY_ROBOTS.map(async (robot) => {
-            const raw = await this.assetStore.loadLatestRobotOutput(slug, robot);
+            const raw = await this.assetStore.loadLatestRobotOutput(slug, robot, epicId);
             if (!raw) return; // robot hasn't been run
 
             outputs[robot] = {
