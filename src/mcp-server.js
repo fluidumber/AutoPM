@@ -2293,8 +2293,9 @@ Use this tool to orient the PM at the start of any session, or whenever they ask
 "where are we?" or "what should I do next?".`,
     {
         productSlug: z.string().describe("The product slug to check"),
+        askId: z.string().optional().describe("Ask/Hypothesis ID to resume."),
     },
-    async ({ productSlug }) => {
+    async ({ productSlug, askId = "core" }) => {
         const product = await productRegistry.get(productSlug);
         if (!product) {
             return {
@@ -2309,7 +2310,8 @@ Use this tool to orient the PM at the start of any session, or whenever they ask
 
         const report = await traverseGates(
             { workspace: teamLeader.workspace, freshness: teamLeader.freshness },
-            productSlug
+            productSlug,
+            askId
         );
 
         return {
@@ -2341,11 +2343,13 @@ Returns the current gate level and the precise next action — use this to greet
 and guide them to their next step without asking open-ended questions.`,
     {
         productSlug: z.string().optional().describe("Product to resume. Omit for a product-agnostic PM profile check."),
+        askId: z.string().optional().describe("Ask/Hypothesis ID to resume."),
     },
-    async ({ productSlug }) => {
+    async ({ productSlug, askId = "core" }) => {
         const report = await traverseGates(
             { workspace: teamLeader.workspace, freshness: teamLeader.freshness },
-            productSlug || null
+            productSlug || null,
+            askId
         );
 
         // Persist active-session.json so other tools can reference the current product

@@ -33,17 +33,23 @@ import { FreshnessTracker } from "../src/workspace/freshness-tracker.js";
 
 // ── Robot registries ────────────────────────────────────────────────
 
-/** Phase 1 run order — strategic discovery */
-const ROBOT_ORDER = [
+/** Phase 1a run order — product core strategy */
+const ROBOT_ORDER_PHASE_1A = [
     "scout",
     "detective",
     "people",
     "money",
+];
+
+/** Phase 1b run order — ask/hypothesis execution */
+const ROBOT_ORDER_PHASE_1B = [
     "epic",
     "feature",
     "plan",
     "priority",
 ];
+
+const ROBOT_ORDER = [...ROBOT_ORDER_PHASE_1A, ...ROBOT_ORDER_PHASE_1B];
 
 /** Phase 2 run order — execution definition */
 const ROBOT_ORDER_PHASE_2 = [
@@ -244,12 +250,17 @@ class TeamLeader {
         // gtm-readiness-output, so we must load every available output file.
         // The map key is the robot name regardless of phase.
         const phase1Outputs = {};
-        const allRobots = [...ROBOT_ORDER, ...ROBOT_ORDER_PHASE_2];
-        for (const robot of allRobots) {
+        for (const robot of ROBOT_ORDER_PHASE_1A) {
+            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId: "core", epicId: null, featureId: null });
+            if (text) phase1Outputs[robot] = text;
+        }
+        for (const robot of ROBOT_ORDER_PHASE_1B) {
+            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId, epicId: null, featureId: null });
+            if (text) phase1Outputs[robot] = text;
+        }
+        for (const robot of ROBOT_ORDER_PHASE_2) {
             const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId, epicId, featureId });
-            if (text) {
-                phase1Outputs[robot] = text;
-            }
+            if (text) phase1Outputs[robot] = text;
         }
 
         // Load Phase 2 context manifest (scaffolded by promote-to-phase-2)
@@ -324,9 +335,12 @@ class TeamLeader {
         const robot = this.robots[robotName];
         if (!robot) throw new Error(`Unknown robot: ${robotName}`);
 
+        // Phase 1a robots always save to "core". Phase 1b/2 use the active askId.
+        const effectiveAskId = ROBOT_ORDER_PHASE_1A.includes(robotName) ? "core" : askId;
+
         // If this session is product-scoped, check for a fresh cached result first.
         if (session.productSlug && !forceRerun) {
-            const freshnessState = await this.freshness.getRobotFreshness(session.productSlug, askId, epicId, featureId);
+            const freshnessState = await this.freshness.getRobotFreshness(session.productSlug, { askId: effectiveAskId, epicId, featureId });
             const robotState = freshnessState[robotName];
             if (robotState?.status === "fresh") {
                 const cached = await this.assetStore.loadRobotResult(session.productSlug, robotState.assetPath);
@@ -393,9 +407,9 @@ class TeamLeader {
                     session.productSlug,
                     robotName,
                     result,
-                    { askId, epicId, featureId }
+                    { askId: effectiveAskId, epicId, featureId }
                 );
-                await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath, askId, epicId, featureId);
+                await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath, effectiveAskId, epicId, featureId);
                 console.log(`💾 Saved ${robotName} analysis to ${assetPath}`);
             } catch (err) {
                 console.error(`Failed to persist ${robotName} result: ${err.message}`);
@@ -558,5 +572,5 @@ class TeamLeader {
     }
 }
 
-export { ROBOT_ORDER, ROBOT_ORDER_PHASE_2, PHASE2_GATE_ROBOTS };
+export { ROBOT_ORDER, ROBOT_ORDER_PHASE_1A, ROBOT_ORDER_PHASE_1B, ROBOT_ORDER_PHASE_2, PHASE2_GATE_ROBOTS };
 export default TeamLeader;

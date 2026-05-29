@@ -21,7 +21,8 @@
 import fs from "fs/promises";
 import path from "path";
 
-const PHASE1_ROBOTS = ["scout", "detective", "people", "money", "feature", "plan", "priority"];
+const PHASE1A_ROBOTS = ["scout", "detective", "people", "money"];
+const PHASE1B_ROBOTS = ["epic", "feature", "plan", "priority"];
 const PHASE2_ROBOTS = [
     "user-stories", "scope-spec", "feasibility-tech", "feasibility-design",
     "customer-journeys", "data-privacy", "gtm-readiness", "risks-registry",
@@ -57,9 +58,10 @@ export const GATE_NEXT_ACTIONS = {
  * @param {import('../src/workspace/workspace-manager.js').WorkspaceManager} deps.workspace
  * @param {import('../src/workspace/freshness-tracker.js').FreshnessTracker} deps.freshness
  * @param {string|null} productSlug
+ * @param {string} [askId="core"]
  * @returns {Promise<GateReport>}
  */
-export async function traverseGates({ workspace, freshness }, productSlug) {
+export async function traverseGates({ workspace, freshness }, productSlug, askId = "core") {
     const gates = {};
 
     // ── G1: PM Profile exists ─────────────────────────────────────────
@@ -98,18 +100,28 @@ export async function traverseGates({ workspace, freshness }, productSlug) {
     }
     gates.G3 = { name: GATES.G3, passed: interviewPassed, detail: interviewDetail };
 
-    // ── G4: Phase 1 complete (all 7 robots fresh) ─────────────────────
+    // ── G4: Phase 1 complete (1A core fresh + 1B ask fresh) ───────────────
     let phase1Passed = false;
     let phase1Detail = "Phase 1 robots not yet run.";
-    let stalePhase1 = [...PHASE1_ROBOTS];
+    let stalePhase1 = [...PHASE1A_ROBOTS, ...PHASE1B_ROBOTS];
     if (hasProduct) {
         try {
-            const rf = await freshness.getRobotFreshness(productSlug);
-            stalePhase1 = PHASE1_ROBOTS.filter(r => rf[r]?.status !== "fresh");
+            // Check Phase 1a (always core)
+            const rf1A = await freshness.getRobotFreshness(productSlug, { askId: "core" });
+            const stale1A = PHASE1A_ROBOTS.filter(r => rf1A[r]?.status !== "fresh");
+
+            // Check Phase 1b (active askId)
+            const rf1B = await freshness.getRobotFreshness(productSlug, { askId });
+            const stale1B = PHASE1B_ROBOTS.filter(r => rf1B[r]?.status !== "fresh");
+
+            stalePhase1 = [...stale1A, ...stale1B];
             phase1Passed = stalePhase1.length === 0;
-            phase1Detail = phase1Passed
-                ? "All 7 Phase 1 robots are fresh."
-                : `Not fresh: ${stalePhase1.join(", ")}.`;
+
+            if (phase1Passed) {
+                phase1Detail = `All Phase 1a (core) and Phase 1b (${askId}) robots are fresh.`;
+            } else {
+                phase1Detail = `Not fresh: ${stalePhase1.join(", ")}.`;
+            }
         } catch { /* fresh workspace */ }
     }
     gates.G4 = {
