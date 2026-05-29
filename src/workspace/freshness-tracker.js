@@ -152,6 +152,12 @@ export class FreshnessTracker {
         try {
             const raw    = await fs.readFile(p, "utf-8");
             const parsed = JSON.parse(raw);
+            
+            parsed.asks = parsed.asks || {};
+            parsed.asks["core"] = parsed.asks["core"] || { robots: {}, epics: {} };
+            parsed.asks["core"].robots = { ...(parsed.robots || {}), ...parsed.asks["core"].robots };
+            parsed.asks["core"].epics = { ...(parsed.epics || {}), ...parsed.asks["core"].epics };
+            
             return {
                 robots:           parsed.robots           || {},
                 epics:            parsed.epics            || {},
@@ -159,7 +165,7 @@ export class FreshnessTracker {
                 asks:             parsed.asks             || {},
             };
         } catch {
-            return { robots: {}, epics: {}, interviewAnswers: {}, asks: {} };
+            return { robots: {}, epics: {}, interviewAnswers: {}, asks: { "core": { robots: {}, epics: {} } } };
         }
     }
 

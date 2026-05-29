@@ -60,7 +60,9 @@ const PORT     = Number(process.env.PRODUCTFLOW_HTTP_PORT || 4321);
 const BINDING  = `127.0.0.1:${PORT}`;
 const STARTED  = new Date().toISOString();
 
-const PHASE_1_ROBOTS = ["scout", "detective", "people", "money", "feature", "plan", "priority"];
+const PHASE_1A_ROBOTS = ["scout", "detective", "people", "money"];
+const PHASE_1B_ROBOTS = ["epic", "feature", "plan", "priority"];
+const PHASE_1_ROBOTS = [...PHASE_1A_ROBOTS, ...PHASE_1B_ROBOTS];
 const PHASE_2_ROBOTS = [
     "user-stories", "scope-spec", "feasibility-tech", "feasibility-design",
     "customer-journeys", "data-privacy", "gtm-readiness", "risks-registry",
@@ -87,10 +89,18 @@ async function fileSize(absPath) {
 
 async function readFreshness(slug) {
     try {
-        const raw = await fs.readFile(workspace.getFreshnessPath(slug), "utf-8");
-        return JSON.parse(raw);
-    } catch {
-        return { robots: {}, interviewAnswers: {} };
+        const p = workspace.getFreshnessPath(slug);
+        const raw = await fs.readFile(p, "utf-8");
+        const parsed = JSON.parse(raw);
+        
+        parsed.asks = parsed.asks || {};
+        parsed.asks["core"] = parsed.asks["core"] || { robots: {}, epics: {} };
+        parsed.asks["core"].robots = { ...(parsed.robots || {}), ...parsed.asks["core"].robots };
+        parsed.asks["core"].epics = { ...(parsed.epics || {}), ...parsed.asks["core"].epics };
+        
+        return parsed;
+    } catch (e) {
+        return { robots: {}, epics: {}, interviewAnswers: {}, asks: { "core": { robots: {}, epics: {} } } };
     }
 }
 
@@ -128,70 +138,75 @@ function computeRobotStatus(robotEntry, robotKey, phase, phase1Promoted) {
 
 async function buildRobotRuns(slug, phase1Promoted) {
     const fresh = await readFreshness(slug);
-    const out   = {};
-    const epics = {};
     
     await brainDatabase.ready;
     const allFb = brainDatabase.data?.feedback || [];
 
-    for (const robotKey of PHASE_1_ROBOTS) {
-        out[robotKey] = computeRobotStatus(fresh.robots?.[robotKey], robotKey, 1, phase1Promoted);
-        
+    const coreRuns = {};
+    const coreAsk = fresh.asks?.["core"] || { robots: {}, epics: {} };
+    for (const robotKey of PHASE_1A_ROBOTS) {
+        coreRuns[robotKey] = computeRobotStatus(coreAsk.robots?.[robotKey], robotKey, 1, phase1Promoted);
         const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
         if (fb.length > 0) {
             const sum = fb.reduce((acc, f) => acc + f.rating, 0);
             const avg = Math.round((sum / fb.length) * 10) / 10;
-            out[robotKey].feedback = { rating: avg, count: fb.length };
+            coreRuns[robotKey].feedback = { rating: avg, count: fb.length };
         }
     }
 
-    // Extract epic names if epic robot has run
-    const epicOutput = await assetStore.loadLatestRobotOutput(slug, "epic");
-    let epicNames = {};
-    if (epicOutput) {
-        let jsonStr = epicOutput;
-        const jsonMatch = epicOutput.match(/```json\s*([\s\S]*?)\s*```/);
-        if (jsonMatch) jsonStr = jsonMatch[1];
-        else {
-            const braceStart = epicOutput.indexOf('{');
-            const braceEnd = epicOutput.lastIndexOf('}');
-            if (braceStart !== -1 && braceEnd !== -1) jsonStr = epicOutput.substring(braceStart, braceEnd + 1);
-        }
-        try {
-            const parsed = JSON.parse(jsonStr);
-            if (parsed && Array.isArray(parsed.epics)) {
-                for (const e of parsed.epics) epicNames[e.id] = e.name;
-            } else if (parsed && Array.isArray(parsed)) {
-                for (const e of parsed) epicNames[e.id] = e.name;
-            }
-        } catch(e) {}
-    }
+    const asks = {};
+    for (const [askId, askData] of Object.entries(fresh.asks || {})) {
+        asks[askId] = { robots: {}, epics: {} };
 
-    for (const [epicId, epicData] of Object.entries(fresh.epics || {})) {
-        epics[epicId] = { robots: {}, features: {}, name: epicNames[epicId] || null };
-        for (const robotKey of PHASE_2_ROBOTS) {
-            epics[epicId].robots[robotKey] = computeRobotStatus(epicData.robots?.[robotKey], robotKey, 2, phase1Promoted);
+        // 1B robots
+        for (const robotKey of PHASE_1B_ROBOTS) {
+            asks[askId].robots[robotKey] = computeRobotStatus(askData.robots?.[robotKey], robotKey, 1, phase1Promoted);
             const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
             if (fb.length > 0) {
                 const sum = fb.reduce((acc, f) => acc + f.rating, 0);
                 const avg = Math.round((sum / fb.length) * 10) / 10;
-                epics[epicId].robots[robotKey].feedback = { rating: avg, count: fb.length };
+                asks[askId].robots[robotKey].feedback = { rating: avg, count: fb.length };
+            }
+        }
+
+        // Extract epic names for this ask
+        let epicNames = {};
+        const epicOutput = await assetStore.loadLatestRobotOutput(slug, "epic", { askId });
+        if (epicOutput) {
+            let jsonStr = epicOutput;
+            const jsonMatch = epicOutput.match(/```json\s*([\s\S]*?)\s*```/);
+            if (jsonMatch) jsonStr = jsonMatch[1];
+            else {
+                const braceStart = epicOutput.indexOf('{');
+                const braceEnd = epicOutput.lastIndexOf('}');
+                if (braceStart !== -1 && braceEnd !== -1) jsonStr = epicOutput.substring(braceStart, braceEnd + 1);
+            }
+            try {
+                const parsed = JSON.parse(jsonStr);
+                if (parsed && Array.isArray(parsed.epics)) {
+                    for (const e of parsed.epics) epicNames[e.id] = e.name;
+                } else if (parsed && Array.isArray(parsed)) {
+                    for (const e of parsed) epicNames[e.id] = e.name;
+                }
+            } catch(e) {}
+        }
+
+        // Epics
+        for (const [epicId, epicData] of Object.entries(askData.epics || {})) {
+            asks[askId].epics[epicId] = { robots: {}, features: {}, name: epicNames[epicId] || null };
+            for (const robotKey of PHASE_2_ROBOTS) {
+                asks[askId].epics[epicId].robots[robotKey] = computeRobotStatus(epicData.robots?.[robotKey], robotKey, 2, phase1Promoted);
+                const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
+                if (fb.length > 0) {
+                    const sum = fb.reduce((acc, f) => acc + f.rating, 0);
+                    const avg = Math.round((sum / fb.length) * 10) / 10;
+                    asks[askId].epics[epicId].robots[robotKey].feedback = { rating: avg, count: fb.length };
+                }
             }
         }
     }
 
-    for (const robotKey of PHASE_2_ROBOTS) {
-        let bestEntry = null;
-        for (const epicId of Object.keys(epics)) {
-            const entry = epics[epicId].robots[robotKey];
-            if (!bestEntry || entry.status === "fresh" || (entry.status === "stale" && bestEntry.status === "missing")) {
-                bestEntry = entry;
-            }
-        }
-        out[robotKey] = bestEntry || computeRobotStatus(null, robotKey, 2, phase1Promoted);
-    }
-
-    return { robotRuns: out, epics };
+    return { coreRuns, asks };
 }
 
 async function countInterviewAnswers(slug) {
@@ -223,11 +238,24 @@ async function presentationPath(slug) {
 async function computeGates(slug, ctx) {
     const { product, robotRuns, interviewCount, phase1Promoted, hasPdd, presentation } = ctx;
 
-    const allP1Fresh = PHASE_1_ROBOTS.every(k => robotRuns[k]?.status === "fresh");
-    const staleP1    = PHASE_1_ROBOTS.filter(k => robotRuns[k]?.status === "stale");
-    const missingP1  = PHASE_1_ROBOTS.filter(k => robotRuns[k]?.status === "missing");
-    const freshP2Count = PHASE_2_ROBOTS.filter(k => robotRuns[k]?.status === "fresh").length;
-    const missingP2    = PHASE_2_ROBOTS.filter(k => robotRuns[k]?.status === "missing");
+    const allP1Fresh = PHASE_1A_ROBOTS.every(k => robotRuns[k]?.status === "fresh");
+    const staleP1    = PHASE_1A_ROBOTS.filter(k => robotRuns[k]?.status === "stale");
+    const missingP1  = PHASE_1A_ROBOTS.filter(k => robotRuns[k]?.status === "missing");
+    let freshP2Count = 0;
+    let missingP2 = new Set(PHASE_2_ROBOTS);
+    for (const ask of Object.values(ctx.asks || {})) {
+        for (const epic of Object.values(ask.epics || {})) {
+            for (const k of PHASE_2_ROBOTS) {
+                const stat = epic.robots?.[k]?.status;
+                if (stat === "fresh") {
+                    missingP2.delete(k);
+                }
+            }
+        }
+    }
+    // Calculate fresh count based on robots that are NOT missing across all epics
+    freshP2Count = PHASE_2_ROBOTS.length - missingP2.size;
+    missingP2 = Array.from(missingP2);
 
     const personaActive = ctx.activePersona;
 
@@ -357,20 +385,30 @@ async function buildActivity(slug) {
     const fresh = await readFreshness(slug);
     const events = [];
 
-    for (const [robot, entry] of Object.entries(fresh.robots || {})) {
-        if (entry.lastRun) {
-            const window = ROBOT_STALENESS_DAYS[robot] || 30;
-            const age = daysBetween(entry.lastRun);
-            if (age > window) {
+    const addEvents = (robotsMap, scopeStr) => {
+        for (const [robot, entry] of Object.entries(robotsMap || {})) {
+            if (entry.lastRun) {
+                const window = ROBOT_STALENESS_DAYS[robot] || 30;
+                const age = daysBetween(entry.lastRun);
+                if (age > window) {
+                    events.push({
+                        kind: "stale", when: entry.lastRun,
+                        text: `${robot} output marked stale (${scopeStr})`,
+                    });
+                }
                 events.push({
-                    kind: "stale", when: entry.lastRun,
-                    text: `${robot} output marked stale — exceeds ${window}-day window`,
+                    kind: "fresh", when: entry.lastRun,
+                    text: `${robot} ran (${scopeStr})`,
                 });
             }
-            events.push({
-                kind: "fresh", when: entry.lastRun,
-                text: `${robot} ran — output saved to ${entry.assetPath || `assets/...${robot}.md`}`,
-            });
+        }
+    };
+
+    // Scan asks for runs
+    for (const [askId, askData] of Object.entries(fresh.asks || {})) {
+        addEvents(askData.robots, askId === "core" ? "Core" : `Ask: ${askId}`);
+        for (const [epicId, epicData] of Object.entries(askData.epics || {})) {
+            addEvents(epicData.robots, `Epic: ${epicId}`);
         }
     }
 
@@ -427,6 +465,9 @@ async function buildArtifacts(slug) {
         const isHtml     = f.endsWith(".html");
         const isJson     = f.endsWith(".json");
         const isOutput   = f.includes("-output.");
+
+        // Skip raw prompt payload files
+        if (f.endsWith(".md") && !isOutput && dateMatch) continue;
 
         out.push({
             id:    `art-${id++}`,
@@ -680,19 +721,20 @@ async function enrichProduct(p, activePersona) {
         readFreshness(slug).then(() => null), // warm
     ]);
 
-    const { robotRuns, epics } = await buildRobotRuns(slug, phase1Promoted);
+    const { coreRuns, asks } = await buildRobotRuns(slug, phase1Promoted);
     const hasPdd    = await pathExists(await pddLatestPath(slug));
     const pres      = await presentationPath(slug);
 
     const gates = await computeGates(slug, {
-        product: p, robotRuns, interviewCount, phase1Promoted,
+        product: p, robotRuns: coreRuns, asks, interviewCount, phase1Promoted,
         hasPdd, presentation: pres, activePersona,
     });
 
-    const rolls = rollups(robotRuns);
+    // Dummy rollups for now (was used for top level previously)
+    const rolls = rollups(coreRuns);
     const stage = p.stage || (phase1Promoted ? "Phase 2 — Execution Definition" : "Phase 1 — Strategic Discovery");
     const currentGate = pickCurrentGate(gates);
-    const nextAction  = nextActionFor(gates, robotRuns);
+    const nextAction  = nextActionFor(gates, coreRuns);
 
     return {
         slug:         p.slug,
@@ -710,8 +752,9 @@ async function enrichProduct(p, activePersona) {
         nextAction,
         // detail bundle
         gates,
-        robotRuns,
-        epics,
+        robotRuns: coreRuns, // Rename to coreRuns logically but keeping key to avoid breaking old clients
+        coreRuns,
+        asks,
     };
 }
 

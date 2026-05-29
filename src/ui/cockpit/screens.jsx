@@ -96,10 +96,6 @@ function ProductIndex({ onOpen }) {
           <h1>Products</h1>
           <div className="sub">3 products on disk · active persona <span className="mono" style={{ color: "var(--text-1)" }}>anand-rao</span></div>
         </div>
-        <div className="right">
-          <button className="btn"><Icon.Filter width="12" height="12"/>Filter</button>
-          <button className="btn"><Icon.Search width="12" height="12"/>Search <span className="kbd" style={{ marginLeft: 2 }}>⌘K</span></button>
-        </div>
       </div>
 
       <div className="panel" style={{ overflow: "hidden" }}>
@@ -172,10 +168,12 @@ function RollupRow({ rollups, compact = false, onClick }) {
 
 function ProductHome({ product, tab, onTab, onArtifact, onMoney, onFreshness, view, onView, onCopied, onPickEpic }) {
   let robotsCount = Object.keys(PF.ROBOT_META).filter(k => PF.ROBOT_META[k].phase === 1).length;
-  Object.values(product.epics || {}).forEach(epic => {
-    if (epic.robots) {
-      robotsCount += Object.values(epic.robots).filter(r => r && r.status !== "missing").length;
-    }
+  Object.values(product.asks || {}).forEach(ask => {
+    Object.values(ask.epics || {}).forEach(epic => {
+      if (epic.robots) {
+        robotsCount += Object.values(epic.robots).filter(r => r && r.status !== "missing").length;
+      }
+    });
   });
 
   const tabs = [
@@ -246,9 +244,6 @@ function OverviewTab({ product, onTab, onArtifact, onMoney, onFreshness }) {
         <div className="panel">
           <div className="panel-h">
             <div className="title"><Icon.Stack width="13" height="13"/>Product overview</div>
-            <div className="right">
-              <button className="iconbtn"><Icon.Open width="12" height="12"/>product.md</button>
-            </div>
           </div>
           <div className="panel-body">
             <p style={{ margin: "0 0 14px", fontSize: 13.5, color: "var(--text-1)", lineHeight: 1.55, maxWidth: "60ch" }}>
@@ -321,9 +316,7 @@ function OverviewTab({ product, onTab, onArtifact, onMoney, onFreshness }) {
                   <div className="meta">Generated {PF.formatDate(moneyXlsx.generated)} · {moneyXlsx.size} · Editable in Excel / Google Sheets</div>
                   <div style={{ marginTop: 8 }}><PathChip path={moneyXlsx.path} full/></div>
                 </div>
-                <div style={{ display: "flex", gap: 6 }}>
-                  <button className="btn"><Icon.Open width="12" height="12"/>Open</button>
-                  <button className="btn subtle">Copy path</button>
+                <div>
                 </div>
               </div>
             </div>
@@ -346,7 +339,7 @@ function OverviewTab({ product, onTab, onArtifact, onMoney, onFreshness }) {
         {/* Activity */}
         <div className="panel">
           <div className="panel-h">
-            <div className="title"><Icon.Clock width="13" height="13"/>Recent activity</div>
+            <div className="title"><Icon.Clock width="13" height="13"/>Activity log</div>
           </div>
           <div className="panel-body">
             {activity.map((a, i) => (
@@ -501,7 +494,6 @@ function GateRow({ gate, active }) {
               <div className="eyebrow" style={{ marginBottom: 4 }}>Recommended action</div>
               <div style={{ fontSize: 13 }}>{gate.nextAction}</div>
             </div>
-            <button className="btn">Copy action</button>
           </div>
         </div>
       )}
@@ -512,8 +504,17 @@ function GateRow({ gate, active }) {
 /* ─────────────────── Robots tab ─────────────────────────────── */
 
 function RobotsTab({ product, onArtifact, onFreshness, view, onView, onPickEpic }) {
-  const runs = PF.ROBOT_RUNS[product.slug] || {};
-  const phase1 = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 1);
+  const coreRuns = PF.ROBOT_RUNS[product.slug] || {};
+  const phase1a = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 1);
+  const phase1b = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 1.5);
+  const phase2  = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 2);
+
+  const [expandedAsks, setExpandedAsks] = React.useState(() => {
+      const askIds = Object.keys(product.asks || {});
+      return askIds.reduce((acc, id) => { acc[id] = true; return acc; }, {});
+  });
+
+  const toggleAsk = (askId) => setExpandedAsks(prev => ({ ...prev, [askId]: !prev[askId] }));
 
   return (
     <div>
@@ -522,67 +523,101 @@ function RobotsTab({ product, onArtifact, onFreshness, view, onView, onPickEpic 
           <button className={view === "table" ? "on" : ""} onClick={() => onView("table")}><Icon.List width="11" height="11" style={{ marginRight: 4, verticalAlign: -1 }}/>Table</button>
           <button className={view === "grid"  ? "on" : ""} onClick={() => onView("grid")}><Icon.Grid width="11" height="11" style={{ marginRight: 4, verticalAlign: -1 }}/>Grid</button>
         </div>
-        <div className="actions">
-          <button className="btn subtle sm"><Icon.Refresh width="12" height="12"/>Re-check freshness</button>
-        </div>
       </div>
 
-      <div className="panel" style={{ overflow: "hidden" }}>
-        <PhaseHeader phase={1} entries={phase1} runs={runs}/>
+      {/* CORE Phase 1a */}
+      <div className="panel" style={{ overflow: "hidden", marginBottom: 24 }}>
+        <PhaseHeader phase="1a" title="Product Core Strategy" entries={phase1a} runs={coreRuns}/>
         {view === "table"
-          ? <RobotTable entries={phase1} runs={runs} onArtifact={onArtifact} onFreshness={onFreshness} productSlug={product.slug}/>
-          : <RobotCards entries={phase1} runs={runs} onArtifact={onArtifact} onFreshness={onFreshness}/>}
+          ? <RobotTable entries={phase1a} runs={coreRuns} onArtifact={onArtifact} onFreshness={onFreshness} productSlug={product.slug}/>
+          : <RobotCards entries={phase1a} runs={coreRuns} onArtifact={onArtifact} onFreshness={onFreshness}/>}
       </div>
 
-      {Object.keys(product.epics || {}).length > 0 && (
-        <div className="panel" style={{ overflow: "hidden", marginTop: 24 }}>
-          <div className="phase-h">
-            <span className="name" style={{ textTransform: "uppercase" }}>Phase 2 — Epics</span>
-            <span className="count">{Object.keys(product.epics || {}).length} EPICS</span>
-          </div>
-          <table className="tbl">
-            <thead>
-              <tr>
-                <th style={{ width: "40%" }}>Epic</th>
-                <th style={{ width: "25%" }}>Status</th>
-                <th>Robot Runs</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(product.epics || {}).map(([epicId, epicData]) => {
-                const eRuns = epicData.robots || {};
-                const phase2 = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 2);
-                const total = phase2.length;
-                const fresh = phase2.filter(([k]) => eRuns[k]?.status === "fresh").length;
-                const isComplete = fresh === total;
-                const statusStr = isComplete ? "fresh" : (fresh > 0 ? "current" : "missing");
-                return (
-                  <tr key={epicId} onClick={() => onPickEpic && onPickEpic(product.slug, epicId)} style={{ cursor: "pointer" }} className="row-hover">
-                    <td>
-                      <div style={{ fontWeight: 500, color: "var(--text-1)" }}>{epicData.name || epicId}</div>
-                      {epicData.name && <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2 }}>{epicId}</div>}
-                    </td>
-                    <td>
-                       <StatusBadge status={statusStr} />
-                    </td>
-                    <td style={{ color: "var(--text-3)" }}>{fresh}/{total} robots fresh</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {/* ASKS */}
+      {Object.entries(product.asks || {}).map(([askId, askData]) => {
+          // If core has no epics and no 1b robots, skip it to avoid empty panels
+          const hasEpics = Object.keys(askData.epics || {}).length > 0;
+          const has1bRuns = Object.values(askData.robots || {}).length > 0;
+          if (askId === "core" && !hasEpics && !has1bRuns) return null;
+
+          const isExpanded = expandedAsks[askId];
+          const displayTitle = askId === "core" ? "Core Hypothesis (Legacy)" : `Ask: ${askId}`;
+
+          return (
+              <div key={askId} className="panel" style={{ overflow: "hidden", marginBottom: 24 }}>
+                  <div className="phase-h row-hover" onClick={() => toggleAsk(askId)} style={{ cursor: "pointer" }}>
+                      <span className="name" style={{ display: "flex", alignItems: "center" }}>
+                          <span style={{ transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.1s", display: "inline-block", marginRight: 8, fontSize: 10 }}>▶</span>
+                          {displayTitle}
+                      </span>
+                      <span className="count">
+                          {Object.keys(askData.epics || {}).length} EPICS
+                      </span>
+                  </div>
+                  
+                  {isExpanded && (
+                      <div style={{ borderTop: "1px solid var(--border-light)" }}>
+                          {/* Phase 1b Robots for this ask */}
+                          <div style={{ background: "var(--bg-2)", padding: "12px 16px", borderBottom: "1px solid var(--border-light)", fontSize: 12, fontWeight: 500, color: "var(--text-2)", textTransform: "uppercase" }}>
+                              Phase 1b — Hypothesis Definition
+                          </div>
+                          {view === "table"
+                            ? <RobotTable entries={phase1b} runs={askData.robots || {}} onArtifact={onArtifact} onFreshness={onFreshness} productSlug={product.slug}/>
+                            : <RobotCards entries={phase1b} runs={askData.robots || {}} onArtifact={onArtifact} onFreshness={onFreshness}/>}
+
+                          {/* Epics for this ask */}
+                          {Object.keys(askData.epics || {}).length > 0 && (
+                            <>
+                              <div style={{ background: "var(--bg-2)", padding: "12px 16px", borderBottom: "1px solid var(--border-light)", fontSize: 12, fontWeight: 500, color: "var(--text-2)", textTransform: "uppercase" }}>
+                                  Phase 2 — Epics
+                              </div>
+                              <table className="tbl">
+                                <thead>
+                                  <tr>
+                                    <th style={{ width: "40%" }}>Epic</th>
+                                    <th style={{ width: "25%" }}>Status</th>
+                                    <th>Robot Runs</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {Object.entries(askData.epics || {}).map(([epicId, epicData]) => {
+                                    const eRuns = epicData.robots || {};
+                                    const total = phase2.length;
+                                    const fresh = phase2.filter(([k]) => eRuns[k]?.status === "fresh").length;
+                                    const isComplete = fresh === total;
+                                    const statusStr = isComplete ? "fresh" : (fresh > 0 ? "current" : "missing");
+                                    return (
+                                      <tr key={epicId} onClick={() => onPickEpic && onPickEpic(product.slug, epicId)} style={{ cursor: "pointer" }} className="row-hover">
+                                        <td>
+                                          <div style={{ fontWeight: 500, color: "var(--text-1)" }}>{epicData.name || epicId}</div>
+                                          <div style={{ fontSize: 12, color: "var(--text-3)", marginTop: 2 }}>{epicId}</div>
+                                        </td>
+                                        <td>
+                                           <StatusBadge status={statusStr} />
+                                        </td>
+                                        <td style={{ color: "var(--text-3)" }}>{fresh}/{total} robots fresh</td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </>
+                          )}
+                      </div>
+                  )}
+              </div>
+          );
+      })}
     </div>
   );
 }
 
-function PhaseHeader({ phase, entries, runs }) {
+function PhaseHeader({ phase, title, entries, runs }) {
   const total = entries.length;
   const fresh = entries.filter(([k]) => runs[k]?.status === "fresh").length;
   return (
     <div className="phase-h">
-      <span className="name">Phase {phase} — {phase === 1 ? "Strategic Discovery" : "Execution Definition"}</span>
+      <span className="name">Phase {phase} — {title}</span>
       <span className="count">{fresh}/{total} fresh</span>
     </div>
   );
@@ -606,7 +641,13 @@ function RobotTable({ entries, runs, onArtifact, onFreshness, productSlug }) {
       <tbody>
         {entries.map(([k, meta]) => {
           const run = runs[k] || { status: "missing", lastRun: null };
-          const artifact = run.assetPath ? artifactsBySlug.find(a => a.path.endsWith(run.assetPath)) : null;
+          let artifact = null;
+          if (run.assetPath) {
+              const outPath = run.assetPath.endsWith(".md") && !run.assetPath.includes("-output") 
+                  ? run.assetPath.replace(".md", "-output.md") 
+                  : run.assetPath;
+              artifact = artifactsBySlug.find(a => a.path.endsWith(outPath)) || artifactsBySlug.find(a => a.path.endsWith(run.assetPath));
+          }
           return (
             <tr key={k} onClick={() => artifact ? onArtifact(artifact) : onFreshness(k, run, meta)}>
               <td>
@@ -702,8 +743,6 @@ function ArtifactsTab({ product, onArtifact, onMoney, onCopied }) {
         <div className="tree-head">
           <div className="title">Files</div>
           <div className="tree-actions">
-            <button className="iconbtn" title="Collapse all"><Icon.ChevD width="11" height="11"/></button>
-            <button className="iconbtn" title="Refresh"><Icon.Refresh width="11" height="11"/></button>
           </div>
         </div>
         <div className="tree-body">
@@ -871,8 +910,6 @@ function ArtifactDetailPane({ artifact, product, onCopied }) {
           </div>
         </div>
         <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-          <button className="iconbtn ghost-outline" onClick={() => onCopied && onCopied("Revealed in Finder")}><Icon.Folder width="12" height="12"/>Reveal</button>
-          <button className="iconbtn ghost-outline" onClick={() => { try { navigator.clipboard.writeText(`${PF.WORKSPACE.root}/${artifact.path}`); } catch {} onCopied && onCopied("Path copied"); }}><Icon.Copy width="12" height="12"/>Copy path</button>
           {artifact.type === "markdown" && (
             <button className="btn primary"><Icon.Sparkle width="12" height="12"/>Feedback</button>
           )}
@@ -939,8 +976,7 @@ function XlsxPreview({ artifact }) {
           <div className="meta">{artifact.size} · Editable in Excel · Generated {PF.formatDate(artifact.generated)}</div>
           <div style={{ marginTop: 8 }}><PathChip path={artifact.path} full/></div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <button className="btn primary"><Icon.Open width="12" height="12"/>Open in Excel</button>
+        <div style={{ display: "flex" }}>
         </div>
       </div>
 
@@ -1032,8 +1068,7 @@ function PresentationPreview({ artifact }) {
           <div className="meta">{artifact.size} · Stakeholder strategy deck · Generated {PF.formatDate(artifact.generated)}</div>
           <div style={{ marginTop: 8 }}><PathChip path={artifact.path} full/></div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <button className="btn primary"><Icon.Open width="12" height="12"/>Open</button>
+        <div style={{ display: "flex" }}>
         </div>
       </div>
 
@@ -1110,7 +1145,13 @@ function ContextTab({ product }) {
 }
 
 function EpicDashboard({ product, epicId, tab, onTab, onArtifact, onFreshness, view, onView, onCopied }) {
-  const epic = product.epics?.[epicId] || { robots: {} };
+  let epic = { robots: {} };
+  for (const ask of Object.values(product.asks || {})) {
+    if (ask.epics && ask.epics[epicId]) {
+      epic = ask.epics[epicId];
+      break;
+    }
+  }
   const runs = epic.robots;
   const phase2 = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 2);
 

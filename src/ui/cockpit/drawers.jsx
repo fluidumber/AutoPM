@@ -119,7 +119,6 @@ function FreshnessDrawer({ data, onClose, onOpenArtifact }) {
           </span>
           <div style={{ display: "flex", gap: 6 }}>
             {run.assetPath && <button className="btn" onClick={() => onOpenArtifact && onOpenArtifact(robotKey)}><Icon.Eye width="12" height="12"/>Open artifact</button>}
-            <button className="btn primary"><Icon.Refresh width="12" height="12"/>Re-run robot</button>
           </div>
         </div>
       </div>
@@ -199,7 +198,6 @@ function ArtifactViewer({ artifact, product, onBack, onCopied }) {
           </div>
         </div>
         <div className="right">
-          <button className="btn"><Icon.Folder width="12" height="12"/>Reveal in Finder</button>
           <button className={`btn ${showFeedback ? "primary" : ""}`} onClick={() => setShowFeedback(s => !s)}>
             <Icon.Sparkle width="12" height="12"/>
             {submittedAt ? "Edit feedback" : "Add feedback"}
@@ -227,15 +225,15 @@ function ArtifactViewer({ artifact, product, onBack, onCopied }) {
               {bodySource === "loading" && <><span style={{ color: "var(--text-4)" }}>·</span><span className="mono" style={{ color: "var(--text-3)", fontSize: 11 }}>loading…</span></>}
               {bodySource === "error"   && <><span style={{ color: "var(--text-4)" }}>·</span><span className="mono" style={{ color: "var(--warn, #8A6B23)", fontSize: 11 }}>fetch failed — showing mock</span></>}
             </div>
-            <div style={{ display: "flex", gap: 6 }}>
-              <button className="iconbtn ghost-outline"><Icon.Copy width="12" height="12"/>Copy</button>
-              <button className="iconbtn ghost-outline"><Icon.Link width="12" height="12"/>Link</button>
-            </div>
           </div>
-          <div className="panel-body" style={isHtml ? { padding: 0, height: "calc(100vh - 200px)", overflow: "hidden" } : {}}>
-            {isHtml ? (
+          <div className="panel-body" style={(isHtml || window.EPIC_VIEWERS?.[artifact.robot]) ? { padding: 0, height: "calc(100vh - 200px)", overflow: "hidden" } : {}}>
+            {isHtml && (
               <iframe src={`/api/artifact?path=${encodeURIComponent(artifact.path)}`} style={{ width: "100%", height: "100%", border: "none" }} title={artifact.title} />
-            ) : (
+            )}
+            {!isHtml && window.EPIC_VIEWERS?.[artifact.robot] && (
+              React.createElement(window.EPIC_VIEWERS[artifact.robot], { artifact })
+            )}
+            {!isHtml && !window.EPIC_VIEWERS?.[artifact.robot] && (
               <MarkdownView source={body}/>
             )}
           </div>
@@ -361,11 +359,6 @@ function MoneyDetail({ artifact, product, onBack, onCopied }) {
               <div className="meta">Generated {PFD.formatDate(artifact.generated)} · {artifact.size} · {PFD.relativeTime(artifact.generated)}</div>
               <div style={{ marginTop: 10 }}><PathChip path={artifact.path} full/></div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <button className="btn primary"><Icon.Open width="12" height="12"/>Open in Excel</button>
-              <button className="btn" onClick={() => onCopied("Path copied")}><Icon.Copy width="12" height="12"/>Copy path</button>
-              <button className="btn subtle"><Icon.Folder width="12" height="12"/>Reveal</button>
-            </div>
           </div>
 
           <div style={{ marginTop: 18 }}>
@@ -385,7 +378,6 @@ function MoneyDetail({ artifact, product, onBack, onCopied }) {
                   <div className="src">{moneyMd.size} · Generated {PFD.formatDate(moneyMd.generated)}</div>
                   <div style={{ marginTop: 6 }}><PathChip path={moneyMd.path} full/></div>
                 </div>
-                <div><button className="btn sm">Open</button></div>
               </div>
             </div>
           )}

@@ -44,11 +44,86 @@ function useJsonArtifact(artifact) {
   return data;
 }
 
+function normaliseSynthesis(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) {
+    return value
+      .map(item => {
+        if (typeof item === "string") return item;
+        if (item?.signal && item?.detail) return `${item.signal}: ${item.detail}`;
+        return item?.text || item?.detail || item?.signal || "";
+      })
+      .map(item => item.trim())
+      .filter(Boolean);
+  }
+
+  return String(value)
+    .split(/\n|•/)
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+function SynthesisList({ value }) {
+  const items = normaliseSynthesis(value);
+  if (items.length === 0) return null;
+
+  return (
+    <div style={{ marginTop: 8, maxWidth: 720 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-3)", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 6 }}>Synthesis</div>
+      <ul style={{ margin: 0, paddingLeft: 18, color: "var(--text-3)", fontSize: 13, lineHeight: 1.45 }}>
+        {items.map((item, i) => <li key={i} style={{ marginBottom: 4 }}>{item}</li>)}
+      </ul>
+    </div>
+  );
+}
+
 function UserStoriesViewer({ artifact }) {
-  const data = useJsonArtifact(artifact);
+  const [state, setState] = useState({ loading: true, data: null, raw: "", parseError: null });
   const [selectedStories, setSelectedStories] = useState(new Set());
 
-  if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
+  useEffect(() => {
+    let cancelled = false;
+    setState({ loading: true, data: null, raw: "", parseError: null });
+
+    fetch(`/api/artifact?path=${encodeURIComponent(artifact.path)}`)
+      .then(res => res.text())
+      .then(text => {
+        if (cancelled) return;
+        let jsonStr = text.trim();
+        if (jsonStr.startsWith("```json")) {
+          jsonStr = jsonStr.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+        }
+
+        try {
+          setState({ loading: false, data: JSON.parse(jsonStr), raw: text, parseError: null });
+        } catch (e) {
+          setState({ loading: false, data: null, raw: text, parseError: e.message });
+        }
+      })
+      .catch(e => {
+        if (!cancelled) setState({ loading: false, data: null, raw: "", parseError: e.message });
+      });
+
+    return () => { cancelled = true; };
+  }, [artifact.path]);
+
+  if (state.loading) return <div style={{ padding: 20 }}>Loading...</div>;
+
+  if (!state.data) {
+    return (
+      <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
+        {state.parseError && (
+          <div style={{ marginBottom: 16, padding: 12, border: "1px solid var(--line)", borderRadius: "var(--radius-1)", background: "var(--surface-2)", color: "var(--text-2)", fontSize: 13 }}>
+            Showing this user-stories artifact as Markdown. The structured experiment selector is available only for JSON-formatted user-stories outputs.
+          </div>
+        )}
+        <MarkdownView source={state.raw || "No artifact body returned."}/>
+      </div>
+    );
+  }
+
+  const data = state.data;
+  const storyGroups = normaliseUserStoryGroups(data);
 
   const handleToggle = (storyId) => {
     const next = new Set(selectedStories);
@@ -81,32 +156,34 @@ function UserStoriesViewer({ artifact }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>User Stories</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
         <button onClick={handleLockScope} className="btn primary" disabled={selectedStories.size === 0}>
           <Icon.Check width="12" height="12"/> Lock Scope ({selectedStories.size})
         </button>
       </div>
 
-      {data.userStories && data.userStories.map((personaCluster, i) => (
+      {storyGroups.map((personaCluster, i) => (
         <div key={i} style={{ marginBottom: 32 }}>
            <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12 }}>{personaCluster.persona}</h3>
            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
              {personaCluster.stories.map((s, j) => {
-               const id = `${personaCluster.persona}-${j}`;
+               const id = s.id || `${personaCluster.persona}-${j}`;
                return (
                  <label key={j} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: 12, border: "1px solid var(--line-soft)", borderRadius: "var(--radius-1)", background: "white", cursor: "pointer" }}>
                    <input type="checkbox" checked={selectedStories.has(id)} onChange={() => handleToggle(id)} style={{ marginTop: 4 }}/>
                    <div>
-                     <div style={{ fontWeight: 500 }}>{s.asA} I want to {s.iWantTo} so that {s.soThat}</div>
+                     <div style={{ fontWeight: 500 }}>{s.story || `${s.asA || ""} I want to ${s.iWantTo || ""} so that ${s.soThat || ""}`}</div>
+                     {s.description && <div style={{ marginTop: 6, color: "var(--text-2)", fontSize: 13 }}>{s.description}</div>}
                      {s.acceptanceCriteria && (
                        <ul style={{ margin: "8px 0 0 0", paddingLeft: 20, color: "var(--text-2)", fontSize: 13 }}>
                          {s.acceptanceCriteria.map((ac, k) => <li key={k}>{ac}</li>)}
                        </ul>
                      )}
                      <div style={{ marginTop: 8, display: "flex", gap: 6 }}>
-                       <StatusBadge status={s.priority === "Must Have" ? "fresh" : "current"} label={s.priority}/>
-                       <span style={{ fontSize: 11, padding: "2px 6px", background: "var(--surface-2)", borderRadius: 3 }}>{s.storyPoints} pts</span>
+                       <StatusBadge status={(s.priority || s.moscow) === "Must Have" || s.moscow === "MUST_HAVE" ? "fresh" : "current"} label={s.priority || s.moscow || "Story"}/>
+                       {s.sequenceStage && <span style={{ fontSize: 11, padding: "2px 6px", background: "var(--surface-2)", borderRadius: 3 }}>{s.sequenceStage}</span>}
+                       {s.storyPoints && <span style={{ fontSize: 11, padding: "2px 6px", background: "var(--surface-2)", borderRadius: 3 }}>{s.storyPoints} pts</span>}
                      </div>
                    </div>
                  </label>
@@ -119,30 +196,43 @@ function UserStoriesViewer({ artifact }) {
   );
 }
 
+function normaliseUserStoryGroups(data) {
+  const stories = Array.isArray(data.userStories) ? data.userStories : [];
+  if (stories.length === 0) return [];
+
+  if (stories.some(s => Array.isArray(s.stories))) {
+    return stories.map(group => ({
+      persona: group.persona || group.name || "Stories",
+      stories: group.stories || [],
+    }));
+  }
+
+  const ordered = new Map();
+  stories.forEach(story => {
+    const key = story.sequenceStage || story.persona || "Stories";
+    if (!ordered.has(key)) ordered.set(key, []);
+    ordered.get(key).push(story);
+  });
+
+  return Array.from(ordered.entries()).map(([persona, groupStories]) => ({
+    persona: persona.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, c => c.toUpperCase()),
+    stories: groupStories,
+  }));
+}
+
 function ScopeSpecViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: "experiment", id: "approve-scope", title: "Scope Approved", description: "Scope specification approved" })
-    }).then(() => setApproved(true));
-  };
 
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>Scope Specification</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'Scope Approved' : 'Approve Scope'}
-        </button>
       </div>
 
       {data.criticalChange?.isCritical && (
@@ -210,24 +300,17 @@ function ScopeSpecViewer({ artifact }) {
 
 function FeasibilityTechViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-tech", title: "Architecture Approved", description: "Technical feasibility approved" }) }).then(() => setApproved(true));
-  };
 
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>Technical Architecture</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'Architecture Approved' : 'Approve Architecture'}
-        </button>
       </div>
 
       <div style={{ marginBottom: 32 }}>
@@ -307,24 +390,17 @@ function FeasibilityTechViewer({ artifact }) {
 
 function FeasibilityDesignViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-design", title: "Design Approved", description: "Design feasibility approved" }) }).then(() => setApproved(true));
-  };
 
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>Design Feasibility</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'Design Approved' : 'Approve Design'}
-        </button>
       </div>
 
       <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12 }}>Design Principles</h3>
@@ -379,24 +455,17 @@ function FeasibilityDesignViewer({ artifact }) {
 }
 function CustomerJourneysViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-journeys", title: "Journeys Approved", description: "Customer journeys approved" }) }).then(() => setApproved(true));
-  };
 
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>Customer Journeys</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'Journeys Approved' : 'Approve Journeys'}
-        </button>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 32, marginBottom: 32 }}>
@@ -436,13 +505,9 @@ function CustomerJourneysViewer({ artifact }) {
 
 function DataPrivacyViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-privacy", title: "Privacy Approved", description: "Data privacy & security approved" }) }).then(() => setApproved(true));
-  };
 
   const getImpactColor = (impact) => {
      if (impact === 'Yes') return { bg: 'var(--red-light)', fg: 'var(--red-dark)' };
@@ -455,11 +520,8 @@ function DataPrivacyViewer({ artifact }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>Data Privacy & Compliance</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'Privacy Approved' : 'Approve Privacy'}
-        </button>
       </div>
 
       <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12 }}>Priority Actions</h3>
@@ -499,24 +561,17 @@ function DataPrivacyViewer({ artifact }) {
 
 function GtmReadinessViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-gtm", title: "GTM Approved", description: "GTM Readiness approved" }) }).then(() => setApproved(true));
-  };
 
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>GTM Readiness</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'GTM Approved' : 'Approve GTM'}
-        </button>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 32 }}>
@@ -597,13 +652,9 @@ function GtmReadinessViewer({ artifact }) {
 }
 function RisksRegistryViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-risks", title: "Risks Approved", description: "Risks registry approved" }) }).then(() => setApproved(true));
-  };
 
   const getSeverityColor = (sev) => {
      if (sev === 'High') return { bg: 'var(--red-light)', fg: 'var(--red-dark)' };
@@ -611,16 +662,23 @@ function RisksRegistryViewer({ artifact }) {
      return { bg: 'var(--green-light)', fg: 'var(--green-dark)' };
   };
 
+  const riskCount = (probability, impact) =>
+    data.risks?.filter(r => r.probability === probability && r.impact === impact).length || 0;
+
+  const heatmapTone = (probability, impact) => {
+    const score = ({ Low: 1, Medium: 2, High: 3 }[probability] || 1) * ({ Low: 1, Medium: 2, High: 3 }[impact] || 1);
+    if (score >= 6) return { bg: 'var(--red-light)', fg: 'var(--red-dark)', border: 'var(--red-border)' };
+    if (score >= 3) return { bg: 'var(--yellow-light)', fg: 'var(--yellow-dark)', border: 'var(--yellow-border)' };
+    return { bg: 'var(--green-light)', fg: 'var(--green-dark)', border: 'var(--green-border)' };
+  };
+
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>Risks Registry</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'Risks Approved' : 'Approve Risks'}
-        </button>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 240px", gap: 24, marginBottom: 32 }}>
@@ -650,53 +708,35 @@ function RisksRegistryViewer({ artifact }) {
       </div>
 
       <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12 }}>Risk Heatmap</h3>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: 32 }}>
-         <div style={{ display: "grid", gridTemplateColumns: "24px 1fr", gap: 8, alignItems: "center" }}>
-            <div style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", textAlign: "center", fontSize: 12, fontWeight: 600, color: "var(--text-3)", letterSpacing: "0.05em", textTransform: "uppercase" }}>Probability</div>
-            <div>
-               <div style={{ display: "grid", gridTemplateColumns: "80px 100px 100px 100px", gap: 4, textAlign: "center" }}>
-                  <div />
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", paddingBottom: 8 }}>Low</div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", paddingBottom: 8 }}>Medium</div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", paddingBottom: 8 }}>High</div>
-
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", textAlign: "right", paddingRight: 8, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>High</div>
-                  <div style={{ background: "var(--yellow-light)", border: "1px solid var(--yellow-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--yellow-dark)" }}>
-                     {data.risks?.filter(r => r.probability === 'High' && r.impact === 'Low').length || ''}
-                  </div>
-                  <div style={{ background: "var(--red-light)", border: "1px solid var(--red-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--red-dark)" }}>
-                     {data.risks?.filter(r => r.probability === 'High' && r.impact === 'Medium').length || ''}
-                  </div>
-                  <div style={{ background: "var(--red)", border: "1px solid var(--red-dark)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "white" }}>
-                     {data.risks?.filter(r => r.probability === 'High' && r.impact === 'High').length || ''}
-                  </div>
-
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", textAlign: "right", paddingRight: 8, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>Medium</div>
-                  <div style={{ background: "var(--green-light)", border: "1px solid var(--green-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--green-dark)" }}>
-                     {data.risks?.filter(r => r.probability === 'Medium' && r.impact === 'Low').length || ''}
-                  </div>
-                  <div style={{ background: "var(--yellow-light)", border: "1px solid var(--yellow-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--yellow-dark)" }}>
-                     {data.risks?.filter(r => r.probability === 'Medium' && r.impact === 'Medium').length || ''}
-                  </div>
-                  <div style={{ background: "var(--red-light)", border: "1px solid var(--red-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--red-dark)" }}>
-                     {data.risks?.filter(r => r.probability === 'Medium' && r.impact === 'High').length || ''}
-                  </div>
-
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-3)", textAlign: "right", paddingRight: 8, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>Low</div>
-                  <div style={{ background: "var(--green-light)", border: "1px solid var(--green-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--green-dark)", opacity: 0.6 }}>
-                     {data.risks?.filter(r => r.probability === 'Low' && r.impact === 'Low').length || ''}
-                  </div>
-                  <div style={{ background: "var(--green-light)", border: "1px solid var(--green-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--green-dark)" }}>
-                     {data.risks?.filter(r => r.probability === 'Low' && r.impact === 'Medium').length || ''}
-                  </div>
-                  <div style={{ background: "var(--yellow-light)", border: "1px solid var(--yellow-border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 4, fontWeight: 700, fontSize: 18, color: "var(--yellow-dark)" }}>
-                     {data.risks?.filter(r => r.probability === 'Low' && r.impact === 'High').length || ''}
-                  </div>
-               </div>
-               <div style={{ textAlign: "center", fontSize: 12, fontWeight: 600, color: "var(--text-3)", letterSpacing: "0.05em", textTransform: "uppercase", marginTop: 12, paddingLeft: 80 }}>Impact</div>
-            </div>
-         </div>
-      </div>
+      <table className="styled-table" style={{ width: "100%", borderCollapse: "collapse", background: "white", borderRadius: "var(--radius-2)", overflow: "hidden", border: "1px solid var(--line-soft)", marginBottom: 32 }}>
+         <thead style={{ background: "var(--surface-2)", textAlign: "center" }}>
+            <tr>
+               <th style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", textAlign: "left", width: 160 }}>Probability / Impact</th>
+               {["Low", "Medium", "High"].map(impact => (
+                  <th key={impact} style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", fontWeight: 600 }}>{impact}</th>
+               ))}
+            </tr>
+         </thead>
+         <tbody>
+            {["High", "Medium", "Low"].map(probability => (
+               <tr key={probability}>
+                  <th style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", textAlign: "left", background: "var(--surface-2)", color: "var(--text-2)", fontWeight: 600 }}>{probability}</th>
+                  {["Low", "Medium", "High"].map(impact => {
+                     const count = riskCount(probability, impact);
+                     const tone = heatmapTone(probability, impact);
+                     return (
+                        <td key={impact} style={{ padding: 8, borderBottom: "1px solid var(--line-soft)" }}>
+                           <div style={{ minHeight: 58, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, border: `1px solid ${tone.border}`, background: tone.bg, color: tone.fg, borderRadius: "var(--radius-1)" }}>
+                              <strong style={{ fontSize: 22, lineHeight: 1 }}>{count}</strong>
+                              <span style={{ fontSize: 11, fontWeight: 600 }}>{count === 1 ? "risk" : "risks"}</span>
+                           </div>
+                        </td>
+                     );
+                  })}
+               </tr>
+            ))}
+         </tbody>
+      </table>
 
       <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12 }}>Full Risk Register</h3>
       <table className="styled-table" style={{ width: "100%", borderCollapse: "collapse", background: "white", borderRadius: "var(--radius-2)", overflow: "hidden", border: "1px solid var(--line-soft)" }}>
@@ -738,70 +778,76 @@ function RisksRegistryViewer({ artifact }) {
 
 function KpisViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-kpis", title: "KPIs Approved", description: "Success metrics & KPIs approved" }) }).then(() => setApproved(true));
-  };
 
-  const renderMetricGrid = (title, metrics) => (
-     <div style={{ marginBottom: 24 }}>
-        <h4 style={{ margin: "0 0 12px 0", fontSize: 15, color: "var(--text-2)" }}>{title}</h4>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
-           {metrics?.map((m, i) => (
-              <div key={i} style={{ background: "white", padding: 16, border: "1px solid var(--line-soft)", borderRadius: "var(--radius-1)" }}>
-                 <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 8 }}>{m.metric}</div>
-                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <span style={{ fontSize: 20, fontWeight: 700, color: "var(--blue-dark)" }}>{m.target}</span>
-                 </div>
-                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--text-3)", borderTop: "1px solid var(--line-soft)", paddingTop: 8, marginTop: 8 }}>
-                    <span>{m.cadence}</span>
-                    <span>{m.source}</span>
-                 </div>
-              </div>
-           ))}
-        </div>
-     </div>
-  );
+  const metricGroups = [
+    ["Adoption", data.adoption],
+    ["Retention", data.retention],
+    ["Usage", data.usage],
+    ["Revenue / Value", data.revenue],
+  ];
 
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: 20 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: 20 }}>Success Metrics & KPIs</h1>
-          <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.phase1Synthesis}</p>
+          <SynthesisList value={data.phase1Synthesis} />
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'KPIs Approved' : 'Approve KPIs'}
-        </button>
       </div>
 
       {data.northStar && (
-         <div style={{ background: "linear-gradient(to right bottom, var(--blue-dark), #1a365d)", color: "white", padding: 24, borderRadius: "var(--radius-2)", marginBottom: 32, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-            <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "rgba(255,255,255,0.7)", marginBottom: 8 }}>North Star Metric</div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 24 }}>
-               <div>
-                  <h2 style={{ margin: "0 0 8px 0", fontSize: 28 }}>{data.northStar.metric}</h2>
-                  <p style={{ margin: "0 0 16px 0", fontSize: 14, color: "rgba(255,255,255,0.9)", maxWidth: 500 }}>{data.northStar.definition}</p>
-                  <p style={{ margin: 0, fontSize: 13, color: "rgba(255,255,255,0.8)", fontStyle: "italic" }}>"{data.northStar.rationale}"</p>
-               </div>
-               <div style={{ background: "rgba(255,255,255,0.1)", padding: 16, borderRadius: "var(--radius-1)", minWidth: 150 }}>
-                  <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>{data.northStar.target}</div>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", display: "flex", justifyContent: "space-between" }}>
-                     <span>{data.northStar.cadence}</span>
-                     <span>{data.northStar.source}</span>
-                  </div>
-               </div>
-            </div>
-         </div>
+        <div style={{ marginBottom: 32 }}>
+          <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12 }}>North Star Metric</h3>
+          <table className="styled-table" style={{ width: "100%", borderCollapse: "collapse", background: "white", borderRadius: "var(--radius-2)", overflow: "hidden", border: "1px solid var(--line-soft)" }}>
+            <tbody>
+              {[
+                ["Metric", data.northStar.metric],
+                ["Definition", data.northStar.definition],
+                ["Target", data.northStar.target],
+                ["Cadence", data.northStar.cadence],
+                ["Source", data.northStar.source],
+                ["Rationale", data.northStar.rationale],
+              ].map(([label, value]) => (
+                <tr key={label} style={{ borderBottom: "1px solid var(--line-soft)" }}>
+                  <th style={{ width: 160, padding: 12, textAlign: "left", verticalAlign: "top", background: "var(--surface-2)", color: "var(--text-2)", fontWeight: 600 }}>{label}</th>
+                  <td style={{ padding: 12, color: "var(--text-2)", fontSize: 13, lineHeight: 1.5 }}>{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
-      {renderMetricGrid("Adoption Metrics", data.adoption)}
-      {renderMetricGrid("Retention Metrics", data.retention)}
-      {renderMetricGrid("Usage Metrics", data.usage)}
-      {renderMetricGrid("Revenue / Value Metrics", data.revenue)}
+      <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12 }}>Metric Register</h3>
+      <table className="styled-table" style={{ width: "100%", borderCollapse: "collapse", background: "white", borderRadius: "var(--radius-2)", overflow: "hidden", border: "1px solid var(--line-soft)", marginBottom: 32 }}>
+        <thead style={{ background: "var(--surface-2)", textAlign: "left" }}>
+          <tr>
+            <th style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", fontWeight: 600 }}>Category</th>
+            <th style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", fontWeight: 600 }}>Metric</th>
+            <th style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", fontWeight: 600 }}>Target</th>
+            <th style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", fontWeight: 600 }}>Cadence</th>
+            <th style={{ padding: 12, borderBottom: "1px solid var(--line-soft)", fontWeight: 600 }}>Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {metricGroups.flatMap(([category, metrics]) =>
+            (metrics || []).map((m, i) => (
+              <tr key={`${category}-${i}`} style={{ borderBottom: "1px solid var(--line-soft)" }}>
+                <td style={{ padding: 12, verticalAlign: "top" }}>
+                  <span style={{ fontSize: 11, background: "var(--surface-2)", color: "var(--text-2)", padding: "2px 6px", borderRadius: 4, fontWeight: 600 }}>{category}</span>
+                </td>
+                <td style={{ padding: 12, verticalAlign: "top", fontWeight: 500, fontSize: 13 }}>{m.metric}</td>
+                <td style={{ padding: 12, verticalAlign: "top", color: "var(--text-2)", fontSize: 13 }}>{m.target}</td>
+                <td style={{ padding: 12, verticalAlign: "top", color: "var(--text-3)", fontSize: 13 }}>{m.cadence}</td>
+                <td style={{ padding: 12, verticalAlign: "top", color: "var(--text-3)", fontSize: 13 }}>{m.source}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
 
       <h3 style={{ borderBottom: "1px solid var(--line)", paddingBottom: 8, marginBottom: 12, marginTop: 32 }}>Feedback Mechanisms</h3>
       <ul style={{ paddingLeft: 20, color: "var(--text-2)", fontSize: 14 }}>
@@ -813,13 +859,9 @@ function KpisViewer({ artifact }) {
 
 function DaciStakeholdersViewer({ artifact }) {
   const data = useJsonArtifact(artifact);
-  const [approved, setApproved] = useState(false);
   
   if (!data) return <div style={{ padding: 20 }}>Loading...</div>;
 
-  const handleApprove = () => {
-    fetch('/api/select-experiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "experiment", id: "approve-daci", title: "DACI Approved", description: "Stakeholders & DACI approved" }) }).then(() => setApproved(true));
-  };
 
   return (
     <div style={{ height: "100%", overflowY: "auto", padding: 24, background: "var(--surface)" }}>
@@ -828,9 +870,6 @@ function DaciStakeholdersViewer({ artifact }) {
           <h1 style={{ margin: 0, fontSize: 20 }}>DACI & Stakeholders</h1>
           <p style={{ marginTop: 6, color: "var(--text-3)", maxWidth: 600 }}>{data.daciSummary}</p>
         </div>
-        <button onClick={handleApprove} className={`btn ${approved ? 'ghost-outline' : 'primary'}`} disabled={approved}>
-          <Icon.Check width="12" height="12"/> {approved ? 'DACI Approved' : 'Approve DACI'}
-        </button>
       </div>
 
       {data.pmConfirmationRequired?.length > 0 && (

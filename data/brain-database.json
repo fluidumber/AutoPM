@@ -7,147 +7,167 @@
       "robotName": "scout",
       "rating": 4,
       "notes": "good",
-      "timestamp": "2026-04-15T19:03:58.361Z"
+      "timestamp": "2026-04-15T19:03:58.361Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1776280133411",
       "robotName": "detective",
       "rating": 3,
       "notes": "Need real competitor names",
-      "timestamp": "2026-04-15T19:08:53.434Z"
+      "timestamp": "2026-04-15T19:08:53.434Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777117759879",
       "robotName": "scout",
       "rating": 5,
       "notes": "User rated this a solid 4.5/5. Strong research quality and context. Improvement requested: add correlation logic, an equation, and smart visuals that bring the market, AI, pricing, competitive funding, and product wedge data together into a clearer investment thesis direction. Output should be more human-presentable: details plus correlation logic plus visuals such as charts, Venn diagrams, or other smart visualizations.",
-      "timestamp": "2026-04-25T12:04:05.867Z"
+      "timestamp": "2026-04-25T12:04:05.867Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777119037784",
       "robotName": "detective",
       "rating": 5,
       "notes": "User rated Detective output 5 stars. They liked the competitive framing and are ready to proceed to the People robot.",
-      "timestamp": "2026-04-25T12:25:26.004Z"
+      "timestamp": "2026-04-25T12:25:26.004Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777119945864",
       "robotName": "people",
       "rating": 5,
       "notes": "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
-      "timestamp": "2026-04-25T12:33:07.559Z"
+      "timestamp": "2026-04-25T12:33:07.559Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777120410036",
       "robotName": "money",
       "rating": 5,
       "notes": "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
-      "timestamp": "2026-04-25T12:47:04.478Z"
+      "timestamp": "2026-04-25T12:47:04.478Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777120410036",
       "robotName": "money",
       "rating": 5,
       "notes": "Follow-up improvement: Money output should include investment ratios and finance metrics such as NPV, IRR, LTV, NRR, GRR, and EBITDA, plus a chart showing the top 2-3 crucial values across the 3-year period.",
-      "timestamp": "2026-04-25T12:53:14.433Z"
+      "timestamp": "2026-04-25T12:53:14.433Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777121249733",
       "robotName": "feature",
       "rating": 5,
       "notes": "User rated Feature output a solid 5. Improvement requests: clarify how Feature Prioritization Logic differs from later RICE prioritization, likely strategic vs tactical levels; and add an MVP capacity/sizing sanity check against the known team size of 6 engineers and timeline to show whether the MVP scope is realistically accommodated or likely to need major engineering edits.",
-      "timestamp": "2026-04-25T14:11:31.616Z"
+      "timestamp": "2026-04-25T14:11:31.616Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777126791136",
       "robotName": "plan",
       "rating": 5,
       "notes": "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
-      "timestamp": "2026-04-25T14:29:32.026Z"
+      "timestamp": "2026-04-25T14:29:32.026Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777127404946",
       "robotName": "priority",
       "rating": 5,
       "notes": "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
-      "timestamp": "2026-04-25T14:35:20.695Z"
+      "timestamp": "2026-04-25T14:35:20.695Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777130983039",
       "robotName": "user-stories",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output is execution-ready, covers all Phase 1 personas, maps the Q3/Q4 scope into MoSCoW stories, preserves the critical governed mobile capture loop, and includes dependencies and scope-cut guidance for downstream Phase 2 robots.",
-      "timestamp": "2026-04-25T15:40:01.869Z"
+      "timestamp": "2026-04-25T15:40:01.869Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777131619103",
       "robotName": "scope-spec",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output draws clear Q3 MVP, Q4 GA, and 2027 boundaries; identifies Mobile 2.0 as a critical change; specifies core/non-core functionality, role permissions, ruthless out-of-scope items, assumptions, constraints, limitations, gates, and scope-cut rules.",
-      "timestamp": "2026-04-25T15:42:31.683Z"
+      "timestamp": "2026-04-25T15:42:31.683Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777131839059",
       "robotName": "feasibility-tech",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output gives a concrete feasibility verdict, architecture overview, Mermaid component diagram, capability feasibility table, technical risks and mitigations, vendor/platform dependencies, security/compliance requirements, infrastructure blockers, architecture spikes, NFRs, sequencing, and go/no-go gates. It preserves the Q3 depth-first capture loop and clearly identifies where to cut if gates fail.",
-      "timestamp": "2026-04-25T15:46:01.408Z"
+      "timestamp": "2026-04-25T15:46:01.408Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777132120344",
       "robotName": "feasibility-design",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output gives a clear design feasibility verdict, grounded design principles, Q3 information architecture, 15-screen primary wireflow covering all must-have features, Q4 design extensions, risks and mitigations, research plan, prototype plan, accessibility commitments, content/copy requirements, design capacity assessment, and design gates. It centers the trust principle that capture should feel like protection, not surveillance.",
-      "timestamp": "2026-04-25T15:50:36.774Z"
+      "timestamp": "2026-04-25T15:50:36.774Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777132300624",
       "robotName": "customer-journeys",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output provides a complete journey system map, six persona journeys for frontline, supervisor, operations, IT/security, compliance, and executive buyer, adjacent later journeys for expert/revenue/field personas, journey insights, traceability to requirements, telemetry events, and a clear Q3 recommendation centered on the Sofia-to-Jamal operating loop.",
-      "timestamp": "2026-04-25T15:53:59.562Z"
+      "timestamp": "2026-04-25T15:53:59.562Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777132486258",
       "robotName": "data-privacy",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
-      "timestamp": "2026-04-25T15:58:07.306Z"
+      "timestamp": "2026-04-25T15:58:07.306Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777132879262",
       "robotName": "gtm-readiness",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
-      "timestamp": "2026-04-25T16:04:36.212Z"
+      "timestamp": "2026-04-25T16:04:36.212Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777133136923",
       "robotName": "risks-registry",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
-      "timestamp": "2026-04-25T16:07:40.289Z"
+      "timestamp": "2026-04-25T16:07:40.289Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777133343323",
       "robotName": "kpis",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
-      "timestamp": "2026-04-25T16:11:02.623Z"
+      "timestamp": "2026-04-25T16:11:02.623Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777133524753",
       "robotName": "daci-stakeholders",
       "rating": 5,
       "notes": "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation.",
-      "timestamp": "2026-04-25T16:14:33.406Z"
+      "timestamp": "2026-04-25T16:14:33.406Z",
+      "productSlug": "autopm-productflow"
     },
     {
       "analysisId": "analysis-1777620233994",
       "robotName": "detective",
       "rating": 4,
       "notes": "Good output. Improvement requested: Detective should ask deeper questions about the user's own product before/while analyzing competitors, especially for platform/product categories that are 10+ years old. It should explicitly challenge whether the named category has become commoditized and whether the product should reframe/rebrand the category, e.g. CDP -> Customer Intelligence Platform (CIP), where value is not only customer data plumbing but the intelligence and actions derived from it. It should also pressure-test moat beyond the obvious differentiator; for Lucidya, Arabic is important but competitors may catch up, so the analysis should identify additional moats such as proprietary CX interaction data, workflow embedding, enterprise/government distribution, governance/data residency, recommendation loops, and cross-product activation. This category-challenge section should be mandatory for mature product/platform categories.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-01T08:36:40.849Z"
     },
     {
@@ -155,7 +175,7 @@
       "robotName": "people",
       "rating": 5,
       "notes": "User responded 'Great' after reviewing the People/JTBD output. Treating this as approval. Output covered multi-stakeholder personas, JTBD, buyer/user deltas, adoption equation, and Phase 2 implications.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-04T16:37:06.833Z"
     },
     {
@@ -163,7 +183,7 @@
       "robotName": "scope-spec",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceed to next Phase 2 robots.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:24:54.287Z"
     },
     {
@@ -171,7 +191,7 @@
       "robotName": "feasibility-tech",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceed to next Phase 2 robots.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:24:57.813Z"
     },
     {
@@ -179,7 +199,7 @@
       "robotName": "feasibility-design",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:30:12.997Z"
     },
     {
@@ -187,7 +207,7 @@
       "robotName": "customer-journeys",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:30:16.823Z"
     },
     {
@@ -195,7 +215,7 @@
       "robotName": "data-privacy",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:31:56.312Z"
     },
     {
@@ -203,7 +223,7 @@
       "robotName": "gtm-readiness",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:33:58.712Z"
     },
     {
@@ -211,7 +231,7 @@
       "robotName": "risks-registry",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:36:21.141Z"
     },
     {
@@ -219,7 +239,7 @@
       "robotName": "kpis",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; proceeded per PM request.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:37:47.666Z"
     },
     {
@@ -227,7 +247,7 @@
       "robotName": "daci-stakeholders",
       "rating": 4,
       "notes": "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-05T03:39:30.390Z"
     },
     {
@@ -235,7 +255,7 @@
       "robotName": "scout",
       "rating": 3,
       "notes": "Scout output was directionally useful but confidence was still intuitively suggested rather than empirically calculated. Future Scout outputs should create an evidence equation based on discovered vectors with explicit weights, explain why vectors and weights were chosen, show a clear decision flow visual, include charts where useful, identify when direct data is unavailable and use clearly labeled proxies, and include a PM review gate where the PM can acknowledge, reject, or append evidence before final confidence is calculated.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-09T10:54:45.227Z"
     },
     {
@@ -243,7 +263,7 @@
       "robotName": "scout",
       "rating": 3,
       "notes": "Revised Scout output is greatly improved, but still needs a permanent workflow change. After evidence vectors and calculated confidence are shown, Scout should ask the PM to provide validation evidence. At this point the PM may have answers, may acknowledge/reject/append vectors, or may need to go do discovery. If the PM wants to do discovery, AutoPM should help create a survey plan or Google Form-style validation instrument to capture evidence. There are now two classes of PM asks required for meaningful confidence: (1) rate the Scout output and acknowledge/reject/append evidence vectors; (2) provide or collect validation evidence for weak/missing vectors. For Google Forms, do not collect Google username/password; use OAuth or existing Google integration/API credentials if survey creation is automated.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-09T11:11:11.511Z"
     },
     {
@@ -251,7 +271,7 @@
       "robotName": "detective",
       "rating": 4,
       "notes": "Solid output. Improvement requested: add a SWOT analysis in a quadrant visual to make the competitive analysis more executive-ready and easier to scan. Detective outputs should include a visual SWOT quadrant where useful.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T12:21:32.545Z"
     },
     {
@@ -259,7 +279,7 @@
       "robotName": "people",
       "rating": 4,
       "notes": "Great output, solid 4/5. Improvement requested: People should end by asking whether Design or PM teams already have mapped personas. This should happen after the robot's first-pass output, not before, to avoid biasing the analysis. If existing personas are provided, People should add them as enrichment or reconciliation to the final output. Also, persona cards should support/generated image portraits next to each persona to create the classic persona-document feel.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T13:18:37.904Z"
     },
     {
@@ -267,7 +287,7 @@
       "robotName": "money",
       "rating": 4,
       "notes": "Great output. Improvement requested: Money must always produce an editable Excel financial model as one of its artifacts, not only narrative markdown. The workbook should include clear assumptions, formula-driven calculations, scenarios, source notes, checks, and editable formulas so the PM can adjust drivers later. Financial modeling is mandatory for Money outputs.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T13:26:12.622Z"
     },
     {
@@ -275,7 +295,7 @@
       "robotName": "money",
       "rating": 5,
       "notes": "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T14:07:43.022Z"
     },
     {
@@ -283,7 +303,7 @@
       "robotName": "feature",
       "rating": 4,
       "notes": "User rated Feature output a solid 4/5. No specific improvement note provided in this turn. Maintain the MoSCoW breakdown quality; future improvement can be collected if the PM identifies what made it miss the final point.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T14:12:33.216Z"
     },
     {
@@ -291,7 +311,7 @@
       "robotName": "plan",
       "rating": 4,
       "notes": "Solid 4/5. Improvement requested: every robot output should include a visual flow/diagram, not only prose and tables. This has been suggested in previous ProductFlow runs for other products and is still missing across outputs. For Plan specifically, include a visual roadmap flow/timeline that shows phase progression, gates, dependencies, and revenue milestones.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T14:18:01.780Z"
     },
     {
@@ -299,7 +319,7 @@
       "robotName": "priority",
       "rating": 4,
       "notes": "Priority rated 4/5. Improvement requested: reduce the font size / visual density of item labels inside the Effort vs Impact Prioritization quadrant. Also, this same kind of quadrant visualization should have been included in the Detective output, e.g. for competitive positioning or differentiation vs market maturity. Future robot outputs should ensure visuals are not only present but readable and presentation-safe.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T14:24:13.513Z"
     },
     {
@@ -307,7 +327,7 @@
       "robotName": "user-stories",
       "rating": 3,
       "notes": "User rated user-stories 3/5. Major miss: the robot should generate multiple blocks/clusters of user stories and ask the PM to choose a specific block or a mix before locking the execution backlog. This appears to have been missed. Future user-stories output should include alternative story blocks, e.g. local cockpit core, review/feedback loop, stakeholder artifact flow, and then a recommended mix/selection prompt.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T14:45:32.757Z"
     },
     {
@@ -315,7 +335,7 @@
       "robotName": "scope-spec",
       "rating": 4,
       "notes": "PM rated scope-spec 4/5: good output. Preserve the selected story mix and clear MVP boundary style in future scope specs.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T14:53:37.048Z"
     },
     {
@@ -323,7 +343,7 @@
       "robotName": "feasibility-tech",
       "rating": 4,
       "notes": "PM rated feasibility-tech 4/5. Good output with room for improvement. PM agreed with local Express + workspace-reader architecture, React/Vite direction, local-only first, existing ProductFlow repo/modules, npm dev flow, and no hosted backend. PM explicitly chose direct ProductFlow feedback persistence instead of a local queue because feedback should affect the actual learning loop and future outputs immediately.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T15:23:41.671Z"
     },
     {
@@ -331,7 +351,7 @@
       "robotName": "feasibility-design",
       "rating": 4,
       "notes": "PM rated feasibility-design 4/5. Good enough to proceed. Design output can be used as a prompt source for vibe-coding or design-generation tools such as Vercel v0 or Claude Design to create a high-fidelity mockup frontend before wiring real ProductFlow APIs.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T15:39:49.900Z"
     },
     {
@@ -339,7 +359,7 @@
       "robotName": "customer-journeys",
       "rating": 4,
       "notes": "PM rated customer-journeys 4/5. Proceed with 3 deep MVP journeys, deferred Sarah full stakeholder journey, feedback completion as the stronger activation milestone, and Money workbook as a core trust moment.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T15:44:40.080Z"
     },
     {
@@ -347,7 +367,7 @@
       "robotName": "data-privacy",
       "rating": 4,
       "notes": "PM rated data-privacy 4/5: sounds good. Preserve local-only privacy posture, localhost/path allowlist/markdown sanitization/direct feedback guardrails, manual external mockup use with redaction, and deferred hosted certification/compliance until SaaS/team features are selected.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T16:06:56.981Z"
     },
     {
@@ -355,7 +375,7 @@
       "robotName": "gtm-readiness",
       "rating": 4,
       "notes": "PM rated gtm-readiness 4/5. Proceed with local MVP design-partner preview, free local MVP, local-only GA definition, technical PM builders in Wave 1, broader PM users in Wave 2, and pricing interviews only after activation proof.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T16:09:53.075Z"
     },
     {
@@ -363,7 +383,7 @@
       "robotName": "risks-registry",
       "rating": 4,
       "notes": "PM rated risks-registry 4/5 and requested moving to KPIs. Proceed with schema reliability first, direct feedback as a core preview risk, technical PM builders in Wave 1, and capture-not-build hosted demand.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T16:18:49.467Z"
     },
     {
@@ -371,7 +391,7 @@
       "robotName": "kpis",
       "rating": 4,
       "notes": "PM rated KPIs 4/5 and requested completing final DACI. Proceed with Weekly Activated Product Workspaces as North Star, feedback required for activation, local event log for MVP measurement, and revenue readiness rather than revenue optimization for local preview.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T16:22:07.159Z"
     },
     {
@@ -379,8 +399,128 @@
       "robotName": "daci-stakeholders",
       "rating": 4,
       "notes": "PM rated DACI 4/5. Keep machine-readable JSON separate from human-facing markdown. Proceed with Anand as acting approver for local MVP, placeholders acceptable for draft PDD, and design partners as contributors pending confirmation.",
-      "productSlug": null,
+      "productSlug": "autopm-productflow",
       "timestamp": "2026-05-23T16:31:52.021Z"
+    },
+    {
+      "analysisId": "analysis-1779814631928",
+      "robotName": "scope-spec",
+      "rating": 4,
+      "notes": "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+      "productSlug": "autopm-productflow",
+      "timestamp": "2026-05-26T17:17:15.930Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "epic",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:11:57.154Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "feature",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:12:01.316Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "plan",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:12:04.872Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "priority",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:12:08.488Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "scope-spec",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:12:14.052Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "feasibility-tech",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:12:17.795Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "feasibility-design",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:12:23.669Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "customer-journeys",
+      "rating": 4,
+      "notes": "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T08:12:27.258Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "user-stories",
+      "rating": 4,
+      "notes": "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T13:39:16.113Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "data-privacy",
+      "rating": 3.5,
+      "notes": "Rated a good 3.5/5. Proceeding without a rerun per PM instruction; preserve the local-first privacy posture, external IDE paste warnings, no repo scanning/no managed execution guardrails, and future hosted certification deferral.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T13:47:15.348Z"
+    },
+    {
+      "analysisId": "phase-3-build-lab-review-2026-05-29",
+      "robotName": "gtm-readiness",
+      "rating": 3,
+      "notes": "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+      "productSlug": null,
+      "timestamp": "2026-05-29T13:56:20.158Z"
+    },
+    {
+      "analysisId": "analysis-1780063016440",
+      "robotName": "kpis",
+      "rating": 4.5,
+      "notes": "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+      "productSlug": "autopm-productflow",
+      "timestamp": "2026-05-29T14:26:52.699Z"
+    },
+    {
+      "analysisId": "analysis-1780064827553",
+      "robotName": "risks-registry",
+      "rating": 4,
+      "notes": "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix.",
+      "productSlug": "autopm-productflow",
+      "timestamp": "2026-05-29T14:44:52.828Z"
+    },
+    {
+      "analysisId": "analysis-1780069000280",
+      "robotName": "daci-stakeholders",
+      "rating": 4,
+      "notes": "4/5 — strong first-pass for Build Lab epic. Agentic Builder included as non-human contributor stakeholder, which was a notable structural addition. All 13 PDD sections confirmed draft-complete. MCP server timeout prevented disk save; retry needed.",
+      "productSlug": "autopm-productflow",
+      "timestamp": "2026-05-29T15:54:21.631Z"
     }
   ],
   "errors": [],
@@ -612,8 +752,334 @@
         "id": "50dead7d-4ab4-4dc4-a33f-361588961153",
         "createdAt": "2026-05-23T16:31:52.022Z",
         "updatedAt": "2026-05-23T16:31:52.022Z"
+      },
+      {
+        "robotName": "scope-spec",
+        "content": "scope-spec: Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "173e0640-3d50-476d-9e6b-a717bb55452b",
+        "createdAt": "2026-05-26T17:17:15.933Z",
+        "updatedAt": "2026-05-26T17:17:15.933Z"
+      },
+      {
+        "robotName": "epic",
+        "content": "epic: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "03d01012-c2b1-446e-b605-aea89704141c",
+        "createdAt": "2026-05-29T08:11:57.160Z",
+        "updatedAt": "2026-05-29T08:11:57.160Z"
+      },
+      {
+        "robotName": "feature",
+        "content": "feature: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "f1df78ed-e9e9-4368-9fda-61a40dcca93a",
+        "createdAt": "2026-05-29T08:12:01.322Z",
+        "updatedAt": "2026-05-29T08:12:01.322Z"
+      },
+      {
+        "robotName": "plan",
+        "content": "plan: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "ca1bd1a0-ad32-4520-a513-a833fd880f74",
+        "createdAt": "2026-05-29T08:12:04.874Z",
+        "updatedAt": "2026-05-29T08:12:04.874Z"
+      },
+      {
+        "robotName": "priority",
+        "content": "priority: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "98c0b747-0f79-4283-a831-cffaf995f25c",
+        "createdAt": "2026-05-29T08:12:08.488Z",
+        "updatedAt": "2026-05-29T08:12:08.488Z"
+      },
+      {
+        "robotName": "scope-spec",
+        "content": "scope-spec: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "a5e19022-c074-46e7-a236-3480f08192c1",
+        "createdAt": "2026-05-29T08:12:14.052Z",
+        "updatedAt": "2026-05-29T08:12:14.052Z"
+      },
+      {
+        "robotName": "feasibility-tech",
+        "content": "feasibility-tech: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "dac9f189-f9d8-498a-86b7-96f53bc11f57",
+        "createdAt": "2026-05-29T08:12:17.796Z",
+        "updatedAt": "2026-05-29T08:12:17.796Z"
+      },
+      {
+        "robotName": "feasibility-design",
+        "content": "feasibility-design: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "29a49638-7913-403e-8a56-726fdf9124d9",
+        "createdAt": "2026-05-29T08:12:23.670Z",
+        "updatedAt": "2026-05-29T08:12:23.670Z"
+      },
+      {
+        "robotName": "customer-journeys",
+        "content": "customer-journeys: Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "d8385682-d80f-4ca3-b353-f8a52d6bebb7",
+        "createdAt": "2026-05-29T08:12:27.259Z",
+        "updatedAt": "2026-05-29T08:12:27.259Z"
+      },
+      {
+        "robotName": "user-stories",
+        "content": "user-stories: Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "4a8c8dad-0cbc-484f-807d-ec0a2ce0ea98",
+        "createdAt": "2026-05-29T13:39:16.116Z",
+        "updatedAt": "2026-05-29T13:39:16.116Z"
+      },
+      {
+        "robotName": "kpis",
+        "content": "kpis: Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "bf1a1726-f20c-497a-a783-126e3f1146cd",
+        "createdAt": "2026-05-29T14:26:52.701Z",
+        "updatedAt": "2026-05-29T14:26:52.701Z"
+      },
+      {
+        "robotName": "risks-registry",
+        "content": "risks-registry: Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "9ddbfbc4-bb60-4c3a-b7a9-daca1f74e946",
+        "createdAt": "2026-05-29T14:44:52.831Z",
+        "updatedAt": "2026-05-29T14:44:52.831Z"
+      },
+      {
+        "robotName": "daci-stakeholders",
+        "content": "daci-stakeholders: 4/5 — strong first-pass for Build Lab epic. Agentic Builder included as non-human contributor stakeholder, which was a notable structural addition. All 13 PDD sections confirmed draft-complete. MCP server timeout prevented disk save; retry needed.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "autopm-productflow"
+        ],
+        "id": "e8e2b8f6-25e1-4154-8600-730a98e66ab5",
+        "createdAt": "2026-05-29T15:54:21.633Z",
+        "updatedAt": "2026-05-29T15:54:21.633Z"
       }
     ]
   },
-  "processImprovements": []
+  "processImprovements": [
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "PM rated data-privacy 4/5: sounds good. Preserve local-only privacy posture, localhost/path allowlist/markdown sanitization/direct feedback guardrails, manual external mockup use with redaction, and deferred hosted certification/compliance until SaaS/team features are selected.",
+        "PM rated gtm-readiness 4/5. Proceed with local MVP design-partner preview, free local MVP, local-only GA definition, technical PM builders in Wave 1, broader PM users in Wave 2, and pricing interviews only after activation proof.",
+        "PM rated risks-registry 4/5 and requested moving to KPIs. Proceed with schema reliability first, direct feedback as a core preview risk, technical PM builders in Wave 1, and capture-not-build hosted demand.",
+        "PM rated KPIs 4/5 and requested completing final DACI. Proceed with Weekly Activated Product Workspaces as North Star, feedback required for activation, local event log for MVP measurement, and revenue readiness rather than revenue optimization for local preview.",
+        "PM rated DACI 4/5. Keep machine-readable JSON separate from human-facing markdown. Proceed with Anand as acting approver for local MVP, placeholders acceptable for draft PDD, and design partners as contributors pending confirmation."
+      ],
+      "frequency": 29,
+      "status": "pending",
+      "id": "26bba30a-d996-4ec8-8176-09fbb5c1c0eb",
+      "suggestedAt": "2026-05-29T08:12:14.056Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Great output. Improvement requested: Money must always produce an editable Excel financial model as one of its artifacts, not only narrative markdown. The workbook should include clear assumptions, formula-driven calculations, scenarios, source notes, checks, and editable formulas so the PM can adjust drivers later. Financial modeling is mandatory for Money outputs.",
+        "User rated Feature output a solid 4/5. No specific improvement note provided in this turn. Maintain the MoSCoW breakdown quality; future improvement can be collected if the PM identifies what made it miss the final point.",
+        "Solid 4/5. Improvement requested: every robot output should include a visual flow/diagram, not only prose and tables. This has been suggested in previous ProductFlow runs for other products and is still missing across outputs. For Plan specifically, include a visual roadmap flow/timeline that shows phase progression, gates, dependencies, and revenue milestones.",
+        "Priority rated 4/5. Improvement requested: reduce the font size / visual density of item labels inside the Effort vs Impact Prioritization quadrant. Also, this same kind of quadrant visualization should have been included in the Detective output, e.g. for competitive positioning or differentiation vs market maturity. Future robot outputs should ensure visuals are not only present but readable and presentation-safe.",
+        "PM rated feasibility-tech 4/5. Good output with room for improvement. PM agreed with local Express + workspace-reader architecture, React/Vite direction, local-only first, existing ProductFlow repo/modules, npm dev flow, and no hosted backend. PM explicitly chose direct ProductFlow feedback persistence instead of a local queue because feedback should affect the actual learning loop and future outputs immediately."
+      ],
+      "frequency": 12,
+      "status": "pending",
+      "id": "5452a69d-dd52-4580-8b7f-d9823e8921f8",
+      "suggestedAt": "2026-05-29T08:12:14.057Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "c59ca67c-038e-4c07-9d09-f138832cbb68",
+      "suggestedAt": "2026-05-29T08:12:14.057Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "489ab0a1-baa8-4b9b-86ce-338b4d607249",
+      "suggestedAt": "2026-05-29T08:12:14.058Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "b7e78454-bc4d-4ffd-9e57-b42849ac804c",
+      "suggestedAt": "2026-05-29T08:12:14.059Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact."
+      ],
+      "frequency": 7,
+      "status": "pending",
+      "id": "2ce56e4a-0fc8-49aa-94ee-54d683838abc",
+      "suggestedAt": "2026-05-29T08:12:14.060Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Scout output was directionally useful but confidence was still intuitively suggested rather than empirically calculated. Future Scout outputs should create an evidence equation based on discovered vectors with explicit weights, explain why vectors and weights were chosen, show a clear decision flow visual, include charts where useful, identify when direct data is unavailable and use clearly labeled proxies, and include a PM review gate where the PM can acknowledge, reject, or append evidence before final confidence is calculated.",
+        "Revised Scout output is greatly improved, but still needs a permanent workflow change. After evidence vectors and calculated confidence are shown, Scout should ask the PM to provide validation evidence. At this point the PM may have answers, may acknowledge/reject/append vectors, or may need to go do discovery. If the PM wants to do discovery, AutoPM should help create a survey plan or Google Form-style validation instrument to capture evidence. There are now two classes of PM asks required for meaningful confidence: (1) rate the Scout output and acknowledge/reject/append evidence vectors; (2) provide or collect validation evidence for weak/missing vectors. For Google Forms, do not collect Google username/password; use OAuth or existing Google integration/API credentials if survey creation is automated."
+      ],
+      "frequency": 7,
+      "status": "pending",
+      "id": "49a3ffad-a0ac-473f-9115-af1507329a88",
+      "suggestedAt": "2026-05-29T08:12:14.060Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "aca6d6f1-6aa1-4079-8a58-d17cac0a7bdd",
+      "suggestedAt": "2026-05-29T08:12:14.061Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output is execution-ready, covers all Phase 1 personas, maps the Q3/Q4 scope into MoSCoW stories, preserves the critical governed mobile capture loop, and includes dependencies and scope-cut guidance for downstream Phase 2 robots.",
+        "Self-rated on PM's instruction. Output provides a complete journey system map, six persona journeys for frontline, supervisor, operations, IT/security, compliance, and executive buyer, adjacent later journeys for expert/revenue/field personas, journey insights, traceability to requirements, telemetry events, and a clear Q3 recommendation centered on the Sofia-to-Jamal operating loop.",
+        "User responded 'Great' after reviewing the People/JTBD output. Treating this as approval. Output covered multi-stakeholder personas, JTBD, buyer/user deltas, adoption equation, and Phase 2 implications.",
+        "Great output, solid 4/5. Improvement requested: People should end by asking whether Design or PM teams already have mapped personas. This should happen after the robot's first-pass output, not before, to avoid biasing the analysis. If existing personas are provided, People should add them as enrichment or reconciliation to the final output. Also, persona cards should support/generated image portraits next to each persona to create the classic persona-document feel."
+      ],
+      "frequency": 5,
+      "status": "pending",
+      "id": "8742b53e-88d4-4d66-b0fe-4b1a36945f6f",
+      "suggestedAt": "2026-05-29T08:12:14.061Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact."
+      ],
+      "frequency": 5,
+      "status": "pending",
+      "id": "69a6a930-9b99-429c-a7ba-15b9e1397cdd",
+      "suggestedAt": "2026-05-29T08:12:14.062Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact."
+      ],
+      "frequency": 5,
+      "status": "pending",
+      "id": "1b18554e-892b-4419-a06a-36cda2143214",
+      "suggestedAt": "2026-05-29T08:12:14.062Z"
+    }
+  ]
 }

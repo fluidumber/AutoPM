@@ -53,6 +53,12 @@ function App() {
   function goHome() {
     setRoute(r => ({ screen: "home", productSlug: r.productSlug, epicId: r.epicId, tab: r.tab || "overview" }));
   }
+  function goProductHome() {
+    setRoute(r => ({ screen: "home", productSlug: r.productSlug, epicId: null, tab: "overview" }));
+  }
+  function goEpicHome() {
+    setRoute(r => ({ screen: "home", productSlug: r.productSlug, epicId: r.epicId, tab: "overview" }));
+  }
   function openArtifact(art) {
     setRoute(r => ({ screen: "artifact", productSlug: r.productSlug, epicId: r.epicId, tab: r.tab, artifactId: art.id }));
   }
@@ -91,7 +97,7 @@ function App() {
       />
 
       <main className="main">
-        <TopBar route={route} product={product} artifact={currentArtifact} onBack={goHome} onIndex={() => setRoute({ screen: "index" })}/>
+        <TopBar route={route} product={product} artifact={currentArtifact} onBack={goHome} onProductHome={goProductHome} onEpicHome={goEpicHome} onIndex={() => setRoute({ screen: "index" })}/>
         <div className="content">
           {route.screen === "workspace" && (
             <WorkspaceCheck onContinue={() => setRoute({ screen: "index" })}/>
@@ -178,7 +184,7 @@ function Rail({ currentSlug, currentEpicId, currentScreen, onPickProduct, onPick
         <div className="brand">
           <div className="brand-mark">PF</div>
           <span>ProductFlow</span>
-          <span style={{ fontSize: 10, padding: "2px 5px", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 3, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>v1.0</span>
+          <span style={{ fontSize: 10, padding: "2px 5px", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 3, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>v3.0</span>
         </div>
         <button className="workspace-pill" onClick={onWorkspace} aria-label="Workspace details">
           <span className="dot"></span>
@@ -257,7 +263,7 @@ function Rail({ currentSlug, currentEpicId, currentScreen, onPickProduct, onPick
 
 /* ─────────────────────────── TopBar ───────────────────────── */
 
-function TopBar({ route, product, artifact, onBack, onIndex }) {
+function TopBar({ route, product, artifact, onBack, onProductHome, onEpicHome, onIndex }) {
   const isSystem = route.screen === "workspace" || route.screen === "feedback" || route.screen === "policy";
   return (
     <div className="topbar">
@@ -281,7 +287,13 @@ function TopBar({ route, product, artifact, onBack, onIndex }) {
             {product && route.screen !== "index" && (
               <>
                 <span className="sep">/</span>
-                <span className={`crumb ${route.screen === "home" ? "current" : ""}`} onClick={onBack}>{product.name}</span>
+                <span className={`crumb ${route.screen === "home" && !route.epicId && (!route.tab || route.tab === "overview") ? "current" : ""}`} onClick={onProductHome || onBack}>{product.name}</span>
+              </>
+            )}
+            {product && route.epicId && route.screen !== "index" && (
+              <>
+                <span className="sep">/</span>
+                <span className={`crumb ${route.screen === "home" && (!route.tab || route.tab === "overview") ? "current" : ""}`} onClick={onEpicHome || onBack}>{route.epicId}</span>
               </>
             )}
             {route.screen === "home" && route.tab && route.tab !== "overview" && (
@@ -293,7 +305,7 @@ function TopBar({ route, product, artifact, onBack, onIndex }) {
             {route.screen === "artifact" && artifact && (
               <>
                 <span className="sep">/</span>
-                <span className="crumb" onClick={onBack}>Artifacts</span>
+                <span className="crumb" onClick={route.epicId ? (onEpicHome || onBack) : (onProductHome || onBack)}>Artifacts</span>
                 <span className="sep">/</span>
                 <span className="crumb current">{artifact.title}</span>
               </>
@@ -301,7 +313,7 @@ function TopBar({ route, product, artifact, onBack, onIndex }) {
             {route.screen === "money" && artifact && (
               <>
                 <span className="sep">/</span>
-                <span className="crumb" onClick={onBack}>Artifacts</span>
+                <span className="crumb" onClick={route.epicId ? (onEpicHome || onBack) : (onProductHome || onBack)}>Artifacts</span>
                 <span className="sep">/</span>
                 <span className="crumb current">Money workbook</span>
               </>
@@ -311,16 +323,6 @@ function TopBar({ route, product, artifact, onBack, onIndex }) {
       </div>
 
       <div className="topbar-spacer"></div>
-
-      <div className="topbar-actions">
-        <button className="iconbtn ghost-outline" aria-label="Search">
-          <Icon.Search width="12" height="12"/>
-          <span>Search</span>
-          <span className="kbd">⌘K</span>
-        </button>
-        <button className="iconbtn" aria-label="Refresh"><Icon.Refresh width="12" height="12"/></button>
-        <button className="iconbtn" aria-label="Settings"><Icon.Settings width="12" height="12"/></button>
-      </div>
     </div>
   );
 }

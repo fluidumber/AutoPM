@@ -158,9 +158,11 @@ const ROBOT_META = {
   detective:            { label: "Detective",             desc: "Competitive landscape",             phase: 1, windowDays: 60,  rationale: "Competitive landscape moves faster than market sizing" },
   people:               { label: "People",                desc: "Personas & jobs to be done",        phase: 1, windowDays: 180, rationale: "Personas are stable; refresh semi-annually" },
   money:                { label: "Money",                 desc: "Financial model & .xlsx workbook",  phase: 1, windowDays: 90,  rationale: "Financial models need quarterly refresh" },
-  feature:              { label: "Feature",               desc: "Feature inventory & scope",         phase: 1, windowDays: 30,  rationale: "Feature scope changes with each planning cycle" },
-  plan:                 { label: "Plan",                  desc: "Roadmap & waves",                   phase: 1, windowDays: 30,  rationale: "Roadmap adjusts monthly" },
-  priority:             { label: "Priority",              desc: "RICE prioritisation",               phase: 1, windowDays: 30,  rationale: "Prioritisation re-runs with each sprint" },
+  // Phase 1b (Asks)
+  epic:                 { label: "Epic",                  desc: "Deconstruct asks into epics",       phase: 1.5, windowDays: 30, rationale: "Hypothesis shifting happens dynamically" },
+  feature:              { label: "Feature",               desc: "Feature inventory & scope",         phase: 1.5, windowDays: 30,  rationale: "Feature scope changes with each planning cycle" },
+  plan:                 { label: "Plan",                  desc: "Roadmap & waves",                   phase: 1.5, windowDays: 30,  rationale: "Roadmap adjusts monthly" },
+  priority:             { label: "Priority",              desc: "RICE prioritisation",               phase: 1.5, windowDays: 30,  rationale: "Prioritisation re-runs with each sprint" },
   // Phase 2
   "user-stories":       { label: "User Stories",          desc: "Persona-mapped acceptance criteria",phase: 2, windowDays: 30,  rationale: "Stories tied to sprint scope" },
   "scope-spec":         { label: "Scope & Spec",          desc: "Core / non-core / out-of-scope",    phase: 2, windowDays: 30,  rationale: "Scope changes with each planning cycle" },
