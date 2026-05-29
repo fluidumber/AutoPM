@@ -75,7 +75,7 @@ await test("product-level freshness rolls up epic-scoped robot runs", async () =
         "demo",
         "user-stories",
         "assets/epics/legacy-epic/2026-04-24-user-stories.md",
-        "legacy-epic",
+        { epicId: "legacy-epic" },
     );
 
     const productState = await freshness.getRobotFreshness("demo");
@@ -86,7 +86,7 @@ await test("product-level freshness rolls up epic-scoped robot runs", async () =
         "assets/epics/legacy-epic/2026-04-24-user-stories.md",
     );
 
-    const scopedState = await freshness.getRobotFreshness("demo", "legacy-epic");
+    const scopedState = await freshness.getRobotFreshness("demo", { epicId: "legacy-epic" });
     assert.equal(scopedState["user-stories"].status, "fresh");
 });
 

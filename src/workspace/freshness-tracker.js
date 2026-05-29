@@ -156,9 +156,10 @@ export class FreshnessTracker {
                 robots:           parsed.robots           || {},
                 epics:            parsed.epics            || {},
                 interviewAnswers: parsed.interviewAnswers || {},
+                asks:             parsed.asks             || {},
             };
         } catch {
-            return { robots: {}, epics: {}, interviewAnswers: {} };
+            return { robots: {}, epics: {}, interviewAnswers: {}, asks: {} };
         }
     }
 
@@ -169,18 +170,9 @@ export class FreshnessTracker {
     }
 
     /**
-     * Record that a robot analysis ran successfully.
-     *
-     * @param {string} slug - product slug
-     * @param {string} robotName
-     * @param {string} assetPath - relative path to the saved asset
-     * @param {string} [epicId]
-     * @param {string} [featureId]
-     * @param {{ personaSlug?: string|null }} [opts]
+     * Record a robot run in freshness.json under the new asks structure.
      */
-    async recordRobotRun(slug, robotName, assetPath, epicId = null, featureId = null, opts = {}) {
-        ({ epicId, featureId, opts } = normalizeScopeArgs(epicId, featureId, opts));
-        const { personaSlug = null } = opts;
+    async recordRobotRun(slug, robotName, assetPath, { askId = "core", epicId = null, featureId = null, personaSlug = null } = {}) {
         const policy = await resolvePolicy(this.workspace, { personaSlug, productSlug: slug });
         const data   = await this._load(slug);
         
@@ -190,16 +182,19 @@ export class FreshnessTracker {
             staleAfterDays: policy.robots[robotName] ?? 60,
         };
 
+        data.asks = data.asks || {};
+        data.asks[askId] = data.asks[askId] || { epics: {}, robots: {} };
+
         if (epicId) {
-            data.epics[epicId] = data.epics[epicId] || { robots: {}, features: {} };
+            data.asks[askId].epics[epicId] = data.asks[askId].epics[epicId] || { robots: {}, features: {} };
             if (featureId) {
-                data.epics[epicId].features[featureId] = data.epics[epicId].features[featureId] || { robots: {} };
-                data.epics[epicId].features[featureId].robots[robotName] = runData;
+                data.asks[askId].epics[epicId].features[featureId] = data.asks[askId].epics[epicId].features[featureId] || { robots: {} };
+                data.asks[askId].epics[epicId].features[featureId].robots[robotName] = runData;
             } else {
-                data.epics[epicId].robots[robotName] = runData;
+                data.asks[askId].epics[epicId].robots[robotName] = runData;
             }
         } else {
-            data.robots[robotName] = runData;
+            data.asks[askId].robots[robotName] = runData;
         }
 
         await this._save(slug, data);
@@ -250,25 +245,19 @@ export class FreshnessTracker {
     }
 
     /**
-     * Get freshness state for every robot of a product (or scoped epic/feature).
+     * Get freshness state for every robot of a product (or scoped ask/epic/feature).
      *
      * Returns a map: robotName -> { status, ageDays, lastRun, assetPath, staleAfterDays, policyWindow, provenanceSource }
      *   status: "fresh" | "stale" | "missing"
-     *
-     * @param {string} slug
-     * @param {string} [epicId]
-     * @param {string} [featureId]
-     * @param {{ personaSlug?: string|null }} [opts]
      */
-    async getRobotFreshness(slug, epicId = null, featureId = null, opts = {}) {
-        ({ epicId, featureId, opts } = normalizeScopeArgs(epicId, featureId, opts));
-        const { personaSlug = null } = opts;
+    async getRobotFreshness(slug, { askId = "core", epicId = null, featureId = null, personaSlug = null } = {}) {
         const policy = await resolvePolicy(this.workspace, { personaSlug, productSlug: slug });
         const data   = await this._load(slug);
         const out    = {};
 
         for (const robot of Object.keys(ROBOT_STALENESS_DAYS)) {
-            const entry = pickLatestEntry(collectRobotEntries(data, robot, epicId, featureId));
+            const entries = collectRobotEntries(data, robot, askId, epicId, featureId);
+            const entry = pickLatestEntry(entries);
 
             const policyWin  = policy.robots[robot] ?? 60;
             const provenance = policy.provenance[robot] ?? "compiled-default";
@@ -415,48 +404,66 @@ export class FreshnessTracker {
     }
 }
 
-function normalizeScopeArgs(epicId, featureId, opts) {
-    if (isPlainObject(epicId)) {
-        return { epicId: null, featureId: null, opts: epicId };
-    }
-    if (isPlainObject(featureId)) {
-        return { epicId, featureId: null, opts: featureId };
-    }
-    return { epicId: epicId || null, featureId: featureId || null, opts: opts || {} };
-}
+
 
 function isPlainObject(value) {
     return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function collectRobotEntries(data, robot, epicId = null, featureId = null) {
+function collectRobotEntries(data, robot, askId = "core", epicId = null, featureId = null) {
     const entries = [];
 
-    if (!epicId && data.robots?.[robot]) {
-        entries.push({ ...data.robots[robot], epicId: null, featureId: null });
-    }
-
-    if (epicId) {
-        const epic = data.epics?.[epicId];
-        if (!epic) return entries;
-
-        if (featureId) {
-            const featureEntry = epic.features?.[featureId]?.robots?.[robot];
-            if (featureEntry) entries.push({ ...featureEntry, epicId, featureId });
+    // 1. New structure: asks > askId
+    const ask = data.asks?.[askId];
+    if (ask) {
+        if (!epicId && ask.robots?.[robot]) {
+            entries.push({ ...ask.robots[robot], askId, epicId: null, featureId: null });
         }
-
-        const epicEntry = epic.robots?.[robot];
-        if (epicEntry) entries.push({ ...epicEntry, epicId, featureId: null });
-        return entries;
+        if (epicId) {
+            const epic = ask.epics?.[epicId];
+            if (epic) {
+                if (featureId) {
+                    const featureEntry = epic.features?.[featureId]?.robots?.[robot];
+                    if (featureEntry) entries.push({ ...featureEntry, askId, epicId, featureId });
+                }
+                const epicEntry = epic.robots?.[robot];
+                if (epicEntry) entries.push({ ...epicEntry, askId, epicId, featureId: null });
+            }
+        }
+        // Collect all epics if not epic-scoped
+        for (const [eid, epic] of Object.entries(ask.epics || {})) {
+            const epicEntry = epic.robots?.[robot];
+            if (epicEntry) entries.push({ ...epicEntry, askId, epicId: eid, featureId: null });
+            for (const [fid, feature] of Object.entries(epic.features || {})) {
+                const featureEntry = feature.robots?.[robot];
+                if (featureEntry) entries.push({ ...featureEntry, askId, epicId: eid, featureId: fid });
+            }
+        }
     }
 
-    for (const [eid, epic] of Object.entries(data.epics || {})) {
-        const epicEntry = epic.robots?.[robot];
-        if (epicEntry) entries.push({ ...epicEntry, epicId: eid, featureId: null });
-
-        for (const [fid, feature] of Object.entries(epic.features || {})) {
-            const featureEntry = feature.robots?.[robot];
-            if (featureEntry) entries.push({ ...featureEntry, epicId: eid, featureId: fid });
+    // 2. Legacy structure (acts like askId = "core")
+    if (askId === "core") {
+        if (!epicId && data.robots?.[robot]) {
+            entries.push({ ...data.robots[robot], askId: "core", epicId: null, featureId: null });
+        }
+        if (epicId) {
+            const epic = data.epics?.[epicId];
+            if (epic) {
+                if (featureId) {
+                    const featureEntry = epic.features?.[featureId]?.robots?.[robot];
+                    if (featureEntry) entries.push({ ...featureEntry, askId: "core", epicId, featureId });
+                }
+                const epicEntry = epic.robots?.[robot];
+                if (epicEntry) entries.push({ ...epicEntry, askId: "core", epicId, featureId: null });
+            }
+        }
+        for (const [eid, epic] of Object.entries(data.epics || {})) {
+            const epicEntry = epic.robots?.[robot];
+            if (epicEntry) entries.push({ ...epicEntry, askId: "core", epicId: eid, featureId: null });
+            for (const [fid, feature] of Object.entries(epic.features || {})) {
+                const featureEntry = feature.robots?.[robot];
+                if (featureEntry) entries.push({ ...featureEntry, askId: "core", epicId: eid, featureId: fid });
+            }
         }
     }
 

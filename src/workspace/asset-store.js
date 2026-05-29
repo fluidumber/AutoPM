@@ -13,28 +13,24 @@ export class AssetStore {
      */
     constructor(workspace) {
         this.workspace = workspace;
-    }
-
-    /**
+    }    /**
      * Save a robot analysis result. Returns the relative path under the
-     * product directory (e.g., "assets/2026-04-24-scout.md" or "assets/epics/...").
+     * product directory.
      */
-    async saveRobotResult(slug, robotName, result, epicId = null, featureId = null, options = {}) {
-        ({ epicId, featureId, options } = normalizeScopeArgs(epicId, featureId, options));
-        const { feedback = null } = options;
+    async saveRobotResult(slug, robotName, result, { askId = "core", epicId = null, featureId = null, feedback = null } = {}) {
         await this.workspace.ensureProductStructure(slug);
 
         const today = new Date().toISOString().slice(0, 10);
         const filename = `${today}-${robotName}.md`;
         
-        let targetDir = this.workspace.getAssetsDir(slug);
-        let relPrefix = "assets";
+        let targetDir = this.workspace.getAskAssetsDir(slug, askId);
+        let relPrefix = path.posix.join("assets", "asks", askId);
         if (epicId) {
-            targetDir = this.workspace.getEpicFeatureDir(slug, epicId, featureId);
-            relPrefix = path.posix.join("assets", "epics", epicId);
+            targetDir = this.workspace.getEpicFeatureDir(slug, askId, epicId, featureId);
+            relPrefix = path.posix.join(relPrefix, "epics", epicId);
             if (featureId) relPrefix = path.posix.join(relPrefix, "features", featureId);
-            await fs.mkdir(targetDir, { recursive: true });
         }
+        await fs.mkdir(targetDir, { recursive: true });
 
         const absPath = path.join(targetDir, filename);
         const relPath = path.posix.join(relPrefix, filename);
@@ -77,7 +73,7 @@ export class AssetStore {
         const dir = this.workspace.getAssetsDir(slug);
         let files;
         try {
-            files = await fs.readdir(dir);
+            files = await fs.readdir(dir, { recursive: true });
         } catch {
             return [];
         }
@@ -85,8 +81,8 @@ export class AssetStore {
             .filter(f => f.endsWith(".md"))
             .sort()
             .map(f => ({
-                filename: f,
-                relPath: path.posix.join("assets", f),
+                filename: path.basename(f),
+                relPath: path.posix.join("assets", f.split(path.sep).join(path.posix.sep)),
                 absPath: path.join(dir, f),
             }));
     }
@@ -110,44 +106,23 @@ export class AssetStore {
         return relPath;
     }
 
-    // ── Phase 2: robot output files ───────────────────────────────────
-    //
-    // Phase 1 asset files (saveRobotResult) store the _claudeInstructions
-    // prompt payload — the input to Claude.  Phase 2 robots need Claude's
-    // GENERATED analysis text as their input.  These two methods manage a
-    // companion file pattern:
-    //
-    //   YYYY-MM-DD-<robot>.md          ← prompt payload  (existing)
-    //   YYYY-MM-DD-<robot>-output.md   ← Claude's response text (new)
-
     /**
      * Save Claude's generated analysis text for a robot.
-     * Called by the save-robot-output MCP tool after Claude produces its response.
-     *
-     * Filename pattern: YYYY-MM-DD-<robot>-output.md
-     * New runs overwrite the same day's file (idempotent per day).
-     *
-     * @param {string} slug       - product slug
-     * @param {string} robotName  - robot name, e.g. "people" or "user-stories"
-     * @param {string} markdownText - raw analysis text Claude generated
-     * @param {string} [epicId]
-     * @param {string} [featureId]
-     * @returns {Promise<string>} relative path, e.g. "assets/2026-04-24-people-output.md"
      */
-    async saveRobotOutput(slug, robotName, markdownText, epicId = null, featureId = null) {
+    async saveRobotOutput(slug, robotName, markdownText, { askId = "core", epicId = null, featureId = null } = {}) {
         await this.workspace.ensureProductStructure(slug);
 
         const today = new Date().toISOString().slice(0, 10);
         const filename = `${today}-${robotName}-output.md`;
         
-        let targetDir = this.workspace.getAssetsDir(slug);
-        let relPrefix = "assets";
+        let targetDir = this.workspace.getAskAssetsDir(slug, askId);
+        let relPrefix = path.posix.join("assets", "asks", askId);
         if (epicId) {
-            targetDir = this.workspace.getEpicFeatureDir(slug, epicId, featureId);
-            relPrefix = path.posix.join("assets", "epics", epicId);
+            targetDir = this.workspace.getEpicFeatureDir(slug, askId, epicId, featureId);
+            relPrefix = path.posix.join(relPrefix, "epics", epicId);
             if (featureId) relPrefix = path.posix.join(relPrefix, "features", featureId);
-            await fs.mkdir(targetDir, { recursive: true });
         }
+        await fs.mkdir(targetDir, { recursive: true });
 
         const absPath = path.join(targetDir, filename);
         const relPath = path.posix.join(relPrefix, filename);
@@ -158,16 +133,9 @@ export class AssetStore {
 
     /**
      * Load the most recently dated output file for a robot.
-     * Filenames are YYYY-MM-DD-<robot>-output.md so lexicographic sort = date sort.
-     *
-     * @param {string} slug      - product slug
-     * @param {string} robotName - robot name
-     * @param {string} [epicId]
-     * @param {string} [featureId]
-     * @returns {Promise<string|null>} raw markdown text, or null if no file found
      */
-    async loadLatestRobotOutput(slug, robotName, epicId = null, featureId = null) {
-        const candidates = await this._findRobotOutputCandidates(slug, robotName, epicId, featureId);
+    async loadLatestRobotOutput(slug, robotName, { askId = "core", epicId = null, featureId = null } = {}) {
+        const candidates = await this._findRobotOutputCandidates(slug, robotName, { askId, epicId, featureId });
         if (candidates.length === 0) return null;
 
         try {
@@ -177,9 +145,9 @@ export class AssetStore {
         }
     }
 
-    async _findRobotOutputCandidates(slug, robotName, epicId = null, featureId = null) {
+    async _findRobotOutputCandidates(slug, robotName, { askId = "core", epicId = null, featureId = null } = {}) {
         const suffix = `-${robotName}-output.md`;
-        const dirs = await this._candidateDirs(slug, epicId, featureId);
+        const dirs = await this._candidateDirs(slug, { askId, epicId, featureId });
         const matches = [];
 
         for (const dir of dirs) {
@@ -203,54 +171,37 @@ export class AssetStore {
         return matches.sort((a, b) => b.filename.localeCompare(a.filename));
     }
 
-    async _candidateDirs(slug, epicId = null, featureId = null) {
+    async _candidateDirs(slug, { askId = "core", epicId = null, featureId = null } = {}) {
+        const dirs = [];
+        const pushDir = (absDir, relDir) => dirs.push({ absDir, relDir });
+
+        // 1. Exact path resolution
         if (epicId) {
             const relDir = featureId
-                ? path.posix.join("assets", "epics", epicId, "features", featureId)
-                : path.posix.join("assets", "epics", epicId);
-            return [{
-                absDir: this.workspace.getEpicFeatureDir(slug, epicId, featureId),
-                relDir,
-            }];
+                ? path.posix.join("assets", "asks", askId, "epics", epicId, "features", featureId)
+                : path.posix.join("assets", "asks", askId, "epics", epicId);
+            pushDir(this.workspace.getEpicFeatureDir(slug, askId, epicId, featureId), relDir);
+        } else {
+            pushDir(this.workspace.getAskAssetsDir(slug, askId), path.posix.join("assets", "asks", askId));
         }
 
-        const dirs = [{
-            absDir: this.workspace.getAssetsDir(slug),
-            relDir: "assets",
-        }];
-
-        const epicsDir = path.join(this.workspace.getAssetsDir(slug), "epics");
-        let epicEntries;
-        try {
-            epicEntries = await fs.readdir(epicsDir, { withFileTypes: true });
-        } catch {
-            return dirs;
-        }
-
-        for (const epicEntry of epicEntries) {
-            if (!epicEntry.isDirectory()) continue;
-            const epicId = epicEntry.name;
-            const epicAbs = path.join(epicsDir, epicId);
-            const epicRel = path.posix.join("assets", "epics", epicId);
-            dirs.push({ absDir: epicAbs, relDir: epicRel });
-
-            const featuresDir = path.join(epicAbs, "features");
-            let featureEntries;
-            try {
-                featureEntries = await fs.readdir(featuresDir, { withFileTypes: true });
-            } catch {
-                continue;
+        // 2. Fallbacks for 'core' missing old migrations
+        if (askId === "core") {
+            if (epicId) {
+                const legacyEpicRel = featureId 
+                    ? path.posix.join("assets", "epics", epicId, "features", featureId)
+                    : path.posix.join("assets", "epics", epicId);
+                const legacyEpicAbs = featureId 
+                    ? path.join(this.workspace.getAssetsDir(slug), "epics", epicId, "features", featureId)
+                    : path.join(this.workspace.getAssetsDir(slug), "epics", epicId);
+                pushDir(legacyEpicAbs, legacyEpicRel);
             }
-
-            for (const featureEntry of featureEntries) {
-                if (!featureEntry.isDirectory()) continue;
-                const featureId = featureEntry.name;
-                dirs.push({
-                    absDir: path.join(featuresDir, featureId),
-                    relDir: path.posix.join(epicRel, "features", featureId),
-                });
-            }
+            pushDir(this.workspace.getAssetsDir(slug), "assets");
         }
+        
+        // 3. Always fallback to the product root (assets/) in case it's a Phase 1 core dependency
+        // This ensures epic robots can still load scout/detective output if it's only at the root.
+        pushDir(this.workspace.getAssetsDir(slug), "assets");
 
         return dirs;
     }
@@ -294,18 +245,4 @@ ${feedback.notes ? `**Notes:** ${feedback.notes}` : ""}
 <!-- feedback-end -->
 `;
     }
-}
-
-function normalizeScopeArgs(epicId, featureId, options) {
-    if (isPlainObject(epicId)) {
-        return { epicId: null, featureId: null, options: epicId };
-    }
-    if (isPlainObject(featureId)) {
-        return { epicId, featureId: null, options: featureId };
-    }
-    return { epicId: epicId || null, featureId: featureId || null, options: options || {} };
-}
-
-function isPlainObject(value) {
-    return value !== null && typeof value === "object" && !Array.isArray(value);
 }

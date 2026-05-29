@@ -2626,6 +2626,71 @@ the owner when PRODUCTFLOW_OWNER_EMAIL is configured.`,
         };
     }
 );
+// ═════════════════════════════════════════════════════════════════════
+// Tool 28: ASK-CREATE — register a new ask/hypothesis for a product
+// ═════════════════════════════════════════════════════════════════════
+server.tool(
+    "ask-create",
+    `Register a new Ask/Hypothesis for a product. This creates the foundational structure for running robots on a new problem space.`,
+    {
+        productSlug: z.string().describe("The slug of the product"),
+        askId: z.string().describe("Short slug-like ID for the ask (e.g. 'growth-experiment-1')"),
+        hypothesis: z.string().describe("What is the core hypothesis or goal being tested?"),
+        targetAudience: z.string().optional().describe("Who is this specifically for?"),
+        successCriteria: z.string().optional().describe("How will we know if this succeeds?"),
+    },
+    async ({ productSlug, askId, hypothesis, targetAudience, successCriteria }) => {
+        const p = await workspace.products.get(productSlug);
+        if (!p) {
+            return {
+                content: [{ type: "text", text: JSON.stringify({ error: `Unknown product: ${productSlug}. Call 'product-create' first.` }, null, 2) }]
+            };
+        }
+
+        const safeAskId = askId.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+        if (!safeAskId) {
+            return {
+                content: [{ type: "text", text: JSON.stringify({ error: "Invalid askId provided." }, null, 2) }]
+            };
+        }
+
+        const askDir = workspace.getAskAssetsDir(productSlug, safeAskId);
+        await fs.promises.mkdir(askDir, { recursive: true });
+
+        const askContent = `---
+type: ask
+askId: ${safeAskId}
+created: ${new Date().toISOString()}
+---
+
+# Ask: ${safeAskId}
+
+## Hypothesis
+${hypothesis}
+
+## Target Audience
+${targetAudience || "_Not specified_"}
+
+## Success Criteria
+${successCriteria || "_Not specified_"}
+`;
+        
+        const askFilePath = path.join(askDir, "ask.md");
+        await fs.promises.writeFile(askFilePath, askContent, "utf-8");
+
+        return {
+            content: [{
+                type: "text",
+                text: JSON.stringify({
+                    message: `Successfully created ask '${safeAskId}'.`,
+                    askId: safeAskId,
+                    askPath: askFilePath
+                }, null, 2)
+            }]
+        };
+    }
+);
+
 
 // ── Start ────────────────────────────────────────────────────────────
 async function main() {
