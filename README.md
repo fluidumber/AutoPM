@@ -46,8 +46,9 @@ By enforcing Phase 1 as a prerequisite for Phase 2, AutoPM prevents the most com
 2. Point a new server at the Absolute Path of this project with `command: "node"` and `args: ["/absolute/path/to/AutoPM/src/mcp-server.js"]`.
 3. Start the workflow using the `interview` tool, iterate via `run-robot`, and export using `generate-presentation`!
 
-### Via Other MCP Clients (Cursor, Roo Code, etc.)
+### Via Other MCP Clients (Cursor, Roo Code, ChatGPT, etc.)
 Because AutoPM is built on the standard **Model Context Protocol (MCP)**, you can use it with any compatible client!
+- **ChatGPT macOS Desktop App**: Open or create `~/Library/Application Support/OpenAI/ChatGPT/mcp.json` and add the `productflow` server configuration similar to Claude Desktop (command: `node`, args: `["/absolute/path/to/AutoPM/src/mcp-server.js"]`). Restart the app.
 - **Cursor**: Go to Settings -> Features -> MCP. Add a new MCP server. Type: `command`, Command: `node`, Args: `/absolute/path/to/AutoPM/src/mcp-server.js`.
 - **Roo Code (VS Code)**: Open MCP Settings and add a configuration similar to Claude Desktop:
   ```json
@@ -73,3 +74,41 @@ Because AutoPM is built on the standard **Model Context Protocol (MCP)**, you ca
 - `leader/` - TeamLeader orchestrator managing the flow
 - `utils/` - Output engines and file tooling
 - `plans/` - Auto-generated HTML presentation deliverables
+
+---
+
+## Cockpit UI: Navigation & Custom Local Domain Setup
+
+The ProductFlow Cockpit UI supports full URL routing, browser history (Back/Forward navigation), page-refresh persistence, and deep-linking via a hash-based routing system.
+
+### Custom Local Domain (`autopm.ai`)
+Instead of accessing the Cockpit UI via `http://localhost:4321`, you can configure your machine to access it via a custom local domain: **`http://autopm.ai`**.
+
+#### Step 1: Map the domain locally on macOS
+1. Open a terminal.
+2. Edit your system's hosts file:
+   ```bash
+   sudo nano /etc/hosts
+   ```
+3. Add the following entry at the bottom of the file:
+   ```text
+   127.0.0.1 autopm.ai
+   ```
+4. Save and exit (`Ctrl + O`, `Enter`, then `Ctrl + X`).
+
+#### Step 2: Start the server
+You have two options for starting the HTTP Cockpit server:
+
+* **Option A: Run on Port 4321 (Default)**
+  Start the server normally:
+  ```bash
+  npm run http
+  ```
+  Access it in the browser at: [http://autopm.ai:4321](http://autopm.ai:4321)
+
+* **Option B: Run on Port 80 (No port number in URL)**
+  Port 80 is a privileged port, so you must start Node with `sudo` permissions:
+  ```bash
+  sudo PRODUCTFLOW_HTTP_PORT=80 node src/http-server.js
+  ```
+  Access it in the browser directly at: [http://autopm.ai](http://autopm.ai)

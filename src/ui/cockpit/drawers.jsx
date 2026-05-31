@@ -226,9 +226,9 @@ function ArtifactViewer({ artifact, product, onBack, onCopied }) {
               {bodySource === "error"   && <><span style={{ color: "var(--text-4)" }}>·</span><span className="mono" style={{ color: "var(--warn, #8A6B23)", fontSize: 11 }}>fetch failed — showing mock</span></>}
             </div>
           </div>
-          <div className="panel-body" style={(isHtml || window.EPIC_VIEWERS?.[artifact.robot]) ? { padding: 0, height: "calc(100vh - 200px)", overflow: "hidden" } : {}}>
+          <div className="panel-body" style={(isHtml || window.EPIC_VIEWERS?.[artifact.robot]) ? { padding: 0, height: "85vh", display: "flex", flexDirection: "column" } : {}}>
             {isHtml && (
-              <iframe src={`/api/artifact?path=${encodeURIComponent(artifact.path)}`} style={{ width: "100%", height: "100%", border: "none" }} title={artifact.title} />
+              <iframe src={`/api/artifact?path=${encodeURIComponent(artifact.path)}`} style={{ flex: 1, width: "100%", border: "none" }} title={artifact.title} />
             )}
             {!isHtml && window.EPIC_VIEWERS?.[artifact.robot] && (
               React.createElement(window.EPIC_VIEWERS[artifact.robot], { artifact })
@@ -261,10 +261,32 @@ function FeedbackPanel({ artifact, product, initial, onSubmit, onClose, submitte
 
   const submit = () => {
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      onSubmit({ rating, notes });
-    }, 550);
+    fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productSlug: product.slug,
+        robot: artifact.robot,
+        rating,
+        notes
+      })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("HTTP error " + res.status);
+        return res.json();
+      })
+      .then(res => {
+        setSubmitting(false);
+        if (res.success) {
+          onSubmit({ rating, notes });
+        } else {
+          alert("Failed to save feedback: " + (res.error || "unknown error"));
+        }
+      })
+      .catch(err => {
+        setSubmitting(false);
+        alert("Failed to save feedback: " + err.message);
+      });
   };
 
   return (

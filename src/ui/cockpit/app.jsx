@@ -11,6 +11,82 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "startScreen": "home"
 }/*EDITMODE-END*/;
 
+const { useState, useEffect, useMemo, useCallback } = React;
+
+// Hash routing helpers
+function parseHash() {
+  const hash = window.location.hash;
+  if (!hash || hash === "#" || hash === "#/") {
+    return null;
+  }
+  const path = hash.substring(2); // Strip '#/'
+  const parts = path.split("/");
+  
+  if (parts[0] === "workspace") return { screen: "workspace" };
+  if (parts[0] === "index" || (parts[0] === "products" && parts.length === 1)) return { screen: "index" };
+  if (parts[0] === "feedback") return { screen: "feedback" };
+  if (parts[0] === "policy") return { screen: "policy" };
+  
+  if (parts[0] === "products" && parts.length > 1) {
+    const productSlug = parts[1];
+    
+    // Check if it's an epic path: products/:slug/epics/:epicId/...
+    if (parts[2] === "epics" && parts.length > 3) {
+      const epicId = parts[3];
+      const tab = parts[4] || "overview";
+      
+      if (parts[5] === "artifact" && parts.length > 6) {
+        return { screen: "artifact", productSlug, epicId, tab, artifactId: parts[6] };
+      }
+      if (parts[5] === "money" && parts.length > 6) {
+        return { screen: "money", productSlug, epicId, tab, artifactId: parts[6] };
+      }
+      return { screen: "home", productSlug, epicId, tab };
+    }
+    
+    // Non-epic path: products/:slug/:tab/...
+    const tab = parts[2] || "overview";
+    if (parts[3] === "artifact" && parts.length > 4) {
+      return { screen: "artifact", productSlug, epicId: null, tab, artifactId: parts[4] };
+    }
+    if (parts[3] === "money" && parts.length > 4) {
+      return { screen: "money", productSlug, epicId: null, tab, artifactId: parts[4] };
+    }
+    return { screen: "home", productSlug, epicId: null, tab };
+  }
+  return null;
+}
+
+function updateHash(r) {
+  let h = "#/";
+  if (r.screen === "workspace") h = "#/workspace";
+  else if (r.screen === "index") h = "#/products";
+  else if (r.screen === "feedback") h = "#/feedback";
+  else if (r.screen === "policy") h = "#/policy";
+  else if (r.screen === "home") {
+    if (r.epicId) {
+      h = `#/products/${r.productSlug}/epics/${r.epicId}/${r.tab || "overview"}`;
+    } else {
+      h = `#/products/${r.productSlug}/${r.tab || "overview"}`;
+    }
+  } else if (r.screen === "artifact") {
+    if (r.epicId) {
+      h = `#/products/${r.productSlug}/epics/${r.epicId}/${r.tab || "overview"}/artifact/${r.artifactId}`;
+    } else {
+      h = `#/products/${r.productSlug}/${r.tab || "overview"}/artifact/${r.artifactId}`;
+    }
+  } else if (r.screen === "money") {
+    if (r.epicId) {
+      h = `#/products/${r.productSlug}/epics/${r.epicId}/${r.tab || "overview"}/money/${r.artifactId}`;
+    } else {
+      h = `#/products/${r.productSlug}/${r.tab || "overview"}/money/${r.artifactId}`;
+    }
+  }
+  if (window.location.hash !== h) {
+    window.location.hash = h;
+  }
+}
+
 function App() {
   // Route state: { screen: 'workspace' | 'index' | 'home' | 'artifact' | 'money', productSlug, tab, artifactId }
   const [tweaks, setTweak] = window.useTweaks(TWEAK_DEFAULTS);
@@ -24,10 +100,59 @@ function App() {
 
   // Initial screen
   const [route, setRoute] = useState(() => {
+    const initialRoute = parseHash();
+    if (initialRoute) return initialRoute;
+
     if (tweaks.startScreen === "workspace") return { screen: "workspace" };
     if (tweaks.startScreen === "index") return { screen: "index" };
-    return { screen: "home", productSlug: "autopm-productflow", epicId: null, tab: "overview" };
+    const defaultSlug = PFA.PRODUCTS?.[0]?.slug || "autopm-productflow";
+    return { screen: "home", productSlug: defaultSlug, epicId: null, tab: "overview" };
   });
+
+  // Sync state changes to hash
+  useEffect(() => {
+    updateHash(route);
+  }, [route]);
+
+  // Sync hash changes back to state (e.g. browser back/forward)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const parsed = parseHash();
+      if (parsed) {
+        setRoute(prev => {
+          if (
+            prev.screen === parsed.screen &&
+            prev.productSlug === parsed.productSlug &&
+            prev.epicId === parsed.epicId &&
+            prev.tab === parsed.tab &&
+            prev.artifactId === parsed.artifactId
+          ) {
+            return prev;
+          }
+          return parsed;
+        });
+      } else {
+        const defaultSlug = PFA.PRODUCTS?.[0]?.slug || "autopm-productflow";
+        setRoute({ screen: "home", productSlug: defaultSlug, epicId: null, tab: "overview" });
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  const [lastSync, setLastSync] = useState(Date.now());
+
+  // Periodically refresh data from backend to ensure we don't miss new files
+  useEffect(() => {
+    if (typeof window.PFBoot.refreshBundle === "function") {
+      const interval = setInterval(async () => {
+        const ok = await window.PFBoot.refreshBundle();
+        if (ok) setLastSync(Date.now());
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, []);
+
   const [freshnessData, setFreshnessData] = useState(null);
   const toast = useToast();
 

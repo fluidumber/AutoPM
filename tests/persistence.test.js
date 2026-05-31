@@ -14,6 +14,7 @@ import {
 } from "../src/workspace/freshness-tracker.js";
 import { ContextStore, CONTEXT_TYPES } from "../src/workspace/context-store.js";
 import { AssetStore } from "../src/workspace/asset-store.js";
+import { ALL_ROBOTS } from "../src/config/robot-registry.js";
 
 let failures = 0;
 let passes = 0;
@@ -46,7 +47,7 @@ console.log(`   temp root: ${tmpRoot}\n`);
 console.log("FreshnessTracker:");
 
 await test("exports sane staleness defaults", () => {
-    for (const robot of ["scout", "detective", "people", "money", "feature", "plan", "priority"]) {
+    for (const robot of ALL_ROBOTS) {
         assert.ok(typeof ROBOT_STALENESS_DAYS[robot] === "number", `staleness missing for ${robot}`);
         assert.ok(ROBOT_STALENESS_DAYS[robot] > 0);
     }

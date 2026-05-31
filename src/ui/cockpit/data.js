@@ -158,7 +158,7 @@ const ROBOT_META = {
   detective:            { label: "Detective",             desc: "Competitive landscape",             phase: 1, windowDays: 60,  rationale: "Competitive landscape moves faster than market sizing" },
   people:               { label: "People",                desc: "Personas & jobs to be done",        phase: 1, windowDays: 180, rationale: "Personas are stable; refresh semi-annually" },
   money:                { label: "Money",                 desc: "Financial model & .xlsx workbook",  phase: 1, windowDays: 90,  rationale: "Financial models need quarterly refresh" },
-  // Phase 1b (Asks)
+  // Phase 1.5
   epic:                 { label: "Epic",                  desc: "Deconstruct asks into epics",       phase: 1.5, windowDays: 30, rationale: "Hypothesis shifting happens dynamically" },
   feature:              { label: "Feature",               desc: "Feature inventory & scope",         phase: 1.5, windowDays: 30,  rationale: "Feature scope changes with each planning cycle" },
   plan:                 { label: "Plan",                  desc: "Roadmap & waves",                   phase: 1.5, windowDays: 30,  rationale: "Roadmap adjusts monthly" },

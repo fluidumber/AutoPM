@@ -6,6 +6,7 @@
 
 import fs from "fs/promises";
 import path from "path";
+import { packageHtml } from "../../utils/html-renderer.js";
 
 export class AssetStore {
     /**
@@ -17,7 +18,7 @@ export class AssetStore {
      * Save a robot analysis result. Returns the relative path under the
      * product directory.
      */
-    async saveRobotResult(slug, robotName, result, { askId = "core", epicId = null, featureId = null, feedback = null } = {}) {
+    async saveRobotResult(slug, robotName, result, { askId = "core", epicId = null, featureId = null, feedback = null, author = null } = {}) {
         await this.workspace.ensureProductStructure(slug);
 
         const today = new Date().toISOString().slice(0, 10);
@@ -35,7 +36,7 @@ export class AssetStore {
         const absPath = path.join(targetDir, filename);
         const relPath = path.posix.join(relPrefix, filename);
 
-        const body = this._renderMarkdown(robotName, result, feedback);
+        const body = this._renderMarkdown(robotName, result, feedback, author);
         await fs.writeFile(absPath, body, "utf-8");
 
         return relPath;
@@ -109,11 +110,12 @@ export class AssetStore {
     /**
      * Save Claude's generated analysis text for a robot.
      */
-    async saveRobotOutput(slug, robotName, markdownText, { askId = "core", epicId = null, featureId = null } = {}) {
+    async saveRobotOutput(slug, robotName, markdownText, { askId = "core", epicId = null, featureId = null, author = null } = {}) {
         await this.workspace.ensureProductStructure(slug);
 
         const today = new Date().toISOString().slice(0, 10);
         const filename = `${today}-${robotName}-output.md`;
+        const htmlFilename = `${today}-${robotName}-output.html`;
         
         let targetDir = this.workspace.getAskAssetsDir(slug, askId);
         let relPrefix = path.posix.join("assets", "asks", askId);
@@ -125,9 +127,19 @@ export class AssetStore {
         await fs.mkdir(targetDir, { recursive: true });
 
         const absPath = path.join(targetDir, filename);
+        const absHtmlPath = path.join(targetDir, htmlFilename);
         const relPath = path.posix.join(relPrefix, filename);
 
-        await fs.writeFile(absPath, markdownText, "utf-8");
+        let finalOutput = markdownText;
+        if (author) {
+            finalOutput = `---\nauthor: ${JSON.stringify(author)}\n---\n\n${markdownText}`;
+        }
+        await fs.writeFile(absPath, finalOutput, "utf-8");
+
+        // Save HTML version
+        const htmlDoc = packageHtml(finalOutput, `${robotName} - ${slug}`);
+        await fs.writeFile(absHtmlPath, htmlDoc, "utf-8");
+
         return relPath;
     }
 
@@ -208,7 +220,7 @@ export class AssetStore {
 
     // ── internals ──────────────────────────────────────────────────
 
-    _renderMarkdown(robotName, result, feedback) {
+    _renderMarkdown(robotName, result, feedback, author = null) {
         const timestamp = new Date().toISOString();
         const productIdea = result?.productIdea || "";
         const feedbackBlock = feedback ? this._renderFeedbackBlock(feedback) : "";
@@ -217,7 +229,7 @@ export class AssetStore {
 robot: ${robotName}
 generated: ${timestamp}
 productIdea: ${JSON.stringify(productIdea)}
----
+${author ? `author: ${JSON.stringify(author)}\n` : ""}---
 
 # ${robotName.toUpperCase()} Robot Analysis
 

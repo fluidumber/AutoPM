@@ -32,7 +32,9 @@ class MoneyRobot {
                     "NEVER use placeholder values like '$X' or 'Calculate based on retention'",
                     "Call out your assumptions explicitly — a model is only as good as its assumptions",
                     "Stage-calibrate the model: a bootstrapped early-stage product has different CAC/LTV dynamics than a Series A company",
-                    "End with the ONE financial metric that matters most right now given the stage"
+                    "End with the ONE financial metric that matters most right now given the stage",
+                    "CRITICAL: You MUST FIRST call the 'save-robot-output' tool with the complete markdown analysis. This is non-negotiable for Phase 2 progression.",
+                    "AFTER saving the markdown, you MUST generate the editable Excel workbook (.xlsx) by using your Python environment to write a script with openpyxl/pandas that compiles the assumptions, scenarios, and unit economics, then call the 'save-artifact' tool with the base64-encoded content named 'YYYY-MM-DD-money-model.xlsx'."
                 ],
 
                 knownFinancialContext: {
@@ -151,12 +153,14 @@ class MoneyRobot {
             },
 
             outputFormat: {
-                style: "Structured narrative with explicit assumption callouts, then tables for numbers, then Vega-Lite chart specs",
+                style: "Structured narrative with explicit assumption callouts, then tables for numbers, then Vega-Lite chart specs. Use rich HTML with inline styles for visual elements.",
                 currency: geography.toLowerCase().includes("india") ? "INR" : "USD",
-                tables: "Use markdown tables for: unit economics per segment, SaaS health metrics, 3-scenario ARR projection, advanced projections, feature impact",
-                assumptions: "Box or callout every assumption clearly — 'Assumption: 3% monthly churn based on [reason]'",
+                tables: "Use rich HTML tables with styled headers (background colors for column groups), alternating row shading, and bold cells for: TAM/SAM/SOM, unit economics, SaaS health metrics, 3-scenario ARR projection, advanced projections, and feature impact",
+                assumptions: "Box or callout every assumption clearly — use a styled HTML div card with a left border color matching the scenario (e.g., green for Optimistic, amber for Base, red for Conservative) and inline CSS",
                 charts: "After all tables, produce exactly 2 Vega-Lite 5 JSON specs in ```json code blocks: (1) ARR growth line chart, (2) LTV vs CAC bar chart. Use actual numbers from the analysis — never placeholders.",
-                length: "Comprehensive — financial models require depth. Do not truncate tables or omit scenarios."
+                length: "Comprehensive — financial models require depth. Do not truncate tables or omit scenarios.",
+                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for: (1) metric highlight cards at the top (ARR, LTV:CAC, payback period), (2) scenario assumption cards with colored borders, (3) all tables. Plain markdown is fine for narrative text, but all tables, metrics highlights, and callouts MUST be HTML with inline styles.",
+                excelRequired: "You MUST FIRST use the 'save-robot-output' tool to save the markdown analysis. Then, you MUST use your Python environment to programmatically build a real multi-tab Excel workbook named 'YYYY-MM-DD-money-model.xlsx' containing assumptions, projections, and formulas, then save it to the product's assets using the 'save-artifact' tool with base64 encoding."
             }
         };
 

@@ -1,10 +1,12 @@
 import fs from "fs/promises";
+import path from "path";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-import TeamLeader, { ROBOT_ORDER, ROBOT_ORDER_PHASE_2, PHASE2_GATE_ROBOTS } from "../leader/team-leader.js";
+import TeamLeader from "../leader/team-leader.js";
+import { ALL_ROBOTS, ROBOT_ORDER_BUSINESS, ROBOT_ORDER_EPIC_STRATEGY, ROBOT_ORDER_PHASE_2, BUSINESS_GATE_ROBOTS, EPIC_GATE_ROBOTS } from "./config/robot-registry.js";
 import { traverseGates } from "../leader/gate-traversal.js";
 import { generatePresentation } from "../utils/presentation-generator.js";
 import { renderMarkdown, renderHtml } from "../utils/pdd-renderer.js";
@@ -29,7 +31,7 @@ const processAdvisor      = new ProcessAdvisor(teamLeader.database, notification
 
 const server = new McpServer({
     name: "autopm",
-    version: "2.0.0",
+    version: "3.0.0",
 });
 
 // ── Active session helper ─────────────────────────────────────────────
@@ -170,7 +172,7 @@ Never skip this tool at session start — it prevents wasted effort from running
                 type: "text",
                 text: JSON.stringify({
                     welcome:       "👋 Welcome to AutoPM — your agentic Product Management co-pilot.",
-                    version:       "2.0.0",
+                    version:       "3.0.0",
                     paths,
                     personas: {
                         count:   personas.length,
@@ -330,6 +332,14 @@ If 'productSlug' is provided:
   - On subsequent calls, fresh results are reused automatically (see freshness windows).
   - Pass 'forceRerun: true' to re-run and overwrite a still-fresh result.
 
+RICH OUTPUT RULE: When generating your analysis, use rich HTML with inline styles for visual elements:
+  - Persona cards with avatar circles, colored badges, styled blockquotes
+  - Journey maps as horizontal card flows with colored stage headers
+  - Data tables with styled headers and alternating row colors
+  - Chart.js canvas+script blocks for financial charts
+  - Mermaid diagrams in \`\`\`mermaid fences
+  When you later call 'save-robot-output', pass this EXACT rich content — do NOT flatten to plain markdown.
+
 IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 and suggest improvements. Then call the 'feedback' tool before running the next robot.`,
     {
         analysisId: z
@@ -339,14 +349,7 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
                 "Analysis session ID. If not provided, a new session is created automatically."
             ),
         robotName: z
-            .enum([
-                // Phase 1 — strategic discovery
-                "scout", "detective", "people", "money", "epic", "feature", "plan", "priority",
-                // Phase 2 — execution definition
-                "user-stories", "scope-spec", "customer-journeys",
-                "feasibility-tech", "feasibility-design", "kpis",
-                "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
-            ])
+            .enum(ALL_ROBOTS)
             .describe("Which robot to run"),
         enrichedContext: z
             .string()
@@ -438,12 +441,16 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
             sessionId = teamLeader.startAnalysis(context, { productSlug: productSlug || null });
         }
 
+        const profile = await pmProfile.load();
+        const author = profile?.name || null;
+
         // Run the robot
         const result = await teamLeader.runSingleRobot(sessionId, robotName, {
             forceRerun: !!forceRerun,
             askId: askId || "core",
             epicId: epicId || null,
             featureId: featureId || null,
+            author
         });
 
         // Get session state
@@ -472,6 +479,9 @@ IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 a
                                 nextRobot: teamLeader.getNextRobot(sessionId),
                             },
                             ...(sessionHint ? { sessionHint } : {}),
+                            saveOutputReminder: result?._reused
+                                ? null
+                                : "IMPORTANT: After generating your analysis, call 'save-robot-output' with the FULL rich output including any HTML cards, styled divs, colored badges, journey map HTML, chart.js canvas/script blocks, mermaid diagrams, and inline-styled tables you rendered. Do NOT flatten rich visual content to plain markdown — include the raw HTML so the companion .html file renders identically to what the user saw in this chat.",
                         },
                         null,
                         2
@@ -507,14 +517,7 @@ If the session is tied to a product, the rating is also appended to the robot's 
     {
         analysisId: z.string().describe("The analysis session ID"),
         robotName: z
-            .enum([
-                // Phase 1
-                "scout", "detective", "people", "money", "epic", "feature", "plan", "priority",
-                // Phase 2
-                "user-stories", "scope-spec", "customer-journeys",
-                "feasibility-tech", "feasibility-design", "kpis",
-                "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
-            ])
+            .enum(ALL_ROBOTS)
             .describe("Which robot to rate"),
         rating: z
             .number()
@@ -548,12 +551,15 @@ If the session is tied to a product, the rating is also appended to the robot's 
             };
         }
 
+        const profile = await pmProfile.load();
+        const author = profile?.name || null;
+
         await teamLeader.saveFeedback(
             analysisId,
             robotName,
             rating,
             notes || "",
-            { analysisMarkdown: analysisMarkdown || null, bypassReason: bypassReason || null }
+            { analysisMarkdown: analysisMarkdown || null, bypassReason: bypassReason || null, author }
         );
 
         // Async process improvement analysis — does not block the feedback response
@@ -657,7 +663,7 @@ Can be regenerated any time Phase 1 outputs are on disk — no re-runs required.
             if (phase1Data.robotsPresent.length === 0) {
                 return {
                     content: [{ type: "text", text: JSON.stringify({
-                        error: `No Phase 1 robot outputs found for '${productSlug}'. Run at least one Phase 1 robot (scout, detective, people, money, feature, plan, priority) and submit feedback before generating a presentation.`,
+                        error: `No Business robot outputs found for '${productSlug}'. Run at least one Business Strategy robot (${ROBOT_ORDER_BUSINESS.join(", ")}) and submit feedback before generating a presentation.`,
                         robotsMissing: phase1Data.robotsMissing,
                     }, null, 2) }],
                 };
@@ -791,12 +797,17 @@ server.tool(
         
         const fs = await import("fs/promises");
         const path = await import("path");
-        const assetsDir = teamLeader.workspace.getAssetsDir(productSlug);
+        let assetsDir = teamLeader.workspace.getAssetsDir(productSlug);
+        let safeName = path.basename(filename);
+        const ext = path.extname(safeName).toLowerCase();
+        
+        if ([".xlsx", ".xls", ".csv", ".pptx", ".ppt", ".pdf", ".docx", ".doc"].includes(ext)) {
+            assetsDir = path.join(assetsDir, "other-assets");
+        }
         
         await fs.mkdir(assetsDir, { recursive: true });
         
         // Prevent path traversal
-        const safeName = path.basename(filename);
         const filepath = path.join(assetsDir, safeName);
         
         const buffer = encoding === "base64" ? Buffer.from(fileContent, "base64") : fileContent;
@@ -1556,12 +1567,38 @@ the current effective windows before recommending whether to re-run.`,
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "save-robot-output",
-    `Save the raw analysis text that Claude generated for a robot to the product's assets folder.
+    `Save the analysis text that Claude generated for a robot to the product's assets folder.
 
 This is distinct from the prompt payload saved by run-robot.  This tool saves the ACTUAL ANALYSIS TEXT
 Claude produced — the content that Phase 2 robots read as their primary input.
 
-Call this immediately after Claude generates a robot's analysis, passing the full markdown text.
+Call this immediately after Claude generates a robot's analysis, passing the full text.
+
+CRITICAL FORMATTING RULE — RICH OUTPUT REQUIRED:
+You MUST pass the EXACT same rich content you rendered in the chat, including ALL of the following:
+- Raw HTML blocks: persona cards, journey maps, styled divs, colored badges, blockquote cards
+- Mermaid diagrams wrapped in \`\`\`mermaid code fences
+- HTML tables with inline styles for colored headers, status badges, etc.
+- <canvas> and <script> blocks for Chart.js or other visualizations
+- Styled <div> blocks with CSS classes for card layouts, grids, flow diagrams
+
+If you rendered persona cards with avatar circles, colored role badges, and styled blockquotes in the chat,
+you MUST include that exact HTML in markdownText. Do NOT downgrade to plain markdown.
+
+Example: If your chat showed a styled persona card, pass:
+\`\`\`html
+<div style="border:1px solid #e0e0e0; border-radius:12px; padding:24px; margin:16px 0;">
+  <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+    <div style="width:48px; height:48px; border-radius:50%; background:#4B6A4F; color:white; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:16px;">PR</div>
+    <div><strong>Priya Rajan</strong><br><span style="color:#666; font-size:13px;">31 · PM · Bengaluru</span></div>
+  </div>
+  <!-- rest of persona content with styled sections -->
+</div>
+\`\`\`
+
+Do NOT summarize, truncate, or flatten rich content to plain markdown.
+The markdownText is rendered into both a .md file AND a companion .html file.
+The HTML file preserves all visual richness — but only if you include the HTML in this call.
 
 File pattern: assets/YYYY-MM-DD-<robotName>-output.md
 
@@ -1570,14 +1607,9 @@ Phase 2 robots (user-stories, scope-spec, etc.) read these output files to deriv
     {
         productSlug: z.string().describe("The product slug"),
         robotName: z
-            .enum([
-                "scout", "detective", "people", "money", "epic", "feature", "plan", "priority",
-                "user-stories", "scope-spec", "customer-journeys",
-                "feasibility-tech", "feasibility-design", "kpis",
-                "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
-            ])
+            .enum(ALL_ROBOTS)
             .describe("Which robot produced this output"),
-        markdownText: z.string().describe("The full analysis text Claude generated for this robot"),
+        markdownText: z.string().describe("The full analysis text Claude generated — MUST include all rich HTML (cards, badges, journey maps, styled divs, canvas/script blocks, mermaid) exactly as rendered in the chat. Do NOT flatten to plain markdown."),
         epicId: z.string().optional().describe("Epic ID if this output belongs to a specific Epic"),
         featureId: z.string().optional().describe("Feature ID if this output belongs to a specific Feature"),
     },
@@ -1593,8 +1625,10 @@ Phase 2 robots (user-stories, scope-spec, etc.) read these output files to deriv
         }
 
         try {
-            const relPath = await teamLeader.assetStore.saveRobotOutput(productSlug, robotName, markdownText, epicId, featureId);
-            const absPath = `${teamLeader.workspace.getAssetsDir(productSlug)}/${relPath.split("/").pop()}`;
+            const profile = await pmProfile.load();
+            const author = profile?.name || null;
+            const relPath = await teamLeader.assetStore.saveRobotOutput(productSlug, robotName, markdownText, { epicId, featureId, author });
+            const absPath = path.join(teamLeader.workspace.getProductDir(productSlug), relPath);
             
             let viewerPath = null;
             if (robotName === "user-stories") {
@@ -1778,7 +1812,7 @@ until this tool returns { promoted: true }.`,
             if (!alreadyExisted) {
                 const phase2Manifest = {
                     promotedAt: new Date().toISOString(),
-                    promotedFromPhase1: ROBOT_ORDER,
+                    promotedFromPhase1: [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_EPIC_STRATEGY],
                     pddVersion: "1.0.0",
                     pddStatus:  "DRAFT",
                     owner: {
@@ -2156,9 +2190,10 @@ Call this immediately after Claude generates the PDD JSON from 'generate-pdd'.`,
     {
         productSlug:  z.string().describe("The product slug"),
         pddJson:      z.string().describe("The full PDD JSON string that Claude generated"),
+        epicId:       z.string().optional().describe("Optional epic ID to save a scoped PDD for"),
         renderHtmlFlag: z.boolean().optional().describe("Set true to also save an HTML version to plans/. Default false."),
     },
-    async ({ productSlug, pddJson: pddJsonStr, renderHtmlFlag }) => {
+    async ({ productSlug, pddJson: pddJsonStr, epicId, renderHtmlFlag }) => {
         const fspath = await import("fs/promises");
         const ppath  = await import("path");
 
@@ -2199,7 +2234,7 @@ Call this immediately after Claude generates the PDD JSON from 'generate-pdd'.`,
         }
 
         const version = pddJson.meta.version;
-        const pddDir  = workspace.getPDDDir(productSlug);
+        const pddDir  = teamLeader.workspace.getPDDDir(productSlug, epicId);
         await fspath.mkdir(pddDir, { recursive: true });
 
         const jsonFileName   = `pdd-${productSlug}-v${version}.json`;
@@ -2716,19 +2751,29 @@ ${successCriteria || "_Not specified_"}
 );
 
 
-// ── Start ────────────────────────────────────────────────────────────
-async function main() {
+// ── Exports for external transports (e.g. SSE) ────────────────────────
+export { server, teamLeader, workspace };
+
+export async function initServer() {
     // Wait for the brain database to finish loading from disk before
     // accepting connections — prevents serving stale/empty data.
     await teamLeader.ready;
     await workspace.ensureWorkspace();
-
-    const transport = new StdioServerTransport();
-    await server.connect(transport);
-    console.log("🚀 ProductFlow MCP Server v2.0 running on stdio");
+    return server;
 }
 
-main().catch((err) => {
-    console.error("Fatal:", err);
-    process.exit(1);
-});
+// ── Start Stdio ────────────────────────────────────────────────────────────
+async function startStdio() {
+    await initServer();
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+    console.log("🚀 ProductFlow MCP Server v3.0 running on stdio");
+}
+
+import { fileURLToPath } from 'url';
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+    startStdio().catch((err) => {
+        console.error("Fatal:", err);
+        process.exit(1);
+    });
+}

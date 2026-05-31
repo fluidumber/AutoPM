@@ -95,6 +95,18 @@
     if (bundle.feedback)  PFA.FEEDBACK_EVENTS = bundle.feedback;
   }
 
+  window.PFBoot.refreshBundle = async function() {
+    try {
+      const resp = await fetch(`${API_BASE}/api/bundle`, { headers: { Accept: "application/json" } });
+      if (!resp.ok) return false;
+      const bundle = await resp.json();
+      applyBundle(bundle);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
   /* Kick off the connect attempt. Resolves the ready promise
      regardless of outcome. */
   window.PFBoot.ready = (async () => {

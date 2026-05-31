@@ -42,6 +42,7 @@ export const ROBOT_STALENESS_DAYS = {
     detective: 60,
     people:    180,
     money:     90,
+    epic:      30,
     feature:   30,
     plan:      30,
     priority:  30,

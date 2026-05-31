@@ -1,84 +1,97 @@
-# ChatGPT MCP Integration Guide (SSE Bridge)
+# ChatGPT MCP Integration Guide
 
-This document provides instructions and code to expose the ProductFlow stdio MCP server over Server-Sent Events (SSE), allowing integration with ChatGPT Developer Mode.
+ProductFlow includes a built-in Server-Sent Events (SSE) bridge to allow integration with ChatGPT (both the macOS Desktop App and the Web version). 
 
-## The SSE Bridge Script
+> **Important Context**: ChatGPT's Desktop app enforces strict security rules. It blocks `localhost` connections ("Unsafe URL") and it also blocks tunnels that display HTML warning pages (like the free tiers of `ngrok` or `localtunnel`). To bypass this, we use **Cloudflare Tunnel**, which provides a clean, secure HTTPS URL with no warning pages.
 
-Create a file named `src/mcp-sse-server.js` with the following content when you are ready to use it:
-
-```javascript
-import express from "express";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
-import { registerTools } from "./mcp-server-tools.js"; // Or import server setup from mcp-server.js
-
-const app = express();
-const PORT = process.env.PORT || 4322;
-
-// Initialize MCP Server instance
-const mcpServer = new McpServer({
-  name: "ProductFlow",
-  version: "1.0.0",
-});
-
-// Register all your tools here (similar to src/mcp-server.js)
-// Example:
-// mcpServer.tool("greet", { name: z.string() }, async ({ name }) => { ... });
-
-let transport;
-
-app.get("/sse", async (req, res) => {
-  console.log("New connection to SSE endpoint");
-  transport = new SSEServerTransport("/messages", res);
-  await mcpServer.connect(transport);
-});
-
-app.post("/messages", async (req, res) => {
-  console.log("Received message on HTTP endpoint");
-  if (transport) {
-    await transport.handlePostMessage(req, res);
-  } else {
-    res.status(400).send("No active SSE session");
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`ProductFlow MCP SSE Server running on http://localhost:${PORT}`);
-  console.log(`SSE Route: http://localhost:${PORT}/sse`);
-  console.log(`Message Route: http://localhost:${PORT}/messages`);
-});
-```
-
-> [!NOTE]
-> Since `src/mcp-server.js` instantiates its own `McpServer` and starts a stdio loop immediately, you should refactor it to separate the *tool definitions* from the *transport activation* if you want to share tool definitions between stdio (Claude) and SSE (ChatGPT) cleanly.
+Follow this step-by-step guide to connect ProductFlow to ChatGPT on your Mac.
 
 ---
 
-## Step-by-Step Setup
+## Step 1: Start the ProductFlow SSE Server
 
-### Step 1: Install Express
-Install Express in this project if it isn't already:
-```bash
-npm install express
+First, you need to start the background server that handles the MCP tools over HTTP.
+
+1. Open a terminal and navigate to your `productflow` project directory.
+2. Run the following command:
+   ```bash
+   node src/mcp-sse-server.js
+   ```
+3. You should see a message indicating the server is running on port `4322`. **Leave this terminal window open.**
+
+---
+
+## Step 2: Start a Cloudflare Tunnel
+
+We need to securely expose port `4322` to the internet so ChatGPT can reach it.
+
+1. Open a **second** terminal window.
+2. Run the following command to start Cloudflare (which is already installed on your Mac):
+   ```bash
+   /opt/homebrew/bin/cloudflared tunnel --url http://localhost:4322
+   ```
+3. Wait a few seconds, and look for a line in the output that says:
+   `Your quick Tunnel has been created! Visit it at:`
+   `https://random-words.trycloudflare.com`
+4. **Copy that URL.** You will need it for the next step. Leave this terminal running!
+
+---
+
+## Step 3: Add the App to ChatGPT
+
+Now, point ChatGPT to your Cloudflare tunnel.
+
+1. Open the **ChatGPT macOS Desktop App**.
+2. Open **Settings** (press `Cmd` + `,`).
+3. Navigate to the **Apps** or **Developer** section in the sidebar.
+4. Make sure **Developer mode** is toggled ON.
+5. Click **Create** or **Add an App** (sometimes called "Add a Connector").
+6. Fill in the connection details:
+   - **Name**: ProductFlow
+   - **Authentication**: Select **No Auth**
+   - **URL**: Paste the URL you copied from Cloudflare, and **add `/sse` to the end**.
+     *(Example: `https://random-words.trycloudflare.com/sse`)*
+7. Click **Save** or **Trust**.
+
+---
+
+## Step 4: You're Ready!
+
+ChatGPT will immediately make a connection to your SSE server (you will see "New connection to SSE endpoint" pop up in your first terminal window).
+
+You can now close the settings window and start interacting with ProductFlow directly in your ChatGPT conversations! Just ask it to "call the greet tool" to get started.
+
+> **Troubleshooting:**
+> - If ChatGPT says it lost connection, your `localtunnel` URL may have expired. Just restart the `npx localtunnel --port 4322` command, get the new URL, and update the app settings in ChatGPT.
+> - Ensure your `node src/mcp-sse-server.js` terminal is always running while you are using the tools.
+
+---
+
+## Visual Workflow
+
+```mermaid
+graph TD
+    %% Define Styles
+    classDef terminal fill:#2B2D31,stroke:#4B4D53,stroke-width:2px,color:#FFFFFF,rx:8px,ry:8px;
+    classDef action fill:#4CAF50,stroke:#388E3C,stroke-width:2px,color:#FFFFFF,rx:8px,ry:8px;
+    classDef app fill:#2D3748,stroke:#4A5568,stroke-width:2px,color:#FFFFFF,rx:8px,ry:8px;
+    classDef success fill:#10B981,stroke:#059669,stroke-width:2px,color:#FFFFFF,rx:8px,ry:8px;
+
+    %% Nodes
+    A["💻 Terminal 1<br><b>node src/mcp-sse-server.js</b>"]:::terminal
+    B["💻 Terminal 2<br><b>npx localtunnel --port 4322</b>"]:::terminal
+    
+    C["🌐 Secure URL Generated<br><i>(e.g., https://name.loca.lt)</i>"]:::action
+    
+    D["🤖 ChatGPT App<br><b>Settings ➔ Apps ➔ Add Connector</b>"]:::app
+    E["🔗 Enter Connection Details<br><b>URL:</b> https://name.loca.lt/sse<br><b>Auth:</b> No Auth"]:::app
+    
+    F["✅ Connected!<br>ProductFlow Tools Available"]:::success
+
+    %% Connections
+    A -->|"Starts Server on Port 4322"| B
+    B -->|"Tunnels Port 4322 to Web"| C
+    C -->|"Copy URL"| D
+    D --> E
+    E -->|"ChatGPT verifies connection"| F
 ```
-
-### Step 2: Run the SSE Server
-Run the bridge server locally:
-```bash
-node src/mcp-sse-server.js
-```
-
-### Step 3: Tunnel via Ngrok (or alternative)
-Because ChatGPT runs in the cloud, it cannot resolve `localhost` directly. You will need to expose your local port (e.g. `4322`) to a public URL:
-```bash
-ngrok http 4322
-```
-This will give you a public URL (e.g., `https://abcdef123.ngrok-free.app`).
-
-### Step 4: Register in ChatGPT
-1. Go to **ChatGPT** on the web.
-2. Ensure you have **Developer Mode** enabled (under settings/beta features).
-3. Under the custom Apps or Developer settings, choose to register a new connector/app.
-4. Input your public tunnel URL with the `/sse` route:
-   `https://abcdef123.ngrok-free.app/sse`
-5. Save the configuration. ChatGPT will connect and inspect the tools available.

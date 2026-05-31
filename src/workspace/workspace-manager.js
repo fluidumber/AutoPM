@@ -184,7 +184,10 @@ export class WorkspaceManager {
      * Path to the PDD output directory for a product.
      * All PDD exports (markdown + HTML) are stored here.
      */
-    getPDDDir(slug) {
+    getPDDDir(slug, epicId = null) {
+        if (epicId) {
+            return path.join(this.getAskAssetsDir(slug, "core"), "epics", epicId, "pdd");
+        }
         return path.join(this.getAssetsDir(slug), "pdd");
     }
 

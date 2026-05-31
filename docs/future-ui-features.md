@@ -49,3 +49,9 @@ If we want to build these features back into the UI in the future, here is what 
 When picking features to restore, the highest ROI additions would be:
 1. **Re-run robot**: Unlocks autonomous execution from the UI (tied to Direct API Mode).
 2. **Reveal in Finder / Open in Excel**: Huge quality of life improvement for PMs who want to edit the financial models or move files around. Very easy to build on the backend using `child_process`.
+
+## 5. Rich Artifact Renderer Pipeline
+
+| Feature | Intended Behavior | Backend Requirement |
+|---------|-------------------|---------------------|
+| **Auto-generate Rich HTML Reports** | Automatically convert raw Markdown robot outputs (like the Detective competitive matrix) into interactive, beautifully designed HTML dashboards with charts and visuals, saving them alongside the Markdown. | A dedicated post-processing step (`presentation-generator.js` or `rich-renderer.js`) that triggers after a robot saves its output. It reads the structured Markdown data, passes it into an HTML template generator with Chart.js/Vega-lite configs, and writes the resulting `.html` file. This keeps the LLM output resilient and machine-readable (Markdown) while delivering the "wow" factor to the PM natively in the Cockpit. |

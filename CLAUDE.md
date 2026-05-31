@@ -264,38 +264,21 @@ Before committing any robot file, verify:
 
 ---
 
-## Phase 1 Robot Order and Staleness Windows
+## Robot Order and Staleness Windows
 
-```
-ROBOT_ORDER = ["scout", "detective", "people", "money", "feature", "plan", "priority"]
+**CRITICAL RULE: Single Source of Truth**
+The list, order, and phase categorisation of all robots is centrally defined in `src/config/robot-registry.js`. Do NOT hardcode robot arrays anywhere else in the codebase.
 
-Staleness: scout 90d, detective 60d, people 180d, money 90d,
-           feature/plan/priority 30d each
-```
+To add a new robot:
+1. Create the robot class in `robots/`.
+2. Add its name to the appropriate array (`PHASE1A_ROBOTS`, `PHASE1B_ROBOTS`, or `PHASE2_ROBOTS`) in `src/config/robot-registry.js`.
+3. Add its staleness window to `ROBOT_STALENESS_DAYS` in `src/workspace/freshness-tracker.js`.
+4. Register the instance in `team-leader.js`.
 
----
-
-## Phase 2 Robot Order and Staleness Windows
-
-```
-ROBOT_ORDER_PHASE_2 = [
-  "user-stories",         // reads: people-output, feature-output
-  "scope-spec",           // reads: feature-output, plan-output
-  "feasibility-tech",     // reads: feature-output, scope-spec-output, phase2-context
-  "feasibility-design",   // reads: people-output, feature-output
-  "customer-journeys",    // reads: people-output, feature-output
-  "data-privacy",         // reads: feature-output, feasibility-tech-output
-  "gtm-readiness",        // reads: plan-output, money-output, phase2-context
-  "risks-registry",       // reads: plan-output, feasibility-tech-output, gtm-readiness-output
-  "kpis",                 // reads: money-output, plan-output, priority-output
-  "daci-stakeholders",    // reads: context/daci.json, phase2-context, interview-answers
-]
-
-Staleness: user-stories/scope-spec/gtm-readiness/risks-registry 30d,
-           feasibility-tech/feasibility-design 60d,
-           customer-journeys/data-privacy/kpis 90d,
-           daci-stakeholders 180d
-```
+Staleness defaults:
+- Phase 1a (Core): scout 90d, detective 60d, people 180d, money 90d
+- Phase 1b (Asks): epic 30d, feature 30d, plan 30d, priority 30d
+- Phase 2 (Execution): user-stories/scope-spec/gtm-readiness/risks-registry 30d, feasibility-tech/feasibility-design 60d, customer-journeys/data-privacy/kpis 90d, daci-stakeholders 180d
 
 **Phase gate**: All 7 Phase 1 robots must be `fresh` before any Phase 2 robot can run.
 Enforced by `promote-to-phase-2` MCP tool (Phase 2 batch).

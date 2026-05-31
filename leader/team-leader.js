@@ -31,45 +31,14 @@ import { AssetStore } from "../src/workspace/asset-store.js";
 import { ContextStore } from "../src/workspace/context-store.js";
 import { FreshnessTracker } from "../src/workspace/freshness-tracker.js";
 
-// ── Robot registries ────────────────────────────────────────────────
-
-/** Phase 1a run order — product core strategy */
-const ROBOT_ORDER_PHASE_1A = [
-    "scout",
-    "detective",
-    "people",
-    "money",
-];
-
-/** Phase 1b run order — ask/hypothesis execution */
-const ROBOT_ORDER_PHASE_1B = [
-    "epic",
-    "feature",
-    "plan",
-    "priority",
-];
-
-const ROBOT_ORDER = [...ROBOT_ORDER_PHASE_1A, ...ROBOT_ORDER_PHASE_1B];
-
-/** Phase 2 run order — execution definition */
-const ROBOT_ORDER_PHASE_2 = [
-    "user-stories",
-    "scope-spec",
-    "feasibility-tech",
-    "feasibility-design",
-    "customer-journeys",
-    "data-privacy",
-    "gtm-readiness",
-    "risks-registry",
-    "kpis",
-    "daci-stakeholders",
-];
-
-/**
- * Gate rule: the original strategic Phase 1 robots must be fresh before any
- * Phase 2 robot can run. Epic is an optional scoping layer, not a blocker.
- */
-const PHASE2_GATE_ROBOTS = ["scout", "detective", "people", "money", "feature", "plan", "priority"];
+import { 
+    ALL_ROBOTS, 
+    ROBOT_ORDER_BUSINESS, 
+    ROBOT_ORDER_EPIC_STRATEGY, 
+    ROBOT_ORDER_PHASE_2, 
+    BUSINESS_GATE_ROBOTS,
+    EPIC_GATE_ROBOTS
+} from "../src/config/robot-registry.js";
 
 class TeamLeader {
     constructor() {
@@ -250,11 +219,11 @@ class TeamLeader {
         // gtm-readiness-output, so we must load every available output file.
         // The map key is the robot name regardless of phase.
         const phase1Outputs = {};
-        for (const robot of ROBOT_ORDER_PHASE_1A) {
+        for (const robot of ROBOT_ORDER_BUSINESS) {
             const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId: "core", epicId: null, featureId: null });
             if (text) phase1Outputs[robot] = text;
         }
-        for (const robot of ROBOT_ORDER_PHASE_1B) {
+        for (const robot of ROBOT_ORDER_EPIC_STRATEGY) {
             const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId, epicId: null, featureId: null });
             if (text) phase1Outputs[robot] = text;
         }
@@ -308,7 +277,7 @@ class TeamLeader {
      */
     async checkPhase2Gate(productSlug) {
         const freshnessState = await this.freshness.getRobotFreshness(productSlug);
-        return PHASE2_GATE_ROBOTS.filter(r => freshnessState[r]?.status !== "fresh");
+        return BUSINESS_GATE_ROBOTS.filter(r => freshnessState[r]?.status !== "fresh");
     }
 
     /**
@@ -328,7 +297,7 @@ class TeamLeader {
      * @param {string} [opts.epicId=null] - for feature-based scoping
      * @param {string} [opts.featureId=null] - for feature-based scoping
      */
-    async runSingleRobot(analysisId, robotName, { forceRerun = false, askId = "core", epicId = null, featureId = null } = {}) {
+    async runSingleRobot(analysisId, robotName, { forceRerun = false, askId = "core", epicId = null, featureId = null, author = null } = {}) {
         const session = this.sessions.get(analysisId);
         if (!session) throw new Error(`Unknown analysis ID: ${analysisId}`);
 
@@ -336,7 +305,7 @@ class TeamLeader {
         if (!robot) throw new Error(`Unknown robot: ${robotName}`);
 
         // Phase 1a robots always save to "core". Phase 1b/2 use the active askId.
-        const effectiveAskId = ROBOT_ORDER_PHASE_1A.includes(robotName) ? "core" : askId;
+        const effectiveAskId = ROBOT_ORDER_BUSINESS.includes(robotName) ? "core" : askId;
 
         // If this session is product-scoped, check for a fresh cached result first.
         if (session.productSlug && !forceRerun) {
@@ -407,7 +376,7 @@ class TeamLeader {
                     session.productSlug,
                     robotName,
                     result,
-                    { askId: effectiveAskId, epicId, featureId }
+                    { askId: effectiveAskId, epicId, featureId, author }
                 );
                 await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath, effectiveAskId, epicId, featureId);
                 console.log(`💾 Saved ${robotName} analysis to ${assetPath}`);
@@ -429,7 +398,7 @@ class TeamLeader {
             id: session.id,
             productIdea: session.productIdea,
             completedRobots: session.completedRobots,
-            remainingRobots: ROBOT_ORDER.filter(
+            remainingRobots: ROBOT_ORDER_BUSINESS.filter(
                 (r) => !session.completedRobots.includes(r)
             ),
             feedback: session.feedback,
@@ -444,7 +413,7 @@ class TeamLeader {
         const session = this.sessions.get(analysisId);
         if (!session) return null;
         return (
-            ROBOT_ORDER.find(
+            ROBOT_ORDER_BUSINESS.find(
                 (r) => !session.completedRobots.includes(r)
             ) || null
         );
@@ -469,7 +438,7 @@ class TeamLeader {
      * @param {string} notes
      * @param {{ analysisMarkdown?: string|null, bypassReason?: string|null }} [opts]
      */
-    async saveFeedback(analysisId, robotName, rating, notes, { analysisMarkdown = null, bypassReason = null } = {}) {
+    async saveFeedback(analysisId, robotName, rating, notes, { analysisMarkdown = null, bypassReason = null, author = null } = {}) {
         const session = this.sessions.get(analysisId);
         if (session) {
             session.feedback[robotName] = { rating, notes };
@@ -479,7 +448,7 @@ class TeamLeader {
         // cannot be skipped in the normal human-in-the-loop flow).
         if (analysisMarkdown && session?.productSlug) {
             try {
-                await this.assetStore.saveRobotOutput(session.productSlug, robotName, analysisMarkdown);
+                await this.assetStore.saveRobotOutput(session.productSlug, robotName, analysisMarkdown, { author });
                 console.log(`💾 Saved ${robotName} output text (via feedback)`);
             } catch (err) {
                 console.error(`Failed to save ${robotName} output: ${err.message}`);
@@ -542,7 +511,7 @@ class TeamLeader {
 
         const results = {};
 
-        for (const name of ROBOT_ORDER) {
+        for (const name of ROBOT_ORDER_BUSINESS) {
             console.log(`🤖 Running ${this.robots[name].name}...`);
             results[name] = await this.robots[name].analyze(productIdea);
         }
@@ -572,5 +541,5 @@ class TeamLeader {
     }
 }
 
-export { ROBOT_ORDER, ROBOT_ORDER_PHASE_1A, ROBOT_ORDER_PHASE_1B, ROBOT_ORDER_PHASE_2, PHASE2_GATE_ROBOTS };
+export { ROBOT_ORDER_BUSINESS, ROBOT_ORDER_EPIC_STRATEGY, ROBOT_ORDER_PHASE_2, BUSINESS_GATE_ROBOTS, EPIC_GATE_ROBOTS };
 export default TeamLeader;

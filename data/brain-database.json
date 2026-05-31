@@ -521,6 +521,166 @@
       "notes": "4/5 — strong first-pass for Build Lab epic. Agentic Builder included as non-human contributor stakeholder, which was a notable structural addition. All 13 PDD sections confirmed draft-complete. MCP server timeout prevented disk save; retry needed.",
       "productSlug": "autopm-productflow",
       "timestamp": "2026-05-29T15:54:21.631Z"
+    },
+    {
+      "analysisId": "analysis-1780113525664",
+      "robotName": "scout",
+      "rating": 4.5,
+      "notes": "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis.",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T04:24:38.991Z"
+    },
+    {
+      "analysisId": "analysis-1780123969486",
+      "robotName": "people",
+      "rating": 4,
+      "notes": "4/5. Persona cards well-structured with realistic India context. Cross-persona insight (information-rich, decision-poor) is the strongest element — usable as a positioning anchor. Journey map for Priya is actionable. Areas to improve: persona portrait images not yet implemented (noted in prior feedback). Otherwise solid output.",
+      "productSlug": null,
+      "timestamp": "2026-05-30T07:20:24.167Z"
+    },
+    {
+      "analysisId": "analysis-1780136898601",
+      "robotName": "epic",
+      "rating": 1,
+      "notes": "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward.",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T10:33:26.612Z"
+    },
+    {
+      "analysisId": "analysis-1780138249908",
+      "robotName": "plan",
+      "rating": 4,
+      "notes": "Good structured roadmap. Rating 4/5.",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T10:58:47.129Z"
+    },
+    {
+      "analysisId": "analysis-1780139868191",
+      "robotName": "user-stories",
+      "rating": 3,
+      "notes": "Default 3.5 rating per PM instruction — logged as 3.",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:18:31.097Z"
+    },
+    {
+      "analysisId": "analysis-1780140063360",
+      "robotName": "scope-spec",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:21:05.899Z"
+    },
+    {
+      "analysisId": "analysis-1780140073874",
+      "robotName": "feasibility-tech",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:21:17.851Z"
+    },
+    {
+      "analysisId": "analysis-1780140086127",
+      "robotName": "feasibility-design",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:21:31.735Z"
+    },
+    {
+      "analysisId": "analysis-1780140100405",
+      "robotName": "customer-journeys",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:21:47.291Z"
+    },
+    {
+      "analysisId": "analysis-1780140115707",
+      "robotName": "data-privacy",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:22:05.186Z"
+    },
+    {
+      "analysisId": "analysis-1780140199593",
+      "robotName": "scope-spec",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:23:22.738Z"
+    },
+    {
+      "analysisId": "analysis-1780140210728",
+      "robotName": "customer-journeys",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:23:34.599Z"
+    },
+    {
+      "analysisId": "analysis-1780140222841",
+      "robotName": "feasibility-tech",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:23:47.851Z"
+    },
+    {
+      "analysisId": "analysis-1780140235861",
+      "robotName": "feasibility-design",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:24:03.004Z"
+    },
+    {
+      "analysisId": "analysis-1780140251254",
+      "robotName": "data-privacy",
+      "rating": 3,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:24:20.022Z"
+    },
+    {
+      "analysisId": "analysis-1780140568081",
+      "robotName": "risks-registry",
+      "rating": 3.5,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:30:42.449Z"
+    },
+    {
+      "analysisId": "analysis-1780140659492",
+      "robotName": "kpis",
+      "rating": 3.5,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:32:02.188Z"
+    },
+    {
+      "analysisId": "analysis-1780140734988",
+      "robotName": "daci-stakeholders",
+      "rating": 3.5,
+      "notes": "",
+      "productSlug": "styleiq-ai-wardrobe-style-co-pilot",
+      "timestamp": "2026-05-30T11:33:04.851Z"
+    },
+    {
+      "analysisId": "analysis-1780218871475",
+      "robotName": "scout",
+      "rating": 3,
+      "notes": "User rated 3 but did not provide specific notes on what to improve or how to validate proxies.",
+      "productSlug": "lucidya-agentic-voice-ai",
+      "timestamp": "2026-05-31T09:20:32.771Z"
+    },
+    {
+      "analysisId": "analysis-1780219232776",
+      "robotName": "detective",
+      "rating": 3,
+      "notes": "User rated 3 but did not provide specific notes on what to improve.",
+      "productSlug": "lucidya-agentic-voice-ai",
+      "timestamp": "2026-05-31T09:35:21.546Z"
     }
   ],
   "errors": [],
@@ -916,6 +1076,46 @@
         "id": "e8e2b8f6-25e1-4154-8600-730a98e66ab5",
         "createdAt": "2026-05-29T15:54:21.633Z",
         "updatedAt": "2026-05-29T15:54:21.633Z"
+      },
+      {
+        "robotName": "scout",
+        "content": "scout: Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "styleiq-ai-wardrobe-style-co-pilot"
+        ],
+        "id": "6445fd37-4e07-4a0c-93f1-fa6a98fcf22f",
+        "createdAt": "2026-05-30T04:24:38.995Z",
+        "updatedAt": "2026-05-30T04:24:38.995Z"
+      },
+      {
+        "robotName": "people",
+        "content": "people: 4/5. Persona cards well-structured with realistic India context. Cross-persona insight (information-rich, decision-poor) is the strongest element — usable as a positioning anchor. Journey map for Priya is actionable. Areas to improve: persona portrait images not yet implemented (noted in prior feedback). Otherwise solid output.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [],
+        "id": "1a6b1f11-7a2a-4eb4-bdfb-9ea3e3eccb17",
+        "createdAt": "2026-05-30T07:20:24.169Z",
+        "updatedAt": "2026-05-30T07:20:24.169Z"
+      },
+      {
+        "robotName": "plan",
+        "content": "plan: Good structured roadmap. Rating 4/5.",
+        "tier": "observation",
+        "confirmations": 1,
+        "contradictions": 0,
+        "promotionThreshold": 3,
+        "productSlugs": [
+          "styleiq-ai-wardrobe-style-co-pilot"
+        ],
+        "id": "478b0716-04a3-4f5c-9133-00129f2fe1c5",
+        "createdAt": "2026-05-30T10:58:47.131Z",
+        "updatedAt": "2026-05-30T10:58:47.131Z"
       }
     ]
   },
@@ -1080,6 +1280,1221 @@
       "status": "pending",
       "id": "1b18554e-892b-4419-a06a-36cda2143214",
       "suggestedAt": "2026-05-29T08:12:14.062Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 12,
+      "status": "pending",
+      "id": "281e5bb2-7926-4ebe-a511-3b2ff125b083",
+      "suggestedAt": "2026-05-30T04:24:39.000Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "9367333b-a85c-4eb0-8f5d-fb1a958c8117",
+      "suggestedAt": "2026-05-30T04:24:39.001Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "5dcebbec-0aaa-455a-b2fb-e598c3a898bc",
+      "suggestedAt": "2026-05-30T04:24:39.002Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact."
+      ],
+      "frequency": 8,
+      "status": "pending",
+      "id": "dec0f9ff-6477-43f3-a46b-8d2304fad80c",
+      "suggestedAt": "2026-05-30T04:24:39.003Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "84ea76a2-508d-4125-ae5e-3dd16d0cda52",
+      "suggestedAt": "2026-05-30T04:24:39.003Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "2e339683-40ed-4364-a881-9a1cdba585a6",
+      "suggestedAt": "2026-05-30T04:24:39.005Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "5bc58150-1366-441c-8169-cbd7cb5f3b26",
+      "suggestedAt": "2026-05-30T11:21:05.904Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "5decd1b2-465e-46dd-b95c-89ea0351b07d",
+      "suggestedAt": "2026-05-30T11:21:05.905Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "baf42e8d-5ad0-4463-8a95-d31145b32834",
+      "suggestedAt": "2026-05-30T11:21:05.906Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "135042bb-0ce8-470b-8394-6d370aa4c509",
+      "suggestedAt": "2026-05-30T11:21:05.907Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "03d72eb1-601e-4d65-804c-3d3b53625c0d",
+      "suggestedAt": "2026-05-30T11:21:05.908Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "4972e357-b041-43b0-b6b3-923b44b680d1",
+      "suggestedAt": "2026-05-30T11:21:17.854Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "116a983c-f57f-47d3-b905-ee5cef273cf6",
+      "suggestedAt": "2026-05-30T11:21:17.856Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "3a0f3054-cf7d-4256-8c3b-9546d934987d",
+      "suggestedAt": "2026-05-30T11:21:17.856Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "5d6775a5-3538-484d-aca1-a719f712161a",
+      "suggestedAt": "2026-05-30T11:21:17.857Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "aab36bf9-4aaf-469b-8304-573b70d52c84",
+      "suggestedAt": "2026-05-30T11:21:17.858Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "fd1d15c4-98aa-402a-8672-2a63e0b0adc7",
+      "suggestedAt": "2026-05-30T11:21:31.738Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "d18e2fc6-d9ae-4838-bf55-9187d8ebf448",
+      "suggestedAt": "2026-05-30T11:21:31.738Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "a58d4a30-cd79-47be-be28-fb529c7d3640",
+      "suggestedAt": "2026-05-30T11:21:31.739Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "f7854cde-7d88-4c02-b6d0-0fa8c2f13a7e",
+      "suggestedAt": "2026-05-30T11:21:31.740Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "c992c6ce-df16-4909-97f1-53ba2496e322",
+      "suggestedAt": "2026-05-30T11:21:31.741Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "ceccbde0-9f3e-4895-b1cd-0ef7426d7caf",
+      "suggestedAt": "2026-05-30T11:21:47.292Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "a1815b84-d294-428a-809a-fa17012022af",
+      "suggestedAt": "2026-05-30T11:21:47.293Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "70b9c939-f076-45d3-b62b-cb9f20a47985",
+      "suggestedAt": "2026-05-30T11:21:47.294Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "d385f1fe-4b6c-4579-9164-364c37008615",
+      "suggestedAt": "2026-05-30T11:21:47.294Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "b80ca440-99ec-4aea-9d6e-9b9217b941e5",
+      "suggestedAt": "2026-05-30T11:21:47.295Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "3582560b-2877-4e52-b921-b6a568abd7ca",
+      "suggestedAt": "2026-05-30T11:22:05.189Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "12bf709a-4f61-4e8b-86c8-5aba159be47d",
+      "suggestedAt": "2026-05-30T11:22:05.190Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "27b78810-ea8f-432a-890c-ca06c0d69f91",
+      "suggestedAt": "2026-05-30T11:22:05.191Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "8933cbf8-2ec2-49e7-9bb9-bbe8597845b9",
+      "suggestedAt": "2026-05-30T11:22:05.192Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "8c4c5318-4f88-4b78-a37c-b6e44ffe4125",
+      "suggestedAt": "2026-05-30T11:22:05.193Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "c8af79c8-2c85-49c1-b83a-55d958756a20",
+      "suggestedAt": "2026-05-30T11:23:22.742Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "fc5e2afb-5023-4f9e-962c-392e5dfb357c",
+      "suggestedAt": "2026-05-30T11:23:22.744Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "5029807c-42e4-4ec5-a591-cfd8702092fe",
+      "suggestedAt": "2026-05-30T11:23:22.745Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "2693c80c-c760-4f59-a138-34cbcf2470db",
+      "suggestedAt": "2026-05-30T11:23:22.746Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "4ddd2af6-98e6-47ec-a8de-576a067c1d29",
+      "suggestedAt": "2026-05-30T11:23:22.747Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "72cdac7e-4ed9-406f-9ca2-3a23aefafc99",
+      "suggestedAt": "2026-05-30T11:23:34.601Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "11b4ad4d-c5f6-43e5-a85f-3065444e2ada",
+      "suggestedAt": "2026-05-30T11:23:34.603Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "7782f6ac-26b5-4f39-b089-f17be84b10d2",
+      "suggestedAt": "2026-05-30T11:23:34.605Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "e282af88-9a45-40b0-be91-3914a826b5a2",
+      "suggestedAt": "2026-05-30T11:23:34.606Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "4bf404ef-55ba-4c59-b259-424086aa3aaa",
+      "suggestedAt": "2026-05-30T11:23:34.607Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "2e45b2db-5e16-4d9a-bdd0-67fb9829b187",
+      "suggestedAt": "2026-05-30T11:23:47.854Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "fea93d78-d357-4dd2-8aac-b49c73ba279d",
+      "suggestedAt": "2026-05-30T11:23:47.856Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "a9f80890-0c35-4b5b-8e3a-360c9629a7a5",
+      "suggestedAt": "2026-05-30T11:23:47.857Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "d9b66d38-fdc5-40a0-89df-89fef8c71533",
+      "suggestedAt": "2026-05-30T11:23:47.858Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "e5d2c533-806d-4a89-a8ff-764088131761",
+      "suggestedAt": "2026-05-30T11:23:47.860Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "e18633af-cd55-4c6c-9ff8-3b679a3bf397",
+      "suggestedAt": "2026-05-30T11:24:03.007Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "8dada375-b642-4a57-a6d8-8bd70f6dab6d",
+      "suggestedAt": "2026-05-30T11:24:03.009Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "17311079-ef6e-4955-b2ac-36b84b95a17b",
+      "suggestedAt": "2026-05-30T11:24:03.010Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "9de36cb2-180b-431f-aad5-927e43a0c80c",
+      "suggestedAt": "2026-05-30T11:24:03.011Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "1bd07d9f-6747-4270-89fb-ce5d2894cefc",
+      "suggestedAt": "2026-05-30T11:24:03.012Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "ee12c6d5-fdbd-468b-89ed-278a587c550a",
+      "suggestedAt": "2026-05-30T11:24:20.026Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "30f96bfd-63ad-4d43-814e-726fff486b3d",
+      "suggestedAt": "2026-05-30T11:24:20.027Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "c790f3b2-5800-4ef8-a309-f78254fc1026",
+      "suggestedAt": "2026-05-30T11:24:20.029Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "6e0b2ffa-0dcc-4c41-bff9-50789584f31a",
+      "suggestedAt": "2026-05-30T11:24:20.030Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "209ddf3c-fe5b-4d01-8350-3d7d47bb23ed",
+      "suggestedAt": "2026-05-30T11:24:20.031Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "ae107903-8331-4a32-b1d1-37f70856c877",
+      "suggestedAt": "2026-05-30T11:30:42.453Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "abddec29-46cc-4ba0-8d71-3f893e64eaaa",
+      "suggestedAt": "2026-05-30T11:30:42.456Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "52a093cd-e511-4699-9894-a48206d47ec6",
+      "suggestedAt": "2026-05-30T11:30:42.458Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "21e28985-69b8-45b6-82dd-d29ab742005f",
+      "suggestedAt": "2026-05-30T11:30:42.459Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "9c8febd2-9298-4183-b8d1-9bdfafb3a8b9",
+      "suggestedAt": "2026-05-30T11:30:42.461Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "83dc0f65-0099-4aa7-a530-57f529d755b3",
+      "suggestedAt": "2026-05-30T11:32:02.192Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "cc2a02c6-1ec0-43c9-bc41-185994ab2f96",
+      "suggestedAt": "2026-05-30T11:32:02.194Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "b2c99b1f-9768-48f7-be00-dbf494e4a680",
+      "suggestedAt": "2026-05-30T11:32:02.195Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "3c6213ce-da1e-4641-a4c8-017a23b62aeb",
+      "suggestedAt": "2026-05-30T11:32:02.196Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "ff6d9143-bebc-4c05-ad7c-b2e68b500785",
+      "suggestedAt": "2026-05-30T11:32:02.197Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "a6d45aba-13d0-489d-a14d-55afd5c304bf",
+      "suggestedAt": "2026-05-30T11:33:04.855Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "e5c16f76-4ff3-4215-a580-c0319149c3fb",
+      "suggestedAt": "2026-05-30T11:33:04.857Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "3d0b49d0-4612-4fe2-b6fe-2be19dc5c0ed",
+      "suggestedAt": "2026-05-30T11:33:04.859Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "6a658843-43b7-412c-ac8c-0ed2dd4ea960",
+      "suggestedAt": "2026-05-30T11:33:04.860Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "857255e1-e3b7-456e-83ad-b6accf440f35",
+      "suggestedAt": "2026-05-30T11:33:04.861Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "cf095e43-0d2e-4f8e-b676-e7e3b9820fca",
+      "suggestedAt": "2026-05-31T09:20:32.775Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "c50fcdbf-5a8e-4a16-8c14-404a665c221b",
+      "suggestedAt": "2026-05-31T09:20:32.777Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "95677fa4-5d7d-46bd-8e0e-a4a557d4056b",
+      "suggestedAt": "2026-05-31T09:20:32.779Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "ccb1a89d-b88d-4725-9d17-25eca60d35c8",
+      "suggestedAt": "2026-05-31T09:20:32.781Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "17e716c0-80bb-4fe7-8b33-4de7bd715fa1",
+      "suggestedAt": "2026-05-31T09:20:32.782Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Self-rated on PM's instruction. Output provides a high-impact privacy verdict, data inventory, controller/processor assumptions, InfoSec/Legal/Certification impact matrix, privacy-by-design controls, legal/security decisions, risk register, DPIA/PIA trigger assessment, Q3 go/no-go gates, priority actions, and current official source notes. It clearly gates Q3 around work-only capture, visible capture state, human-approved AI summary, SSO/MDM, retention/DSR mapping, and no personal/off-policy channel capture.",
+        "Self-rated on PM's instruction. Output provides ICP, segmentation, positioning, buyer committee, CX stage matrix, provisioning plan, rollout waves, preview-to-GA criteria, pricing and monetization, enablement needs, objection handling, support model, geography sensitivity, launch checklist, GTM risks, and go/no-go gates. It preserves the staged GTM motion and paid attach gate.",
+        "Self-rated on PM's instruction. Output provides a full risk register with 25 risks across delivery, technical, adoption, GTM, and dependency categories; includes probability, impact, severity, owner, leading indicators, triggers, mitigations, contingencies, top 5 executive risks, burn-down plan, escalation cadence, go/no-go gates, and risk ownership map.",
+        "Self-rated on PM's instruction. Output provides a complete KPI framework with North Star, metric tree, adoption/retention/usage/revenue KPIs, guardrails, phase targets, instrumentation plan, dashboard views, feedback mechanisms, go/no-go gates, and measurement risks. It anchors on Governed Mobile Capture Rate and ties KPI targets to pilot, GA, and commercial investment gates.",
+        "Self-rated on PM's instruction. Output provides first-pass DACI, key contacts with placeholders, decision-rights matrix, PDD section status, open decisions, recurring forums, escalation paths, confirmation list, decision log template, immediate next steps, and persist instructions. Placeholder names/emails are clearly marked for PM confirmation."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "6b169144-abf5-4c23-96ec-8e899988b2dd",
+      "suggestedAt": "2026-05-31T09:35:21.554Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; proceeded per PM request.",
+        "Initial pass rated 4 pending deeper review; placeholders require PM confirmation before treating as authoritative.",
+        "Initial Scout output (no rubric, no visuals) rated 3/5. Enhanced output rated 4.5/5. What drove the improvement: (1) explicit rubric justification for every weight, support score, and maturity value — PM can now challenge individual vectors rather than the aggregate; (2) four Chart.js visuals: market growth trajectories, competitive player landscape, fashion-AI VC investment stack by application layer, and VC funding vs India fashion growth combo chart; (3) honest disclosure that wardrobe management receives only ~4% of fashion-AI VC and why that matters for the business model thesis. Standard for all future Scout runs: rubric-justified confidence model + minimum 3 charts + investment stack analysis."
+      ],
+      "frequency": 10,
+      "status": "pending",
+      "id": "b6dc9ad4-47c8-4ae7-b468-09b806d29285",
+      "suggestedAt": "2026-05-31T09:35:21.557Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Accepted for Phase 3 Build Lab direction. User-stories excluded from this batch because the workflow should first ask the PM to choose a story cluster/stories and provide an HTML review artifact.",
+        "Raw HTML/CSS dumped in chat instead of rendered output. Content is good but presentation is unreadable. Use plain text/markdown for chat output going forward."
+      ],
+      "frequency": 9,
+      "status": "pending",
+      "id": "d79d2c71-f24b-424d-a1d0-1baabbc5d923",
+      "suggestedAt": "2026-05-31T09:35:21.560Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "User rated People output 5 stars and approved moving to Money. They value the multi-stakeholder persona system, adoption equation, and product implications.",
+        "User rated Money output 5 stars and approved moving to Feature. They valued the pricing corridor, ARR scenarios, attach-rate gate, and framing that Mobile 2.0 must escape free mobile parity.",
+        "User rated Plan output 5 stars and approved moving to the next stage. They valued the staged roadmap, gates, MVP/GA separation, capacity realism, and North Star metric.",
+        "User rated Priority output a solid 4.5/5. They liked the RICE-backed tactical sequencing and build-this-week recommendation. Exact rating preserved here because the feedback tool accepts integer ratings only.",
+        "User rated Money output 5/5 after workbook artifact was created. They asked about code in the Money output file; this refers to Vega-Lite JSON chart specifications. Future Money outputs should label chart-spec code blocks clearly as chart specs or move them to an appendix so PMs do not mistake them for application code."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "9cc035a6-e72a-4576-a452-9658dd9a4a90",
+      "suggestedAt": "2026-05-31T09:35:21.562Z"
+    },
+    {
+      "type": "new-robot",
+      "robotName": null,
+      "evidence": [
+        "Good structural analysis and critical change identification. Two gaps: (1) the saved asset is a summary — full fidelity details from chat were not captured in the markdown file; (2) no visual artifact showing current state vs future state of the Cockpit engagement model. Future scope-spec runs should include a state-transition diagram or before/after surface map as part of the deliverable.",
+        "Corrected output accepted at 4/5. Required fix was to avoid raw JSON/code-dump output, render the final output as Markdown, include Selected Stories first, and sequence unselected stories as Next, Then, Later, and Not Now. Cockpit viewer fallback was also patched so markdown user-stories outputs no longer remain stuck on Loading.",
+        "Content accepted, but formatting/rendering is distorted in Cockpit. Improve future GTM outputs for viewer-friendly structure: shorter fields, less dense prose in cards, and cleaner section/table layout. Proceeding per PM instruction.",
+        "Rated 4.5/5 after cleanup. KPI content accepted; Cockpit rendering was improved by converting synthesis to bullets and the KPI view to table-first layout with a readable North Star table and Metric Register.",
+        "Accepted after Cockpit heatmap rendering fix. Risk content and JSON shape are usable; viewer was patched to render the heatmap as a stable probability/impact table matrix."
+      ],
+      "frequency": 6,
+      "status": "pending",
+      "id": "7bf955e8-a1d8-414c-80fb-70943c03caf5",
+      "suggestedAt": "2026-05-31T09:35:21.563Z"
     }
   ]
 }

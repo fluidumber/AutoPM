@@ -21,13 +21,13 @@
 import fs from "fs/promises";
 import path from "path";
 
-const PHASE1A_ROBOTS = ["scout", "detective", "people", "money"];
-const PHASE1B_ROBOTS = ["epic", "feature", "plan", "priority"];
-const PHASE2_ROBOTS = [
-    "user-stories", "scope-spec", "feasibility-tech", "feasibility-design",
-    "customer-journeys", "data-privacy", "gtm-readiness", "risks-registry",
-    "kpis", "daci-stakeholders",
-];
+import {
+    ROBOT_ORDER_BUSINESS as PHASE1A_ROBOTS,
+    ROBOT_ORDER_EPIC_STRATEGY as PHASE1B_ROBOTS,
+    ROBOT_ORDER_PHASE_2 as PHASE2_ROBOTS,
+} from "../src/config/robot-registry.js";
+
+const ROBOT_ORDER_PHASE_1 = [...PHASE1A_ROBOTS, ...PHASE1B_ROBOTS];
 
 export const GATES = {
     G1: "PM Profile exists",
@@ -44,9 +44,9 @@ export const GATE_NEXT_ACTIONS = {
     G1: "Call 'pm-profile-save' to create your PM persona first.",
     G2: "Call 'product-create' to scaffold a new product.",
     G3: "Call 'interview' to complete the product intake interview.",
-    G4: "Run all Phase 1 robots via 'run-robot' in order: scout, detective, people, money, feature, plan, priority. Call 'feedback' after each one.",
+    G4: `Run all Phase 1 robots via 'run-robot' in order: ${ROBOT_ORDER_PHASE_1.join(", ")}. Call 'feedback' after each one.`,
     G5: "Call 'promote-to-phase-2' (Call 1 — no confirm flag) to review Phase 1 outputs with the PM, then confirm promotion.",
-    G6: "Run Phase 2 robots via 'run-robot' in recommended order: user-stories, scope-spec, feasibility-tech, feasibility-design, customer-journeys, data-privacy, gtm-readiness, risks-registry, kpis, daci-stakeholders.",
+    G6: `Run Phase 2 robots via 'run-robot' in recommended order: ${PHASE2_ROBOTS.join(", ")}.`,
     G7: "Call 'generate-pdd' to assemble the PDD JSON, then 'save-pdd' to export it.",
     G8: "Call 'generate-presentation' and then 'save-presentation-file' to create the stakeholder presentation.",
 };

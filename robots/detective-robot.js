@@ -114,10 +114,11 @@ class DetectiveRobot {
             suggestedSearchQueries: this._generateSearchQueries(context, knownCompetitors),
 
             outputFormat: {
-                style: "One subsection per competitor with consistent structure, then narrative sections for gaps, moat, and positioning",
+                style: "One subsection per competitor with consistent structure, then narrative sections for gaps, moat, and positioning. Use rich HTML with inline styles for visual elements.",
                 length: "Thorough — competitive intel is only useful if specific",
                 citations: "Link to pricing pages, review platforms, funding databases where possible",
-                tables: "Use a comparison table for direct competitors (name, funding, pricing, key strength, key weakness)"
+                tables: "Use an HTML comparison table for direct competitors with styled headers and colored cells: name, funding, pricing, key strength (green), key weakness (red). Moat ratings should use colored badges: STRONG=green, EMERGING=amber, WEAK=red.",
+                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for: (1) competitor profile cards with logo placeholder circles and key metrics, (2) gap analysis as a styled grid/cards, (3) moat rating badges as colored <span> tags, (4) positioning map as a Mermaid quadrant or styled HTML grid. Plain markdown is fine for narrative text, but visual elements MUST be HTML with inline styles."
             }
         };
 

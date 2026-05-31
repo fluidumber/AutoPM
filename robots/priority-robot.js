@@ -91,9 +91,10 @@ class PriorityRobot {
             },
 
             outputFormat: {
-                style: "Full RICE table first, then narrative sections for MVP bundle, sequencing overrides, quick wins, and build recommendation",
-                tables: "RICE scoring table is mandatory — all rows must have numeric scores",
-                length: "Complete — this should be directly usable as a sprint planning input"
+                style: "Full RICE table first, then narrative sections for MVP bundle, sequencing overrides, quick wins, and build recommendation. Use rich HTML with inline styles for visual elements.",
+                tables: "RICE scoring table: use a rich HTML table with styled headers (background colors), alternating row shading, and color-coded RICE score badges (high scores highlighted in soft green/blue, low scores in grey) for all columns: Rank | Feature | Reach (1-10) | Impact (1-10) | Confidence (1-10) | Effort (1-10) | RICE Score | Phase",
+                length: "Complete — this should be directly usable as a sprint planning input",
+                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for: (1) RICE score metrics highlight cards, (2) the primary RICE scoring table, (3) 'Quick Wins' list as a grid of small styled cards, (4) 'Build This Week' recommendation banner. Plain markdown is fine for narrative text, but all tables, metrics lists, and recommendations MUST be HTML with inline styles."
             }
         };
 

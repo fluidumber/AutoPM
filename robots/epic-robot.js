@@ -30,7 +30,7 @@ class EpicRobot {
 
                 requiredSections: {
                     epicsList: {
-                        instructions: `The list of Epics required to deliver the product hypothesis. Provide a structured, standardized output for each Epic.`,
+                        instructions: `The list of Epics required to deliver the product hypothesis. You MUST output this as a valid JSON code block (\`\`\`json ... \`\`\`) containing an array of epic objects.`,
                         epicStructure: {
                             id: "A short, URL-safe slug for the epic (e.g., epic-core-onboarding)",
                             name: "Clear, descriptive title",
@@ -60,6 +60,7 @@ class EpicRobot {
             outputFormat: {
                 style: "Structured list of Epics",
                 tables: "Include a summary table: Epic Name | Business Goal | Customer Value | Dependencies",
+                json: "You MUST include a ```json block with the full epicsList array matching the requested structure.",
                 length: "Concise and strategic. Focus on boundaries and goals, not implementation details."
             }
         };

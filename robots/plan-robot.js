@@ -106,9 +106,10 @@ class PlanRobot {
             },
 
             outputFormat: {
-                style: "Phase-by-phase narrative with structured attributes per phase",
-                tables: "Gantt-style summary table: Phase | Duration | Goal | Key Features | Success Metric | Revenue Event",
-                length: "Detailed enough for an engineering lead to start sprint planning from"
+                style: "Phase-by-phase narrative with structured attributes per phase. Use rich HTML with inline styles for visual elements.",
+                tables: "Gantt-style summary table: use a rich HTML table with styled headers (background colors), alternating row shading, and phase/milestone badges for: Phase | Duration | Goal | Key Features | Success Metric | Revenue Event",
+                length: "Detailed enough for an engineering lead to start sprint planning from",
+                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for: (1) phase summary cards with colored title bars (e.g., Phase 1=blue, Phase 2=green, Phase 3=purple), (2) risk mitigation callout boxes with left border matching the risk severity (e.g., High=red, Medium=orange), (3) the Gantt-style summary table. Plain markdown is fine for narrative text, but all tables, roadmap phase blocks, and risk callouts MUST be HTML with inline styles."
             }
         };
 

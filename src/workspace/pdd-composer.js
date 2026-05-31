@@ -9,17 +9,7 @@
 
 import fs from "fs/promises";
 
-// All robots whose outputs contribute to the PDD, in assembly order.
-const ASSEMBLY_ROBOTS = [
-    // Phase 1 — strategic discovery (narrative outputs)
-    "scout", "detective", "people", "money", "feature", "plan", "priority",
-    // Phase 2 — execution definition (JSON outputs)
-    "user-stories", "scope-spec", "customer-journeys",
-    "feasibility-tech", "feasibility-design", "kpis",
-    "data-privacy", "gtm-readiness", "risks-registry", "daci-stakeholders",
-];
-
-const PHASE1_ROBOTS = ["scout", "detective", "people", "money", "feature", "plan", "priority"];
+import { ALL_ROBOTS as ASSEMBLY_ROBOTS, ROBOT_ORDER_BUSINESS, ROBOT_ORDER_EPIC_STRATEGY } from "../config/robot-registry.js";
 
 export class PDDComposer {
     /**
@@ -82,7 +72,8 @@ export class PDDComposer {
         ]);
 
         const robotsPresent = Object.keys(robotOutputs);
-        const robotsMissing = PHASE1_ROBOTS.filter(r => !robotsPresent.includes(r));
+        const BUSINESS_ROBOTS = [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_EPIC_STRATEGY];
+        const robotsMissing = BUSINESS_ROBOTS.filter(r => !robotsPresent.includes(r));
 
         return {
             slug,

@@ -220,11 +220,12 @@ class ScoutRobot {
             suggestedSearchQueries: this._generateSearchQueries(context),
 
             outputFormat: {
-                style: "Narrative sections with inline citations — NOT bullet skeletons",
+                style: "Narrative sections with inline citations — NOT bullet skeletons. Use rich HTML with inline styles for visual elements.",
                 length: "Comprehensive — this is a PM deliverable, not a summary",
                 citations: "Inline [Source: name/URL] after every statistic or claim",
-                tables: "Use tables for TAM/SAM/SOM, evidence vectors, proxy register, validation asks, and risk factors",
-                visuals: "Include a Mermaid decision-flow chart and a simple evidence-contribution chart/table",
+                tables: "Use HTML tables with styled headers (background colors for column groups), alternating row shading, and bold verdict cells for: TAM/SAM/SOM, evidence vectors, proxy register, validation asks, and risk factors",
+                visuals: "Include a Mermaid decision-flow chart and a Chart.js bar chart for evidence contribution scores (use <canvas> + <script> blocks)",
+                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for: (1) confidence score badges as colored <span> tags, (2) verdict banner as a styled <div> with background color matching STRONG=green/MODERATE=amber/WEAK=red, (3) evidence vector table with colored contribution bars, (4) risk severity badges. Plain markdown is fine for narrative text, but all tables, scores, and visual elements MUST be HTML with inline styles.",
                 pmReviewProtocol: [
                     "Ask the PM to rate the output 1-5",
                     "Ask the PM to acknowledge, reject, or append each evidence vector",

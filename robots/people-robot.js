@@ -79,9 +79,10 @@ class PeopleRobot {
             },
 
             outputFormat: {
-                style: "Narrative persona cards — name, story, then structured attributes. NOT demographic bullet lists.",
+                style: "Rich HTML persona cards. Each persona MUST be wrapped in a styled <div> card with: (1) a circular avatar badge showing initials (colored background, white text), (2) name and demographics in a flex header, (3) colored role/monetisation badges as inline <span> tags, (4) a styled blockquote for the persona quote. Journey map MUST be a horizontal flow of styled stage cards with colored headers (Trigger=red, Awareness=yellow, Consideration=green, Decision=blue, Post-purchase=purple). Use inline CSS styles on all elements — no external classes.",
                 length: "One full persona card per segment — rich enough to use in a design sprint",
-                tables: "Use a summary table at the end: Persona | Primary Pain | Buying Trigger | Key Objection | Commitment Factor"
+                tables: "Use a rich HTML summary table at the end with alternating row colors: Persona | Primary Pain | Buying Trigger | Key Objection | Commitment Factor | Monetisation Role",
+                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for all visual components. Plain markdown headings and bullets are fine for text content, but cards, badges, journey maps, and summary tables MUST be HTML with inline styles."
             }
         };
 

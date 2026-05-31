@@ -60,15 +60,14 @@ const PORT     = Number(process.env.PRODUCTFLOW_HTTP_PORT || 4321);
 const BINDING  = `127.0.0.1:${PORT}`;
 const STARTED  = new Date().toISOString();
 
-const PHASE_1A_ROBOTS = ["scout", "detective", "people", "money"];
-const PHASE_1B_ROBOTS = ["epic", "feature", "plan", "priority"];
-const PHASE_1_ROBOTS = [...PHASE_1A_ROBOTS, ...PHASE_1B_ROBOTS];
+const BUSINESS_ROBOTS = ["scout", "detective", "people", "money"];
+const EPIC_ROBOTS = ["epic", "feature", "plan", "priority"];
 const PHASE_2_ROBOTS = [
     "user-stories", "scope-spec", "feasibility-tech", "feasibility-design",
     "customer-journeys", "data-privacy", "gtm-readiness", "risks-registry",
     "kpis", "daci-stakeholders",
 ];
-const ALL_ROBOTS = [...PHASE_1_ROBOTS, ...PHASE_2_ROBOTS];
+const ALL_ROBOTS = [...BUSINESS_ROBOTS, ...EPIC_ROBOTS, ...PHASE_2_ROBOTS];
 
 // ────────────────────────────────────────────────────────────────────
 // Helpers
@@ -144,7 +143,7 @@ async function buildRobotRuns(slug, phase1Promoted) {
 
     const coreRuns = {};
     const coreAsk = fresh.asks?.["core"] || { robots: {}, epics: {} };
-    for (const robotKey of PHASE_1A_ROBOTS) {
+    for (const robotKey of BUSINESS_ROBOTS) {
         coreRuns[robotKey] = computeRobotStatus(coreAsk.robots?.[robotKey], robotKey, 1, phase1Promoted);
         const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
         if (fb.length > 0) {
@@ -157,17 +156,6 @@ async function buildRobotRuns(slug, phase1Promoted) {
     const asks = {};
     for (const [askId, askData] of Object.entries(fresh.asks || {})) {
         asks[askId] = { robots: {}, epics: {} };
-
-        // 1B robots
-        for (const robotKey of PHASE_1B_ROBOTS) {
-            asks[askId].robots[robotKey] = computeRobotStatus(askData.robots?.[robotKey], robotKey, 1, phase1Promoted);
-            const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
-            if (fb.length > 0) {
-                const sum = fb.reduce((acc, f) => acc + f.rating, 0);
-                const avg = Math.round((sum / fb.length) * 10) / 10;
-                asks[askId].robots[robotKey].feedback = { rating: avg, count: fb.length };
-            }
-        }
 
         // Extract epic names for this ask
         let epicNames = {};
@@ -191,9 +179,28 @@ async function buildRobotRuns(slug, phase1Promoted) {
             } catch(e) {}
         }
 
+        // Ensure askData.epics is initialized with any epics we found in epic-output.md
+        if (!askData.epics) askData.epics = {};
+        for (const epicId of Object.keys(epicNames)) {
+            if (!askData.epics[epicId]) {
+                askData.epics[epicId] = { robots: {}, features: {} };
+            }
+        }
+
+        // Epic-strategy robots (epic, feature, plan, priority) go under asks[askId].robots so they appear in Phase 1b
+        for (const robotKey of EPIC_ROBOTS) {
+            asks[askId].robots[robotKey] = computeRobotStatus(askData.robots?.[robotKey], robotKey, 1, phase1Promoted);
+            const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
+            if (fb.length > 0) {
+                const sum = fb.reduce((acc, f) => acc + f.rating, 0);
+                asks[askId].robots[robotKey].feedback = { rating: Math.round((sum / fb.length) * 10) / 10, count: fb.length };
+            }
+        }
+
         // Epics
         for (const [epicId, epicData] of Object.entries(askData.epics || {})) {
             asks[askId].epics[epicId] = { robots: {}, features: {}, name: epicNames[epicId] || null };
+            // Phase 2 robots go under the specific Epic
             for (const robotKey of PHASE_2_ROBOTS) {
                 asks[askId].epics[epicId].robots[robotKey] = computeRobotStatus(epicData.robots?.[robotKey], robotKey, 2, phase1Promoted);
                 const fb = allFb.filter(f => f.robotName === robotKey && (!f.productSlug || f.productSlug === slug));
@@ -238,9 +245,9 @@ async function presentationPath(slug) {
 async function computeGates(slug, ctx) {
     const { product, robotRuns, interviewCount, phase1Promoted, hasPdd, presentation } = ctx;
 
-    const allP1Fresh = PHASE_1A_ROBOTS.every(k => robotRuns[k]?.status === "fresh");
-    const staleP1    = PHASE_1A_ROBOTS.filter(k => robotRuns[k]?.status === "stale");
-    const missingP1  = PHASE_1A_ROBOTS.filter(k => robotRuns[k]?.status === "missing");
+    const allP1Fresh = BUSINESS_ROBOTS.every(k => robotRuns[k]?.status === "fresh");
+    const staleP1    = BUSINESS_ROBOTS.filter(k => robotRuns[k]?.status === "stale");
+    const missingP1  = BUSINESS_ROBOTS.filter(k => robotRuns[k]?.status === "missing");
     let freshP2Count = 0;
     let missingP2 = new Set(PHASE_2_ROBOTS);
     for (const ask of Object.values(ctx.asks || {})) {
@@ -430,33 +437,40 @@ async function buildActivity(slug) {
 // ────────────────────────────────────────────────────────────────────
 // Artifacts library — scan assets/ for .md + .xlsx + pdd + plans
 // ────────────────────────────────────────────────────────────────────
+async function extractAuthor(absPath) {
+    try {
+        const fh = await fs.open(absPath, "r");
+        const buf = Buffer.alloc(1024);
+        const { bytesRead } = await fh.read(buf, 0, 1024, 0);
+        await fh.close();
+        const content = buf.toString("utf-8", 0, bytesRead);
+        const match = content.match(/^author:\s*["']?([^"'\r\n]+)["']?/m);
+        return match ? match[1] : null;
+    } catch {
+        return null;
+    }
+}
+
 async function buildArtifacts(slug) {
     const out = [];
     const assetsDir = workspace.getAssetsDir(slug);
 
     let files = [];
-    try { files = await fs.readdir(assetsDir); } catch { files = []; }
-
-    const epicsDir = path.join(assetsDir, "epics");
     try {
-        const epics = await fs.readdir(epicsDir);
-        for (const epic of epics) {
-            const epicPath = path.join(epicsDir, epic);
-            const st = await fs.stat(epicPath).catch(() => null);
-            if (st && st.isDirectory()) {
-                const epicFiles = await fs.readdir(epicPath);
-                for (const ef of epicFiles) {
-                    files.push(path.posix.join("epics", epic, ef));
-                }
-            }
-        }
-    } catch { }
+        const rawFiles = await fs.readdir(assetsDir, { recursive: true });
+        files = rawFiles.map(f => f.replaceAll("\\", "/"));
+    } catch {
+        files = [];
+    }
 
     let id = 1;
     for (const f of files.sort()) {
         const abs = path.join(assetsDir, f);
         const st  = await fs.stat(abs).catch(() => null);
         if (!st || st.isDirectory()) continue;
+
+        // Skip files under pdd/ since PDD files are handled separately
+        if (f.startsWith("pdd/")) continue;
 
         const basename = path.basename(f);
         const dateMatch  = basename.match(/^(\d{4}-\d{2}-\d{2})-(.+?)(?:-output)?\.(md|xlsx|html|json)$/);
@@ -466,8 +480,32 @@ async function buildArtifacts(slug) {
         const isJson     = f.endsWith(".json");
         const isOutput   = f.includes("-output.");
 
-        // Skip raw prompt payload files
-        if (f.endsWith(".md") && !isOutput && dateMatch) continue;
+        // Skip raw prompt payload files only if the corresponding -output.md file exists
+        if (f.endsWith(".md") && !isOutput && dateMatch) {
+            const outputPath = f.replace(".md", "-output.md");
+            if (files.includes(outputPath)) {
+                continue;
+            }
+        }
+
+        const author = f.endsWith(".md") ? await extractAuthor(abs) : null;
+
+        let displayF = f;
+        const isOtherAsset = isXlsx || basename.endsWith(".pptx");
+        if (isOtherAsset) {
+            displayF = `other-assets/${basename}`;
+        } else if (BUSINESS_ROBOTS.includes(robot)) {
+            displayF = `Business Space/${basename}`;
+        } else if (EPIC_ROBOTS.includes(robot) || PHASE_2_ROBOTS.includes(robot)) {
+            let epicId = "global";
+            const epicMatch = f.match(/epics\/([^\/]+)/);
+            if (epicMatch) {
+                epicId = epicMatch[1];
+            }
+            displayF = `Epics/${epicId}/${basename}`;
+        } else {
+            displayF = `Misc/${basename}`;
+        }
 
         out.push({
             id:    `art-${id++}`,
@@ -476,31 +514,43 @@ async function buildArtifacts(slug) {
             title: `${robot}${isOutput ? " — output" : ""}${isXlsx ? " workbook" : ""}${isHtml ? " viewer" : ""}${isJson ? " data" : ""}`,
             filename:  basename,
             path:      `products/${slug}/assets/${f}`,
+            logicalPath: `products/${slug}/assets/${displayF}`,
             generated: dateMatch ? new Date(`${dateMatch[1]}T12:00:00Z`).toISOString() : st.mtime.toISOString(),
             size:      await fileSize(abs),
+            author,
         });
     }
 
-    // PDD files under assets/pdd/
-    const pddDir = path.join(assetsDir, "pdd");
-    try {
-        const pddFiles = await fs.readdir(pddDir);
-        for (const f of pddFiles.sort()) {
-            if (!f.endsWith(".md") && !f.endsWith(".json")) continue;
-            const abs = path.join(pddDir, f);
-            const st  = await fs.stat(abs);
+    // PDD files under assets/pdd/ or assets/asks/core/epics/*/pdd/
+    // We already traversed all files with recursive readdir, so we just need to find the PDDs in `files`
+    for (const f of files.sort()) {
+        const basename = path.basename(f);
+        if (basename.startsWith("pdd-") && (basename.endsWith(".md") || basename.endsWith(".json"))) {
+            const abs = path.join(assetsDir, f);
+            const st  = await fs.stat(abs).catch(() => null);
+            if (!st) continue;
+            
+            const author = basename.endsWith(".md") ? await extractAuthor(abs) : null;
+            let displayF = `Epics/global/pdd/${basename}`;
+            const epicMatch = f.match(/epics\/([^\/]+)/);
+            if (epicMatch) {
+                displayF = `Epics/${epicMatch[1]}/pdd/${basename}`;
+            }
+
             out.push({
                 id:    `art-${id++}`,
                 type:  "pdd",
                 robot: "pdd-composer",
-                title: f.replace(/\.(md|json)$/, ""),
-                filename:  f,
-                path:      `products/${slug}/assets/pdd/${f}`,
+                title: basename.replace(/\.(md|json)$/, ""),
+                filename:  basename,
+                path:      `products/${slug}/assets/${f}`,
+                logicalPath: `products/${slug}/assets/${displayF}`,
                 generated: st.mtime.toISOString(),
                 size:      await fileSize(abs),
+                author,
             });
         }
-    } catch { /* no pdd dir yet */ }
+    }
 
     // Presentation under plans/
     const pres = await presentationPath(slug);

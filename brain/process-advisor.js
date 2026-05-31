@@ -4,14 +4,11 @@
 const FEEDBACK_THRESHOLD  = 5;    // minimum feedback events before analysis runs
 const LOW_RATING_THRESHOLD = 3.5; // average rating below this triggers improve-robot
 
+import { ALL_ROBOTS } from "../src/config/robot-registry.js";
+
 // Hard-coded robot names to use as stop-words during keyword extraction.
-// Updated here when new robots are added (avoids a circular dependency with team-leader.js).
-const ROBOT_NAMES = new Set([
-    "scout", "detective", "people", "money", "feature", "plan", "priority",
-    "user-stories", "scope-spec", "feasibility-tech", "feasibility-design",
-    "customer-journeys", "data-privacy", "gtm-readiness", "risks-registry",
-    "kpis", "daci-stakeholders",
-]);
+// Updated dynamically from robot-registry.js (avoids circular dependency with team-leader.js).
+const ROBOT_NAMES = new Set(ALL_ROBOTS);
 
 // Common English stop-words to skip during keyword extraction
 const STOP_WORDS = new Set([
