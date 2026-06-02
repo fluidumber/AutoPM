@@ -1569,51 +1569,33 @@ server.tool(
     "save-robot-output",
     `Save the analysis text that Claude generated for a robot to the product's assets folder.
 
-This is distinct from the prompt payload saved by run-robot.  This tool saves the ACTUAL ANALYSIS TEXT
+This is distinct from the prompt payload saved by run-robot. This tool saves the ACTUAL ANALYSIS TEXT
 Claude produced — the content that Phase 2 robots read as their primary input.
 
-Call this immediately after Claude generates a robot's analysis, passing the full text.
+Call this immediately after Claude generates a robot's analysis, passing the clean Markdown and rich HTML versions.
 
-CRITICAL FORMATTING RULE — RICH OUTPUT REQUIRED:
-You MUST pass the EXACT same rich content you rendered in the chat, including ALL of the following:
-- Raw HTML blocks: persona cards, journey maps, styled divs, colored badges, blockquote cards
-- Mermaid diagrams wrapped in \`\`\`mermaid code fences
-- HTML tables with inline styles for colored headers, status badges, etc.
-- <canvas> and <script> blocks for Chart.js or other visualizations
-- Styled <div> blocks with CSS classes for card layouts, grids, flow diagrams
+CRITICAL FORMATTING RULE:
+You must provide TWO versions of your output:
+1. 'cleanMarkdown': Standard, plain Notion-compatible Markdown. No HTML tags, no inline CSS, no <canvas> elements. This is used by Phase 2 robots and the final PDD.
+2. 'htmlText': The EXACT rich HTML content you rendered in the chat window, including all colored badges, styled divs, and visuals. Do not use dark mode or dark backgrounds; use white or light backgrounds for the HTML files.
 
-If you rendered persona cards with avatar circles, colored role badges, and styled blockquotes in the chat,
-you MUST include that exact HTML in markdownText. Do NOT downgrade to plain markdown.
-
-Example: If your chat showed a styled persona card, pass:
-\`\`\`html
-<div style="border:1px solid #e0e0e0; border-radius:12px; padding:24px; margin:16px 0;">
-  <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
-    <div style="width:48px; height:48px; border-radius:50%; background:#4B6A4F; color:white; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:16px;">PR</div>
-    <div><strong>Priya Rajan</strong><br><span style="color:#666; font-size:13px;">31 · PM · Bengaluru</span></div>
-  </div>
-  <!-- rest of persona content with styled sections -->
-</div>
-\`\`\`
-
-Do NOT summarize, truncate, or flatten rich content to plain markdown.
-The markdownText is rendered into both a .md file AND a companion .html file.
-The HTML file preserves all visual richness — but only if you include the HTML in this call.
-
-File pattern: assets/YYYY-MM-DD-<robotName>-output.md
+File pattern:
+- assets/YYYY-MM-DD-<robotName>-output.md (stores cleanMarkdown)
+- assets/YYYY-MM-DD-<robotName>-output.html (stores htmlText)
 
 IMPORTANT: Call this tool after EVERY Phase 1 robot run if the product will eventually go to Phase 2.
-Phase 2 robots (user-stories, scope-spec, etc.) read these output files to derive their analysis.`,
+Phase 2 robots (user-stories, scope-spec, etc.) read the .md output files to derive their analysis.`,
     {
         productSlug: z.string().describe("The product slug"),
         robotName: z
             .enum(ALL_ROBOTS)
             .describe("Which robot produced this output"),
-        markdownText: z.string().describe("The full analysis text Claude generated — MUST include all rich HTML (cards, badges, journey maps, styled divs, canvas/script blocks, mermaid) exactly as rendered in the chat. Do NOT flatten to plain markdown."),
+        cleanMarkdown: z.string().describe("Clean, plain Markdown text without any HTML tags. Used internally by Phase 2 robots."),
+        htmlText: z.string().describe("The rich HTML output exactly as rendered in the chat, keeping backgrounds white or light (no dark mode). Used for the presentation UI."),
         epicId: z.string().optional().describe("Epic ID if this output belongs to a specific Epic"),
         featureId: z.string().optional().describe("Feature ID if this output belongs to a specific Feature"),
     },
-    async ({ productSlug, robotName, markdownText, epicId, featureId }) => {
+    async ({ productSlug, robotName, cleanMarkdown, htmlText, epicId, featureId }) => {
         const product = await productRegistry.get(productSlug);
         if (!product) {
             return {
@@ -1627,22 +1609,29 @@ Phase 2 robots (user-stories, scope-spec, etc.) read these output files to deriv
         try {
             const profile = await pmProfile.load();
             const author = profile?.name || null;
-            const relPath = await teamLeader.assetStore.saveRobotOutput(productSlug, robotName, markdownText, { epicId, featureId, author });
+            const relPath = await teamLeader.assetStore.saveRobotOutput(productSlug, robotName, cleanMarkdown, htmlText, { epicId, featureId, author });
             const absPath = path.join(teamLeader.workspace.getProductDir(productSlug), relPath);
-            
+
+            // Output-save is the reliable trigger point for the Synthesizer: the
+            // Phase 1a analysis text now exists on disk. No-ops unless all four
+            // business outputs are present and the Phase 1a gate is fresh.
+            if (ROBOT_ORDER_BUSINESS.includes(robotName)) {
+                await teamLeader.maybeAutoRunSynthesizer(productSlug, { epicId, featureId }).catch(() => {});
+            }
+
             let viewerPath = null;
             if (robotName === "user-stories") {
                 try {
                     const { generateExperimentViewer } = await import("./ui/generate-viewer.js");
-                    let jsonStr = markdownText;
-                    const jsonMatch = markdownText.match(/```json\s*([\s\S]*?)\s*```/);
+                    let jsonStr = cleanMarkdown;
+                    const jsonMatch = cleanMarkdown.match(/```json\s*([\s\S]*?)\s*```/);
                     if (jsonMatch) {
                         jsonStr = jsonMatch[1];
                     } else {
-                        const braceStart = markdownText.indexOf('{');
-                        const braceEnd = markdownText.lastIndexOf('}');
+                        const braceStart = cleanMarkdown.indexOf('{');
+                        const braceEnd = cleanMarkdown.lastIndexOf('}');
                         if (braceStart !== -1 && braceEnd !== -1) {
-                            jsonStr = markdownText.substring(braceStart, braceEnd + 1);
+                            jsonStr = cleanMarkdown.substring(braceStart, braceEnd + 1);
                         }
                     }
                     const jsonData = JSON.parse(jsonStr);
@@ -1664,7 +1653,7 @@ Phase 2 robots (user-stories, scope-spec, etc.) read these output files to deriv
                         viewerPath,
                         message: viewerPath
                             ? `${robotName} output saved. A stunning visual experiment selector was generated at: ${viewerPath}. IMPORTANT: Tell the user to open this HTML file in their browser, make their selection, and paste the copied command back here.`
-                            : `${robotName} output saved. Phase 2 robots will use this file.`,
+                            : `${robotName} output saved. Phase 2 robots will use the clean .md file.`,
                     }, null, 2)
                 }]
             };

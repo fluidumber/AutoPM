@@ -4,6 +4,7 @@ import ScoutRobot from "../robots/scout-robot.js";
 import DetectiveRobot from "../robots/detective-robot.js";
 import PeopleRobot from "../robots/people-robot.js";
 import MoneyRobot from "../robots/money-robot.js";
+import SynthesizerRobot from "../robots/synthesizer-robot.js";
 import EpicRobot from "../robots/epic-robot.js";
 import FeatureRobot from "../robots/feature-robot.js";
 import PlanRobot from "../robots/plan-robot.js";
@@ -34,6 +35,7 @@ import { FreshnessTracker } from "../src/workspace/freshness-tracker.js";
 import { 
     ALL_ROBOTS, 
     ROBOT_ORDER_BUSINESS, 
+    ROBOT_ORDER_SYNTHESIS,
     ROBOT_ORDER_EPIC_STRATEGY, 
     ROBOT_ORDER_PHASE_2, 
     BUSINESS_GATE_ROBOTS,
@@ -46,14 +48,15 @@ class TeamLeader {
 
         // Create all robots — Phase 1
         this.robots = {
-            scout:     new ScoutRobot(),
-            detective: new DetectiveRobot(),
-            people:    new PeopleRobot(),
-            money:     new MoneyRobot(),
-            epic:      new EpicRobot(),
-            feature:   new FeatureRobot(),
-            plan:      new PlanRobot(),
-            priority:  new PriorityRobot(),
+            scout:       new ScoutRobot(),
+            detective:   new DetectiveRobot(),
+            people:      new PeopleRobot(),
+            money:       new MoneyRobot(),
+            synthesizer: new SynthesizerRobot(),
+            epic:        new EpicRobot(),
+            feature:     new FeatureRobot(),
+            plan:        new PlanRobot(),
+            priority:    new PriorityRobot(),
 
             // Phase 2
             "user-stories":        new UserStoriesRobot(),
@@ -220,7 +223,10 @@ class TeamLeader {
         // The map key is the robot name regardless of phase.
         const phase1Outputs = {};
         for (const robot of ROBOT_ORDER_BUSINESS) {
-            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId: "core", epicId: null, featureId: null });
+            let text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId, epicId: null, featureId: null });
+            if (!text && askId !== "core") {
+                text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId: "core", epicId: null, featureId: null });
+            }
             if (text) phase1Outputs[robot] = text;
         }
         for (const robot of ROBOT_ORDER_EPIC_STRATEGY) {
@@ -304,8 +310,9 @@ class TeamLeader {
         const robot = this.robots[robotName];
         if (!robot) throw new Error(`Unknown robot: ${robotName}`);
 
-        // Phase 1a robots always save to "core". Phase 1b/2 use the active askId.
-        const effectiveAskId = ROBOT_ORDER_BUSINESS.includes(robotName) ? "core" : askId;
+        // Phase 1a agents default to "core" unless PM explicitly scopes to a named ask.
+        // This preserves backward compat while enabling per-ask scoping when needed.
+        const effectiveAskId = askId || "core";
 
         // If this session is product-scoped, check for a fresh cached result first.
         if (session.productSlug && !forceRerun) {
@@ -353,6 +360,15 @@ class TeamLeader {
             const scopeLabel = epicId ? `Ask: ${askId}, Epic: ${epicId}` : `Ask: ${askId}`;
             console.log(`🔗 Phase 2 context built for '${robotName}' (${scopeLabel}) — ` +
                 `Outputs loaded: [${Object.keys(analysisContext.phase1Outputs).join(", ")}]`);
+        } else if (ROBOT_ORDER_SYNTHESIS.includes(robotName) && session.productSlug) {
+            // The Synthesizer reads context.phase1Outputs to consolidate the four
+            // Phase 1a analyses. It is not a Phase 2 robot, so it would otherwise
+            // receive the bare enrichedContext and synthesize with no inputs.
+            // Reuse the same loader to hydrate phase1Outputs (the Phase 2 manifest
+            // and DACI loads degrade gracefully when they don't exist yet).
+            analysisContext = await this._buildPhase2Context(session.productSlug, session.enrichedContext, { epicId, featureId, askId: effectiveAskId });
+            console.log(`🔗 Synthesis context built for '${robotName}' — ` +
+                `Phase 1a outputs loaded: [${Object.keys(analysisContext.phase1Outputs).join(", ")}]`);
         }
 
         // Gather improvement hints from past feedback
@@ -380,12 +396,82 @@ class TeamLeader {
                 );
                 await this.freshness.recordRobotRun(session.productSlug, robotName, assetPath, effectiveAskId, epicId, featureId);
                 console.log(`💾 Saved ${robotName} analysis to ${assetPath}`);
+
+                // NOTE: the Synthesizer auto-run is intentionally NOT triggered here.
+                // This is result-save time (the prompt payload) — the Phase 1a
+                // *output* files (Claude's analysis text) do not exist yet, so the
+                // synthesizer would run blind. Auto-run is triggered on output-save
+                // instead, via maybeAutoRunSynthesizer() (see saveFeedback and the
+                // save-robot-output MCP tool).
             } catch (err) {
                 console.error(`Failed to persist ${robotName} result: ${err.message}`);
             }
         }
 
         return result;
+    }
+
+    /**
+     * Trigger the Synthesizer auto-run IFF Phase 1a is genuinely ready — i.e.
+     * (a) all Phase 1a business robots are fresh AND (b) every Phase 1a business
+     * robot has a saved *output* file (Claude's analysis text) on disk. Unlike the
+     * old result-save trigger, this guarantees the synthesizer receives real
+     * phase1Outputs rather than running blind.
+     *
+     * Session-independent: callable from saveFeedback (has analysisId) or from the
+     * save-robot-output MCP tool (productSlug only). Reuses or scaffolds a session
+     * so runSingleRobot can persist the synthesizer result + freshness.
+     *
+     * @param {string} productSlug
+     * @param {object} [opts]
+     * @param {string} [opts.askId="core"]
+     * @param {string} [opts.epicId=null]
+     * @param {string} [opts.featureId=null]
+     * @param {string} [opts.analysisId=null] - reuse this session if it exists
+     * @returns {Promise<object|null>} the synthesizer result, or null if not ready
+     */
+    async maybeAutoRunSynthesizer(productSlug, { askId = "core", epicId = null, featureId = null, analysisId = null } = {}) {
+        if (!productSlug) return null;
+
+        // (a) Gate: all Phase 1a business robots must be fresh.
+        const staleGate = await this.checkPhase2Gate(productSlug);
+        if (staleGate.length > 0) return null;
+
+        // (b) Outputs: every business robot must have a saved output file on disk.
+        for (const robot of ROBOT_ORDER_BUSINESS) {
+            const text = await this.assetStore.loadLatestRobotOutput(productSlug, robot, { askId, epicId: null, featureId: null });
+            if (!text) return null; // an output hasn't been saved yet — not ready
+        }
+
+        // Reuse an existing session for this product, else scaffold a minimal one
+        // from the stored interview answers so runSingleRobot can persist results.
+        let sid = analysisId && this.sessions.has(analysisId) ? analysisId : null;
+        if (!sid) {
+            for (const s of this.sessions.values()) {
+                if (s.productSlug === productSlug) { sid = s.id; break; }
+            }
+        }
+        if (!sid) {
+            let answers = {};
+            try {
+                const stored = await this.freshness.getStoredAnswers(productSlug);
+                for (const [qid, entry] of Object.entries(stored || {})) {
+                    if (entry?.value != null) answers[qid] = entry.value;
+                }
+            } catch { /* no stored answers — synthesis relies on the four outputs */ }
+            sid = this.startAnalysis(
+                { productIdea: productSlug, summary: productSlug, answers },
+                { productSlug }
+            );
+        }
+
+        console.log(`✨ Phase 1a gate + all outputs ready for ${productSlug}. Auto-triggering Synthesizer...`);
+        return this.runSingleRobot(sid, "synthesizer", {
+            askId, epicId, featureId, author: "Auto-run", forceRerun: true,
+        }).catch(err => {
+            console.error(`Failed to auto-run synthesizer: ${err.message}`);
+            return null;
+        });
     }
 
     /**
@@ -398,7 +484,7 @@ class TeamLeader {
             id: session.id,
             productIdea: session.productIdea,
             completedRobots: session.completedRobots,
-            remainingRobots: ROBOT_ORDER_BUSINESS.filter(
+            remainingRobots: [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_SYNTHESIS].filter(
                 (r) => !session.completedRobots.includes(r)
             ),
             feedback: session.feedback,
@@ -407,13 +493,14 @@ class TeamLeader {
     }
 
     /**
-     * Get the next robot to run in the standard order.
+     * Get the next robot to run in the standard order (Phase 1a + Synthesis).
      */
     getNextRobot(analysisId) {
         const session = this.sessions.get(analysisId);
         if (!session) return null;
+        const phase1aRobots = [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_SYNTHESIS];
         return (
-            ROBOT_ORDER_BUSINESS.find(
+            phase1aRobots.find(
                 (r) => !session.completedRobots.includes(r)
             ) || null
         );
@@ -450,6 +537,13 @@ class TeamLeader {
             try {
                 await this.assetStore.saveRobotOutput(session.productSlug, robotName, analysisMarkdown, { author });
                 console.log(`💾 Saved ${robotName} output text (via feedback)`);
+
+                // Output-save is the reliable point to auto-run the Synthesizer:
+                // the Phase 1a analysis text now exists on disk. No-ops unless all
+                // four business outputs are present and the gate is fresh.
+                if (ROBOT_ORDER_BUSINESS.includes(robotName)) {
+                    await this.maybeAutoRunSynthesizer(session.productSlug, { analysisId });
+                }
             } catch (err) {
                 console.error(`Failed to save ${robotName} output: ${err.message}`);
             }

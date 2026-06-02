@@ -9,7 +9,7 @@
 
 import fs from "fs/promises";
 
-import { ALL_ROBOTS as ASSEMBLY_ROBOTS, ROBOT_ORDER_BUSINESS, ROBOT_ORDER_EPIC_STRATEGY } from "../config/robot-registry.js";
+import { ALL_ROBOTS as ASSEMBLY_ROBOTS, ROBOT_ORDER_BUSINESS, ROBOT_ORDER_SYNTHESIS, ROBOT_ORDER_EPIC_STRATEGY } from "../config/robot-registry.js";
 
 export class PDDComposer {
     /**
@@ -72,7 +72,7 @@ export class PDDComposer {
         ]);
 
         const robotsPresent = Object.keys(robotOutputs);
-        const BUSINESS_ROBOTS = [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_EPIC_STRATEGY];
+        const BUSINESS_ROBOTS = [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_SYNTHESIS, ...ROBOT_ORDER_EPIC_STRATEGY];
         const robotsMissing = BUSINESS_ROBOTS.filter(r => !robotsPresent.includes(r));
 
         return {
@@ -128,7 +128,9 @@ export class PDDComposer {
         const outputs = {};
 
         await Promise.all(ASSEMBLY_ROBOTS.map(async (robot) => {
-            const raw = await this.assetStore.loadLatestRobotOutput(slug, robot, epicId);
+            // loadLatestRobotOutput expects an options object, not a positional
+            // epicId — passing epicId directly made it read `null.askId` and throw.
+            const raw = await this.assetStore.loadLatestRobotOutput(slug, robot, { epicId });
             if (!raw) return; // robot hasn't been run
 
             outputs[robot] = {
@@ -146,7 +148,8 @@ export class PDDComposer {
      */
     async _loadPhase1RobotOutputs(slug) {
         const outputs = {};
-        await Promise.all(PHASE1_ROBOTS.map(async (robot) => {
+        const BUSINESS_ROBOTS = [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_SYNTHESIS, ...ROBOT_ORDER_EPIC_STRATEGY];
+        await Promise.all(BUSINESS_ROBOTS.map(async (robot) => {
             const raw = await this.assetStore.loadLatestRobotOutput(slug, robot);
             if (!raw) return;
             outputs[robot] = { raw };
