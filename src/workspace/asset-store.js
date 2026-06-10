@@ -110,7 +110,7 @@ export class AssetStore {
     /**
      * Save Claude's generated analysis text for a robot.
      */
-    async saveRobotOutput(slug, robotName, markdownText, { askId = "core", epicId = null, featureId = null, author = null } = {}) {
+    async saveRobotOutput(slug, robotName, cleanMarkdown, htmlText, { askId = "core", epicId = null, featureId = null, author = null } = {}) {
         await this.workspace.ensureProductStructure(slug);
 
         const today = new Date().toISOString().slice(0, 10);
@@ -130,14 +130,14 @@ export class AssetStore {
         const absHtmlPath = path.join(targetDir, htmlFilename);
         const relPath = path.posix.join(relPrefix, filename);
 
-        let finalOutput = markdownText;
+        let finalMarkdown = cleanMarkdown;
         if (author) {
-            finalOutput = `---\nauthor: ${JSON.stringify(author)}\n---\n\n${markdownText}`;
+            finalMarkdown = `---\nauthor: ${JSON.stringify(author)}\n---\n\n${cleanMarkdown}`;
         }
-        await fs.writeFile(absPath, finalOutput, "utf-8");
+        await fs.writeFile(absPath, finalMarkdown, "utf-8");
 
         // Save HTML version
-        const htmlDoc = packageHtml(finalOutput, `${robotName} - ${slug}`);
+        const htmlDoc = packageHtml(htmlText || finalMarkdown, `${robotName} - ${slug}`);
         await fs.writeFile(absHtmlPath, htmlDoc, "utf-8");
 
         return relPath;

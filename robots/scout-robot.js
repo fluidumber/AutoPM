@@ -56,6 +56,16 @@ class ScoutRobot {
                             "Final verdict comes from the Support x Maturity matrix, not from a single magic-number formula",
                             "If reviewer disagreement is likely, show a low/base/high range instead of one precise number"
                         ],
+                        scoringRubricExplainer: {
+                            instructions: "ALWAYS render the full scoring rubric as a standalone section titled '📐 Scoring Rubric' BEFORE presenting the evidence vector table. This ensures the PM understands the math.",
+                            mustInclude: [
+                                "Weight-range rubric (3-row HTML table): High (0.8-1.0) / Medium (0.4-0.7) / Low (0.1-0.3) -> meaning, when to use",
+                                "Support-score rubric (6-row HTML table): 0-5 -> description, example evidence type",
+                                "Evidence-maturity rubric (4-row HTML table): 0.0-0.3 / 0.4-0.6 / 0.7-0.8 / 0.9-1.0 -> meaning, what qualifies",
+                                "Formula in plain language: Support Score = Σ(weight × score ÷ 5) × 100",
+                                "Two-axis decision matrix (3x3 grid HTML table): Support (Low/Med/High) × Maturity (Low/Med/High) -> verdict + action"
+                            ]
+                        },
                         scoringRubrics: {
                             weightRange: [
                                 "High weight: this vector can make or break the product hypothesis",
@@ -225,7 +235,7 @@ class ScoutRobot {
                 citations: "Inline [Source: name/URL] after every statistic or claim",
                 tables: "Use HTML tables with styled headers (background colors for column groups), alternating row shading, and bold verdict cells for: TAM/SAM/SOM, evidence vectors, proxy register, validation asks, and risk factors",
                 visuals: "Include a Mermaid decision-flow chart and a Chart.js bar chart for evidence contribution scores (use <canvas> + <script> blocks)",
-                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for: (1) confidence score badges as colored <span> tags, (2) verdict banner as a styled <div> with background color matching STRONG=green/MODERATE=amber/WEAK=red, (3) evidence vector table with colored contribution bars, (4) risk severity badges. Plain markdown is fine for narrative text, but all tables, scores, and visual elements MUST be HTML with inline styles.",
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) confidence score badges as colored <span> tags, (2) verdict banner as a styled <div> with background color matching STRONG=green/MODERATE=amber/WEAK=red, (3) evidence vector table with colored contribution bars, (4) risk severity badges. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter.",
                 pmReviewProtocol: [
                     "Ask the PM to rate the output 1-5",
                     "Ask the PM to acknowledge, reject, or append each evidence vector",

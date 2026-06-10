@@ -118,7 +118,7 @@ class DetectiveRobot {
                 length: "Thorough — competitive intel is only useful if specific",
                 citations: "Link to pricing pages, review platforms, funding databases where possible",
                 tables: "Use an HTML comparison table for direct competitors with styled headers and colored cells: name, funding, pricing, key strength (green), key weakness (red). Moat ratings should use colored badges: STRONG=green, EMERGING=amber, WEAK=red.",
-                htmlRequired: "Your output will be saved as both .md and .html files. Include raw HTML blocks with inline styles for: (1) competitor profile cards with logo placeholder circles and key metrics, (2) gap analysis as a styled grid/cards, (3) moat rating badges as colored <span> tags, (4) positioning map as a Mermaid quadrant or styled HTML grid. Plain markdown is fine for narrative text, but visual elements MUST be HTML with inline styles."
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) competitor profile cards with logo placeholder circles and key metrics, (2) gap analysis as a styled grid/cards, (3) moat rating badges as colored <span> tags, (4) positioning map as a Mermaid quadrant or styled HTML grid. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter."
             }
         };
 

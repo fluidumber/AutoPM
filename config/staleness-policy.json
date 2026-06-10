@@ -6,6 +6,7 @@
     "detective":          { "windowDays": 60,  "phase": 1, "rationale": "Competitive landscape moves faster than market sizing" },
     "people":             { "windowDays": 180, "phase": 1, "rationale": "Personas are stable; refresh semi-annually" },
     "money":              { "windowDays": 90,  "phase": 1, "rationale": "Financial models need quarterly refresh" },
+    "synthesizer":        { "windowDays": 30,  "phase": 1, "rationale": "Synthesizer aggregates dynamic data, needs frequent refresh" },
     "feature":            { "windowDays": 30,  "phase": 1, "rationale": "Feature scope changes with each planning cycle" },
     "plan":               { "windowDays": 30,  "phase": 1, "rationale": "Roadmap adjusts monthly" },
     "priority":           { "windowDays": 30,  "phase": 1, "rationale": "Prioritisation re-runs with each sprint" },

@@ -167,7 +167,7 @@ function RollupRow({ rollups, compact = false, onClick }) {
 /* ─────────────────────── Product Home ─────────────────────────── */
 
 function ProductHome({ product, tab, onTab, onArtifact, onMoney, onFreshness, view, onView, onCopied, onPickEpic }) {
-  let robotsCount = Object.keys(PF.ROBOT_META).filter(k => PF.ROBOT_META[k].phase === 1).length;
+  let robotsCount = Object.keys(PF.ROBOT_META).filter(k => PF.ROBOT_META[k].phase < 1.5).length;
   Object.values(product.asks || {}).forEach(ask => {
     Object.values(ask.epics || {}).forEach(epic => {
       if (epic.robots) {
@@ -469,7 +469,7 @@ function StatusTab({ product, onTab, onArtifact }) {
 
       <div className="panel">
         <div className="panel-h">
-          <div className="title"><Icon.Stack width="13" height="13"/>G1–G8 Workflow gates</div>
+          <div className="title"><Icon.Stack width="13" height="13"/>G1–G9 Workflow gates</div>
           <div className="right">
             <span className="status current" style={{ fontFamily: "var(--font-mono)" }}>Current: {product.currentGate}</span>
           </div>
@@ -529,6 +529,7 @@ function GateRow({ gate, active }) {
 function RobotsTab({ product, onArtifact, onFreshness, view, onView, onPickEpic }) {
   const coreRuns = PF.ROBOT_RUNS[product.slug] || {};
   const phase1a = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 1);
+  const phase1a_prime = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 1.1);
   const phase1b = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 1.5);
   const phase2  = Object.entries(PF.ROBOT_META).filter(([k, v]) => v.phase === 2);
 
@@ -555,6 +556,16 @@ function RobotsTab({ product, onArtifact, onFreshness, view, onView, onPickEpic 
           ? <RobotTable entries={phase1a} runs={coreRuns} onArtifact={onArtifact} onFreshness={onFreshness} productSlug={product.slug}/>
           : <RobotCards entries={phase1a} runs={coreRuns} onArtifact={onArtifact} onFreshness={onFreshness}/>}
       </div>
+
+      {/* CORE Phase 1a' */}
+      {phase1a_prime.length > 0 && (
+        <div className="panel" style={{ overflow: "hidden", marginBottom: 24 }}>
+          <PhaseHeader phase="1a′" title="Synthesis & Verdict" entries={phase1a_prime} runs={coreRuns}/>
+          {view === "table"
+            ? <RobotTable entries={phase1a_prime} runs={coreRuns} onArtifact={onArtifact} onFreshness={onFreshness} productSlug={product.slug}/>
+            : <RobotCards entries={phase1a_prime} runs={coreRuns} onArtifact={onArtifact} onFreshness={onFreshness}/>}
+        </div>
+      )}
 
       {/* ASKS */}
       {Object.entries(product.asks || {}).map(([askId, askData]) => {

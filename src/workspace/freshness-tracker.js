@@ -38,10 +38,11 @@ const PROJECT_POLICY_PATH = path.join(__dirname, "..", "..", "config", "stalenes
 // Phase 2 — Execution Definition
 export const ROBOT_STALENESS_DAYS = {
     // ── Phase 1 ────────────────────────────────────────────────────
-    scout:     90,
-    detective: 60,
-    people:    180,
-    money:     90,
+    scout:       90,
+    detective:   60,
+    people:     180,
+    money:       90,
+    synthesizer: 30,
     epic:      30,
     feature:   30,
     plan:      30,

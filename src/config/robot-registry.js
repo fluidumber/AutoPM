@@ -13,6 +13,11 @@ export const ROBOT_ORDER_BUSINESS = [
     "money",
 ];
 
+/** Phase 1a' - Synthesizer Agent */
+export const ROBOT_ORDER_SYNTHESIS = [
+    "synthesizer",
+];
+
 /** Phase 1b (Execution Strategy) - now scoped to Epic */
 export const ROBOT_ORDER_EPIC_STRATEGY = [
     "epic",      // Generates the epics (product level) but belongs in epic flow conceptually
@@ -36,7 +41,7 @@ export const ROBOT_ORDER_PHASE_2 = [
 ];
 
 /** All known robots in the system */
-export const ALL_ROBOTS = [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_EPIC_STRATEGY, ...ROBOT_ORDER_PHASE_2];
+export const ALL_ROBOTS = [...ROBOT_ORDER_BUSINESS, ...ROBOT_ORDER_SYNTHESIS, ...ROBOT_ORDER_EPIC_STRATEGY, ...ROBOT_ORDER_PHASE_2];
 
 /** Gate rule: Business robots that must be fresh before generating Epics */
 export const BUSINESS_GATE_ROBOTS = ["scout", "detective", "people", "money"];

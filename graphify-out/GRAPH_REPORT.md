@@ -1,249 +1,337 @@
-# Graph Report - /Users/anandshrivastava/productflow  (2026-05-29)
+# Graph Report - .  (2026-06-03)
 
 ## Corpus Check
-- 56 files · ~141,341 words
+- 96 files · ~172,067 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 477 nodes · 844 edges · 37 communities detected
-- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 173 edges (avg confidence: 0.8)
+- 685 nodes · 1179 edges · 51 communities detected
+- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 232 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Community 0|Community 0]]
-- [[_COMMUNITY_Community 1|Community 1]]
-- [[_COMMUNITY_Community 2|Community 2]]
-- [[_COMMUNITY_Community 3|Community 3]]
-- [[_COMMUNITY_Community 4|Community 4]]
-- [[_COMMUNITY_Community 5|Community 5]]
-- [[_COMMUNITY_Community 6|Community 6]]
-- [[_COMMUNITY_Community 7|Community 7]]
-- [[_COMMUNITY_Community 8|Community 8]]
-- [[_COMMUNITY_Community 9|Community 9]]
-- [[_COMMUNITY_Community 10|Community 10]]
-- [[_COMMUNITY_Community 11|Community 11]]
-- [[_COMMUNITY_Community 12|Community 12]]
-- [[_COMMUNITY_Community 13|Community 13]]
-- [[_COMMUNITY_Community 14|Community 14]]
-- [[_COMMUNITY_Community 15|Community 15]]
-- [[_COMMUNITY_Community 16|Community 16]]
-- [[_COMMUNITY_Community 17|Community 17]]
-- [[_COMMUNITY_Community 18|Community 18]]
-- [[_COMMUNITY_Community 19|Community 19]]
-- [[_COMMUNITY_Community 20|Community 20]]
-- [[_COMMUNITY_Community 21|Community 21]]
-- [[_COMMUNITY_Community 22|Community 22]]
-- [[_COMMUNITY_Community 23|Community 23]]
-- [[_COMMUNITY_Community 24|Community 24]]
-- [[_COMMUNITY_Community 25|Community 25]]
-- [[_COMMUNITY_Community 26|Community 26]]
-- [[_COMMUNITY_Community 27|Community 27]]
-- [[_COMMUNITY_Community 28|Community 28]]
-- [[_COMMUNITY_Community 29|Community 29]]
-- [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 32|Community 32]]
-- [[_COMMUNITY_Community 33|Community 33]]
-- [[_COMMUNITY_Community 34|Community 34]]
-- [[_COMMUNITY_Community 35|Community 35]]
-- [[_COMMUNITY_Community 36|Community 36]]
+- [[_COMMUNITY_Server & Session Orchestration|Server & Session Orchestration]]
+- [[_COMMUNITY_Robot Architecture Rules|Robot Architecture Rules]]
+- [[_COMMUNITY_Freshness Tracking|Freshness Tracking]]
+- [[_COMMUNITY_Cockpit UI Screens|Cockpit UI Screens]]
+- [[_COMMUNITY_Brain Database|Brain Database]]
+- [[_COMMUNITY_Cockpit App Shell|Cockpit App Shell]]
+- [[_COMMUNITY_Context Store|Context Store]]
+- [[_COMMUNITY_Learning Engine|Learning Engine]]
+- [[_COMMUNITY_PDD HTML Renderer|PDD HTML Renderer]]
+- [[_COMMUNITY_Asset Store|Asset Store]]
+- [[_COMMUNITY_Cockpit Data Builders|Cockpit Data Builders]]
+- [[_COMMUNITY_Jira Integration & PDD Examples|Jira Integration & PDD Examples]]
+- [[_COMMUNITY_Interview Robot|Interview Robot]]
+- [[_COMMUNITY_Phase 2 Artifact Viewers|Phase 2 Artifact Viewers]]
+- [[_COMMUNITY_Agentic vs Pipeline Architecture|Agentic vs Pipeline Architecture]]
+- [[_COMMUNITY_Scout & Detective Robots|Scout & Detective Robots]]
+- [[_COMMUNITY_Markdown Doc Parsing|Markdown Doc Parsing]]
+- [[_COMMUNITY_Build-to-Learn Discovery|Build-to-Learn Discovery]]
+- [[_COMMUNITY_Direct API & UI Roadmap|Direct API & UI Roadmap]]
+- [[_COMMUNITY_App Icon Design|App Icon Design]]
+- [[_COMMUNITY_Risks Registry Robot|Risks Registry Robot]]
+- [[_COMMUNITY_KPIs Robot|KPIs Robot]]
+- [[_COMMUNITY_User Stories Robot|User Stories Robot]]
+- [[_COMMUNITY_Standalone HTML Renderer|Standalone HTML Renderer]]
+- [[_COMMUNITY_Plan Robot|Plan Robot]]
+- [[_COMMUNITY_People Robot|People Robot]]
+- [[_COMMUNITY_Feasibility Tech Robot|Feasibility Tech Robot]]
+- [[_COMMUNITY_Feature Robot|Feature Robot]]
+- [[_COMMUNITY_GTM Readiness Robot|GTM Readiness Robot]]
+- [[_COMMUNITY_Scope Spec Robot|Scope Spec Robot]]
+- [[_COMMUNITY_Customer Journeys Robot|Customer Journeys Robot]]
+- [[_COMMUNITY_Data Privacy Robot|Data Privacy Robot]]
+- [[_COMMUNITY_Terms & Data Privacy Policy|Terms & Data Privacy Policy]]
+- [[_COMMUNITY_CLI Entry Point|CLI Entry Point]]
+- [[_COMMUNITY_Presentation Generator|Presentation Generator]]
+- [[_COMMUNITY_Epic Robot|Epic Robot]]
+- [[_COMMUNITY_DACI Stakeholders Robot|DACI Stakeholders Robot]]
+- [[_COMMUNITY_Money Robot|Money Robot]]
+- [[_COMMUNITY_Priority Robot|Priority Robot]]
+- [[_COMMUNITY_ChatGPT MCP Connector|ChatGPT MCP Connector]]
+- [[_COMMUNITY_Cockpit API Client|Cockpit API Client]]
+- [[_COMMUNITY_Synthesizer Robot|Synthesizer Robot]]
+- [[_COMMUNITY_Artifact Renderer Pipeline|Artifact Renderer Pipeline]]
+- [[_COMMUNITY_Feedback & Staleness UI|Feedback & Staleness UI]]
+- [[_COMMUNITY_Workspace Tests|Workspace Tests]]
+- [[_COMMUNITY_Experiment Viewer Generator|Experiment Viewer Generator]]
+- [[_COMMUNITY_ProductFlow + LLM Partnership|ProductFlow + LLM Partnership]]
+- [[_COMMUNITY_LLM Client Robustness|LLM Client Robustness]]
+- [[_COMMUNITY_Legacy Data Fix Script|Legacy Data Fix Script]]
+- [[_COMMUNITY_Reconnect Test|Reconnect Test]]
+- [[_COMMUNITY_Robot Registry|Robot Registry]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `WorkspaceManager` - 27 edges
+1. `WorkspaceManager` - 31 edges
 2. `BrainDatabase` - 19 edges
-3. `renderMarkdown()` - 17 edges
-4. `InterviewRobot` - 17 edges
-5. `TeamLeader` - 16 edges
+3. `TeamLeader` - 18 edges
+4. `renderMarkdown()` - 17 edges
+5. `InterviewRobot` - 17 edges
 6. `PMProfile` - 15 edges
-7. `mdTable()` - 13 edges
-8. `ContextStore` - 13 edges
-9. `FreshnessTracker` - 13 edges
-10. `enrichProduct()` - 12 edges
+7. `main()` - 15 edges
+8. `FreshnessTracker` - 14 edges
+9. `mdTable()` - 13 edges
+10. `enrichProduct()` - 13 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `renderMarkdown()` --calls--> `test()`  [INFERRED]
-  /Users/anandshrivastava/productflow/src/ui/cockpit/atoms.jsx → /Users/anandshrivastava/productflow/tests/persistence.test.js
-- `formatYamlValue()` --calls--> `test()`  [INFERRED]
-  /Users/anandshrivastava/productflow/src/workspace/markdown-doc.js → /Users/anandshrivastava/productflow/tests/persistence.test.js
-- `App()` --calls--> `useKey()`  [INFERRED]
-  /Users/anandshrivastava/productflow/src/ui/cockpit/app.jsx → /Users/anandshrivastava/productflow/src/ui/cockpit/atoms.jsx
-- `ArtifactViewer()` --calls--> `formatDate()`  [INFERRED]
-  /Users/anandshrivastava/productflow/src/ui/cockpit/drawers.jsx → /Users/anandshrivastava/productflow/src/ui/cockpit/data.js
-- `FeedbackPanel()` --calls--> `relativeTime()`  [INFERRED]
-  /Users/anandshrivastava/productflow/src/ui/cockpit/drawers.jsx → /Users/anandshrivastava/productflow/src/ui/cockpit/data.js
+- `AGENTS.md Codebase Ground Truth` --semantically_similar_to--> `CLAUDE.md Project Instructions`  [INFERRED] [semantically similar]
+  AGENTS.md → CLAUDE.md
+- `FeasibilityTechViewer` --semantically_similar_to--> `BYOC SIP Trunk Monitoring PDD (example)`  [INFERRED] [semantically similar]
+  docs/RELEASE_NOTES.md → docs/pdd-examples/GCN-PDD - BYOC SIP Trunk Monitoring-221025-104428.pdf
+- `test()` --calls--> `renderMarkdown()`  [INFERRED]
+  tests/persistence.test.js → src/ui/cockpit/atoms.jsx
+- `test()` --calls--> `formatYamlValue()`  [INFERRED]
+  tests/persistence.test.js → /Users/anandshrivastava/productflow/src/workspace/markdown-doc.js
+- `renderHtml()` --calls--> `main()`  [INFERRED]
+  /Users/anandshrivastava/productflow/utils/pdd-renderer.js → scripts/slm-driver.mjs
+
+## Hyperedges (group relationships)
+- **Phase 1 Strategic Discovery Robot Pipeline** — readme_scout_robot, readme_detective_robot, readme_people_robot, readme_money_robot, readme_feature_robot, readme_plan_robot, readme_priority_robot [EXTRACTED 1.00]
+- **StyleIQ Deck Robot-Derived Sections** — presentation_styleiq_market_tam, presentation_styleiq_competitors, presentation_styleiq_personas, presentation_styleiq_financials, presentation_styleiq_daci [INFERRED 0.80]
+- **MCP Client Wiring Across Clients** — quickstart_claude_desktop_config, quickstart_cursor_config, install_autopm_guide [EXTRACTED 1.00]
+- **Build-to-Learn Product Discovery Synthesis** — discovery_report_build_to_learn_product_discovery_engine, build_to_learn_architecture_discovery, discovery_report_build_to_learn_pillar_b_experiment_clusters, build_to_learn_architecture_experiment_matrix, discovery_report_build_to_learn_svpg_build_to_learn [INFERRED 0.80]
+- **Phase 2 React Epic Viewer Suite** — release_notes_epic_viewers, release_notes_feasibility_tech_viewer, release_notes_risks_registry_viewer, release_notes_gtm_readiness_viewer, release_notes_customer_journeys_viewer [EXTRACTED 0.90]
+- **Direct API Mode Future Build-Out** — architecture_llm_discussion_direct_api_mode, architecture_llm_discussion_llm_client_js, architecture_llm_discussion_robot_runner_js, architecture_llm_discussion_orchestrator_js [EXTRACTED 0.90]
 
 ## Communities
 
-### Community 0 - "Community 0"
-Cohesion: 0.09
-Nodes (8): AssetStore, isPlainObject(), normalizeScopeArgs(), traverseGates(), buildPolicy(), main(), readActiveSession(), WorkspaceManager
+### Community 0 - "Server & Session Orchestration"
+Cohesion: 0.08
+Nodes (12): traverseGates(), buildWorkspaceCheck(), serialiseMarkdownDoc(), initServer(), main(), readActiveSession(), startStdio(), startSseServer() (+4 more)
 
-### Community 1 - "Community 1"
+### Community 1 - "Robot Architecture Rules"
+Cohesion: 0.04
+Nodes (58): Brand-Agnostic Code Rule (rationale), _claudeInstructions Pattern, Context Field Name Contract, Directory Layout, Double-Parse Guard, AGENTS.md Codebase Ground Truth, Learning Loop / LearningEngine Hints, PDD Composer + Renderer (+50 more)
+
+### Community 2 - "Freshness Tracking"
+Cohesion: 0.1
+Nodes (14): clearPolicyCache(), collectRobotEntries(), daysSince(), FreshnessTracker, isPlainObject(), normalizeScopeArgs(), pickLatestEntry(), resolvePolicy() (+6 more)
+
+### Community 3 - "Cockpit UI Screens"
 Cohesion: 0.11
-Nodes (8): collectRobotEntries(), daysSince(), FreshnessTracker, isPlainObject(), normalizeScopeArgs(), pickLatestEntry(), resolvePolicy(), TeamLeader
+Nodes (31): daysAgo(), formatDate(), gatesFor(), relativeTime(), ArtifactViewer(), FeedbackPanel(), FreshnessDrawer(), MoneyDetail() (+23 more)
 
-### Community 2 - "Community 2"
-Cohesion: 0.09
+### Community 4 - "Brain Database"
+Cohesion: 0.08
 Nodes (6): BrainDatabase, ensureDataDir(), loadData(), saveData(), NotificationService, ProcessAdvisor
 
-### Community 3 - "Community 3"
+### Community 5 - "Cockpit App Shell"
 Cohesion: 0.08
-Nodes (15): useKey(), formatDate(), gatesFor(), relativeTime(), ArtifactViewer(), FeedbackPanel(), FreshnessDrawer(), MoneyDetail() (+7 more)
+Nodes (16): App(), applyPathVisibility(), ConnectionPill(), Rail(), TopBar(), TweaksPanelOverlay(), escapeHtml(), inline() (+8 more)
 
-### Community 4 - "Community 4"
-Cohesion: 0.15
-Nodes (5): buildWorkspaceCheck(), serialiseMarkdownDoc(), PMProfile, ProductRegistry, slugify()
+### Community 6 - "Context Store"
+Cohesion: 0.12
+Nodes (3): ContextStore, sanitiseFilename(), PDDComposer
 
-### Community 5 - "Community 5"
-Cohesion: 0.07
-Nodes (6): App(), escapeHtml(), inline(), renderMarkdown(), useToast(), useTweaks()
-
-### Community 6 - "Community 6"
+### Community 7 - "Learning Engine"
 Cohesion: 0.1
 Nodes (5): FeasibilityDesignRobot, getThreshold(), LearningEngine, RobotMemory, main()
 
-### Community 7 - "Community 7"
+### Community 8 - "PDD HTML Renderer"
 Cohesion: 0.22
 Nodes (25): bulletList(), escapeHtml(), inlineHtml(), markdownToHtml(), mdTable(), renderAppendix(), renderCustomerJourneys(), renderDaci() (+17 more)
 
-### Community 8 - "Community 8"
-Cohesion: 0.22
-Nodes (17): buildActivity(), buildArtifacts(), buildRobotRuns(), computeGates(), computeRobotStatus(), countInterviewAnswers(), daysBetween(), enrichProduct() (+9 more)
+### Community 9 - "Asset Store"
+Cohesion: 0.14
+Nodes (5): AssetStore, isPlainObject(), normalizeScopeArgs(), buildPolicy(), main()
 
-### Community 9 - "Community 9"
-Cohesion: 0.23
+### Community 10 - "Cockpit Data Builders"
+Cohesion: 0.26
+Nodes (20): buildActivity(), buildArtifacts(), buildContext(), buildFeedback(), buildRobotRuns(), computeGates(), computeRobotStatus(), countInterviewAnswers() (+12 more)
+
+### Community 11 - "Jira Integration & PDD Examples"
+Cohesion: 0.1
+Nodes (20): Cockpit as MCP Admin Dashboard, Integrations as Data Surfaces, Talkdesk Mobile 2.0 PDD (example), BYOC SIP Trunk Monitoring PDD (example), Atlassian Document Format (ADF) Payload, Epic Mapping (Scope Spec to Jira Epic), jira-export MCP Tool (proposed), utils/jira-exporter.js (proposed) (+12 more)
+
+### Community 12 - "Interview Robot"
+Cohesion: 0.21
 Nodes (1): InterviewRobot
 
-### Community 10 - "Community 10"
-Cohesion: 0.24
-Nodes (3): ContextStore, sanitiseFilename(), buildContext()
+### Community 13 - "Phase 2 Artifact Viewers"
+Cohesion: 0.29
+Nodes (15): CustomerJourneysViewer(), DaciStakeholdersViewer(), DataPrivacyViewer(), FeasibilityDesignViewer(), FeasibilityTechViewer(), GtmReadinessViewer(), KpisViewer(), Mermaid() (+7 more)
 
-### Community 11 - "Community 11"
-Cohesion: 0.24
-Nodes (11): coerceYamlScalar(), escapeRegex(), formatYamlValue(), getListSection(), getSection(), parseMarkdownDoc(), parseSimpleYaml(), backfillEpicFreshnessFromFiles() (+3 more)
+### Community 14 - "Agentic vs Pipeline Architecture"
+Cohesion: 0.12
+Nodes (17): Core Agent Loop (Brain), Functional Data Tools (run_market_research), Pipeline vs Agentic AI Comparison, Quality Rubric Stopping Condition, Rationale: structured robot expertise is the defensible moat, Self-Evaluation Step (recommended), Rationale: stay a pipeline — autonomous agents not enterprise-ready in 2026, _claudeInstructions Pattern (+9 more)
 
-### Community 12 - "Community 12"
-Cohesion: 0.19
+### Community 15 - "Scout & Detective Robots"
+Cohesion: 0.16
 Nodes (3): DetectiveRobot, extractDomainKeywords(), ScoutRobot
 
-### Community 13 - "Community 13"
-Cohesion: 0.28
-Nodes (11): CustomerJourneysViewer(), DaciStakeholdersViewer(), DataPrivacyViewer(), FeasibilityDesignViewer(), FeasibilityTechViewer(), GtmReadinessViewer(), KpisViewer(), RisksRegistryViewer() (+3 more)
+### Community 16 - "Markdown Doc Parsing"
+Cohesion: 0.22
+Nodes (11): coerceYamlScalar(), escapeRegex(), formatYamlValue(), getListSection(), getSection(), parseMarkdownDoc(), parseSimpleYaml(), backfillEpicFreshnessFromFiles() (+3 more)
 
-### Community 14 - "Community 14"
-Cohesion: 0.27
-Nodes (1): PDDComposer
+### Community 17 - "Build-to-Learn Discovery"
+Cohesion: 0.15
+Nodes (15): Build to Learn Architectural Discovery, ExperimentAnalysisRobot (proposed), Experiment Matrix (Solution A vs B), PrototypeRobot (proposed), ResearchRobot (proposed), Tributary & Distributary Validation Loop, add-research MCP Tool, Four Product Risks (Value/Usability/Feasibility/Viability) (+7 more)
 
-### Community 15 - "Community 15"
+### Community 18 - "Direct API & UI Roadmap"
+Cohesion: 0.2
+Nodes (10): Direct API Mode (Future), src/llm-client.js (proposed), Rationale: Direct API mode not yet — MCP is the right prototype stage, src/orchestrator.js (proposed), src/robot-runner.js (proposed), Approve Phase 2 Section feature, Global Search (Cmd+K) feature, Re-check Freshness endpoint (+2 more)
+
+### Community 19 - "App Icon Design"
+Cohesion: 0.36
+Nodes (8): ProductFlow App Icon, Antennae / Ear Tufts, Automation / AI Robot Theme, Dark Near-Black Background, Gear / Cog Outline, Blue Line-Art Style, Stylized Robot/Owl Head Motif, ProductFlow Product
+
+### Community 20 - "Risks Registry Robot"
 Cohesion: 0.43
 Nodes (1): RisksRegistryRobot
 
-### Community 16 - "Community 16"
+### Community 21 - "KPIs Robot"
 Cohesion: 0.43
 Nodes (1): KpisRobot
 
-### Community 17 - "Community 17"
+### Community 22 - "User Stories Robot"
 Cohesion: 0.43
 Nodes (1): UserStoriesRobot
 
-### Community 18 - "Community 18"
+### Community 23 - "Standalone HTML Renderer"
+Cohesion: 0.48
+Nodes (5): escapeHtml(), markdownToHtml(), packageHtml(), translateMarkdown(), main()
+
+### Community 24 - "Plan Robot"
+Cohesion: 0.4
+Nodes (1): PlanRobot
+
+### Community 25 - "People Robot"
+Cohesion: 0.4
+Nodes (1): PeopleRobot
+
+### Community 26 - "Feasibility Tech Robot"
 Cohesion: 0.47
 Nodes (1): FeasibilityTechRobot
 
-### Community 19 - "Community 19"
+### Community 27 - "Feature Robot"
+Cohesion: 0.4
+Nodes (1): FeatureRobot
+
+### Community 28 - "GTM Readiness Robot"
 Cohesion: 0.47
 Nodes (1): GtmReadinessRobot
 
-### Community 20 - "Community 20"
+### Community 29 - "Scope Spec Robot"
 Cohesion: 0.47
 Nodes (1): ScopeSpecRobot
 
-### Community 21 - "Community 21"
+### Community 30 - "Customer Journeys Robot"
 Cohesion: 0.47
 Nodes (1): CustomerJourneysRobot
 
-### Community 22 - "Community 22"
+### Community 31 - "Data Privacy Robot"
 Cohesion: 0.47
 Nodes (1): DataPrivacyRobot
 
-### Community 23 - "Community 23"
+### Community 32 - "Terms & Data Privacy Policy"
+Cohesion: 0.33
+Nodes (6): accept-terms MCP Tool, Rationale: anonymise patterns to protect product/PM identity, Knowledge Layer (anonymised patterns), Local-only Data Storage, Process Improvement Email Notifications, AutoPM Terms of Service v1.0
+
+### Community 33 - "CLI Entry Point"
 Cohesion: 0.4
 Nodes (0): 
 
-### Community 24 - "Community 24"
-Cohesion: 0.5
-Nodes (1): PlanRobot
+### Community 34 - "Presentation Generator"
+Cohesion: 0.8
+Nodes (3): buildHTML(), escapeHTML(), generatePresentation()
 
-### Community 25 - "Community 25"
-Cohesion: 0.5
-Nodes (1): PeopleRobot
+### Community 35 - "Epic Robot"
+Cohesion: 0.4
+Nodes (1): EpicRobot
 
-### Community 26 - "Community 26"
-Cohesion: 0.5
-Nodes (1): FeatureRobot
-
-### Community 27 - "Community 27"
+### Community 36 - "DACI Stakeholders Robot"
 Cohesion: 0.5
 Nodes (1): DaciStakeholdersRobot
 
-### Community 28 - "Community 28"
-Cohesion: 0.83
-Nodes (3): buildHTML(), escapeHTML(), generatePresentation()
-
-### Community 29 - "Community 29"
-Cohesion: 0.5
-Nodes (1): EpicRobot
-
-### Community 30 - "Community 30"
-Cohesion: 0.5
+### Community 37 - "Money Robot"
+Cohesion: 0.4
 Nodes (1): MoneyRobot
 
-### Community 31 - "Community 31"
-Cohesion: 0.5
+### Community 38 - "Priority Robot"
+Cohesion: 0.4
 Nodes (1): PriorityRobot
 
-### Community 32 - "Community 32"
+### Community 39 - "ChatGPT MCP Connector"
+Cohesion: 0.4
+Nodes (5): ChatGPT MCP Connector, Rationale: Cloudflare bypasses localhost block and HTML warning pages, Cloudflare Tunnel, mcp-sse-server.js (port 4322), ProductFlow SSE Bridge
+
+### Community 40 - "Cockpit API Client"
+Cohesion: 0.67
+Nodes (2): applyBundle(), withTimeout()
+
+### Community 41 - "Synthesizer Robot"
+Cohesion: 0.5
+Nodes (1): SynthesizerRobot
+
+### Community 42 - "Artifact Renderer Pipeline"
+Cohesion: 0.5
+Nodes (4): Rich Artifact Renderer Pipeline, atoms.jsx Markdown Renderer, Mermaid.js Integration, Vega-Lite Integration
+
+### Community 43 - "Feedback & Staleness UI"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 33 - "Community 33"
-Cohesion: 0.67
-Nodes (0): 
-
-### Community 34 - "Community 34"
+### Community 44 - "Workspace Tests"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 35 - "Community 35"
+### Community 45 - "Experiment Viewer Generator"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 36 - "Community 36"
+### Community 46 - "ProductFlow + LLM Partnership"
+Cohesion: 1.0
+Nodes (2): Rationale: ProductFlow + LLM are a deliberate partnership, ProductFlow Structure Layer
+
+### Community 47 - "LLM Client Robustness"
+Cohesion: 1.0
+Nodes (2): LLM Client Tooling Variability, _tryParseJson Defensive Fence Stripping
+
+### Community 48 - "Legacy Data Fix Script"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 49 - "Reconnect Test"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 50 - "Robot Registry"
 Cohesion: 1.0
 Nodes (0): 
 
 ## Knowledge Gaps
-- **Thin community `Community 34`** (2 nodes): `workspace.test.js`, `test()`
+- **76 isolated node(s):** `Install Node.js (LTS)`, `Cursor MCP Config`, `Interview Tool Trigger`, `Local-first, no API keys (rationale)`, `Optional Environment Variables` (+71 more)
+  These have ≤1 connection - possible missing edges or undocumented components.
+- **Thin community `Workspace Tests`** (2 nodes): `workspace.test.js`, `test()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (2 nodes): `generateExperimentViewer()`, `generate-viewer.js`
+- **Thin community `Experiment Viewer Generator`** (2 nodes): `generateExperimentViewer()`, `generate-viewer.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (1 nodes): `fix-legacy-data.js`
+- **Thin community `ProductFlow + LLM Partnership`** (2 nodes): `Rationale: ProductFlow + LLM are a deliberate partnership`, `ProductFlow Structure Layer`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `LLM Client Robustness`** (2 nodes): `LLM Client Tooling Variability`, `_tryParseJson Defensive Fence Stripping`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Legacy Data Fix Script`** (1 nodes): `fix-legacy-data.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Reconnect Test`** (1 nodes): `test-reconnect.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Robot Registry`** (1 nodes): `robot-registry.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `test()` connect `Community 11` to `Community 9`, `Community 5`?**
-  _High betweenness centrality (0.155) - this node is a cross-community bridge._
-- **Why does `renderMarkdown()` connect `Community 5` to `Community 11`?**
-  _High betweenness centrality (0.147) - this node is a cross-community bridge._
-- **Why does `useKey()` connect `Community 3` to `Community 5`?**
-  _High betweenness centrality (0.112) - this node is a cross-community bridge._
-- **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
-- **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.11 - nodes in this community are weakly interconnected._
-- **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
-- **Should `Community 3` be split into smaller, more focused modules?**
+- **Why does `main()` connect `Freshness Tracking` to `Server & Session Orchestration`, `Cockpit App Shell`, `Context Store`, `PDD HTML Renderer`, `Asset Store`?**
+  _High betweenness centrality (0.136) - this node is a cross-community bridge._
+- **Why does `renderMarkdown()` connect `Cockpit App Shell` to `Markdown Doc Parsing`, `Freshness Tracking`?**
+  _High betweenness centrality (0.101) - this node is a cross-community bridge._
+- **Why does `useKey()` connect `Cockpit App Shell` to `Cockpit UI Screens`?**
+  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **What connects `Install Node.js (LTS)`, `Cursor MCP Config`, `Interview Tool Trigger` to the rest of the system?**
+  _76 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Server & Session Orchestration` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
+- **Should `Robot Architecture Rules` be split into smaller, more focused modules?**
+  _Cohesion score 0.04 - nodes in this community are weakly interconnected._
+- **Should `Freshness Tracking` be split into smaller, more focused modules?**
+  _Cohesion score 0.1 - nodes in this community are weakly interconnected._

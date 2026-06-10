@@ -110,7 +110,7 @@ const PRODUCTS = [
   }
 ];
 
-/* ────────────────────── Gates (G1-G8) ────────────────────────── */
+/* ────────────────────── Gates (G1-G9) ────────────────────────── */
 
 function gatesFor(productSlug) {
   if (productSlug === "autopm-productflow") {
@@ -118,11 +118,13 @@ function gatesFor(productSlug) {
       { id: "G1", name: "PM Profile exists",       status: "passed",  reason: "Active persona: anand-rao",                                                       nextAction: null },
       { id: "G2", name: "Product created",         status: "passed",  reason: "products/autopm-productflow/ scaffolded 46 days ago",                              nextAction: null },
       { id: "G3", name: "Interview answered",      status: "passed",  reason: "7 fresh interview answers on disk (≥ 5 required)",                                 nextAction: null },
-      { id: "G4", name: "Phase 1 complete",        status: "passed",  reason: "All 7 Phase 1 robots fresh as of 2026-05-23",                                      nextAction: null },
-      { id: "G5", name: "Phase 2 promoted",        status: "passed",  reason: "context/phase2-context.json present (2026-05-21)",                                 nextAction: null },
-      { id: "G6", name: "Phase 2 in progress",     status: "current", reason: "5 of 10 Phase 2 robots fresh. Awaiting feasibility-tech, customer-journeys, data-privacy, kpis, daci-stakeholders.", nextAction: "Run remaining Phase 2 robots; ProductFlow recommends feasibility-tech next." },
-      { id: "G7", name: "PDD exported",            status: "blocked", reason: "assets/pdd/pdd-autopm-productflow-latest.md not found — Phase 2 incomplete",        nextAction: "Run remaining Phase 2 robots first." },
-      { id: "G8", name: "Presentation generated",  status: "mismatch",reason: "Presentation HTML exists at plans/autopm-productflow-strategy-presentation.html, but gate bookkeeping expects assets/. See artifact/gate mismatch.", nextAction: "Move or symlink to assets/, or re-run generate-presentation." }
+      { id: "G4a", name: "Phase 1a complete",      status: "passed",  reason: "All 4 Phase 1a robots fresh as of 2026-05-23",                                     nextAction: null },
+      { id: "G4b", name: "Synthesis complete",     status: "passed",  reason: "Synthesizer verdict is fresh",                                                     nextAction: null },
+      { id: "G5", name: "Phase 1b complete",       status: "passed",  reason: "All 3 Phase 1b robots fresh as of 2026-05-23",                                     nextAction: null },
+      { id: "G6", name: "Phase 2 promoted",        status: "passed",  reason: "context/phase2-context.json present (2026-05-21)",                                 nextAction: null },
+      { id: "G7", name: "Phase 2 in progress",     status: "current", reason: "5 of 10 Phase 2 robots fresh. Awaiting feasibility-tech, customer-journeys, data-privacy, kpis, daci-stakeholders.", nextAction: "Run remaining Phase 2 robots; ProductFlow recommends feasibility-tech next." },
+      { id: "G8", name: "PDD exported",            status: "blocked", reason: "assets/pdd/pdd-autopm-productflow-latest.md not found — Phase 2 incomplete",        nextAction: "Run remaining Phase 2 robots first." },
+      { id: "G9", name: "Presentation generated",  status: "mismatch",reason: "Presentation HTML exists at plans/autopm-productflow-strategy-presentation.html, but gate bookkeeping expects assets/. See artifact/gate mismatch.", nextAction: "Move or symlink to assets/, or re-run generate-presentation." }
     ];
   }
   if (productSlug === "lucidya-cdp-strategy") {
@@ -130,11 +132,13 @@ function gatesFor(productSlug) {
       { id: "G1", status: "passed", name: "PM Profile exists",   reason: "Active persona: anand-rao" },
       { id: "G2", status: "passed", name: "Product created",     reason: "Scaffolded 88d ago" },
       { id: "G3", status: "passed", name: "Interview answered",  reason: "6 fresh interview answers" },
-      { id: "G4", status: "current",name: "Phase 1 complete",    reason: "All 7 robots present; 3 are stale.", nextAction: "Re-run scout, detective, plan." },
-      { id: "G5", status: "blocked",name: "Phase 2 promoted",    reason: "Awaiting G4." },
-      { id: "G6", status: "locked", name: "Phase 2 in progress", reason: "Phase 2 not promoted." },
-      { id: "G7", status: "locked", name: "PDD exported",        reason: "" },
-      { id: "G8", status: "locked", name: "Presentation generated", reason: "" }
+      { id: "G4a", status: "current",name: "Phase 1a complete",  reason: "4 robots present; 3 are stale.", nextAction: "Re-run scout, detective, plan." },
+      { id: "G4b", status: "blocked",name: "Synthesis complete", reason: "Awaiting G4a." },
+      { id: "G5", status: "blocked",name: "Phase 1b complete",   reason: "Awaiting G4b." },
+      { id: "G6", status: "locked", name: "Phase 2 promoted",    reason: "Phase 2 not promoted." },
+      { id: "G7", status: "locked", name: "Phase 2 in progress", reason: "" },
+      { id: "G8", status: "locked", name: "PDD exported",        reason: "" },
+      { id: "G9", status: "locked", name: "Presentation generated", reason: "" }
     ];
   }
   // ai-fitness
@@ -142,11 +146,13 @@ function gatesFor(productSlug) {
     { id: "G1", status: "passed",  name: "PM Profile exists",      reason: "Active persona: anand-rao" },
     { id: "G2", status: "passed",  name: "Product created",        reason: "Scaffolded 40d ago" },
     { id: "G3", status: "current", name: "Interview answered",     reason: "2 of 5 minimum answers captured.", nextAction: "Complete intake interview." },
-    { id: "G4", status: "locked",  name: "Phase 1 complete",       reason: "" },
-    { id: "G5", status: "locked",  name: "Phase 2 promoted",       reason: "" },
-    { id: "G6", status: "locked",  name: "Phase 2 in progress",    reason: "" },
-    { id: "G7", status: "locked",  name: "PDD exported",           reason: "" },
-    { id: "G8", status: "locked",  name: "Presentation generated", reason: "" }
+    { id: "G4a", status: "locked", name: "Phase 1a complete",      reason: "" },
+    { id: "G4b", status: "locked", name: "Synthesis complete",     reason: "" },
+    { id: "G5", status: "locked",  name: "Phase 1b complete",      reason: "" },
+    { id: "G6", status: "locked",  name: "Phase 2 promoted",       reason: "" },
+    { id: "G7", status: "locked",  name: "Phase 2 in progress",    reason: "" },
+    { id: "G8", status: "locked",  name: "PDD exported",           reason: "" },
+    { id: "G9", status: "locked",  name: "Presentation generated", reason: "" }
   ];
 }
 
@@ -158,6 +164,7 @@ const ROBOT_META = {
   detective:            { label: "Detective",             desc: "Competitive landscape",             phase: 1, windowDays: 60,  rationale: "Competitive landscape moves faster than market sizing" },
   people:               { label: "People",                desc: "Personas & jobs to be done",        phase: 1, windowDays: 180, rationale: "Personas are stable; refresh semi-annually" },
   money:                { label: "Money",                 desc: "Financial model & .xlsx workbook",  phase: 1, windowDays: 90,  rationale: "Financial models need quarterly refresh" },
+  synthesizer:          { label: "Synthesizer",           desc: "Investment Board verdict",          phase: 1.1, windowDays: 30,  rationale: "Dynamic synthesis of all Phase 1a signals" },
   // Phase 1.5
   epic:                 { label: "Epic",                  desc: "Deconstruct asks into epics",       phase: 1.5, windowDays: 30, rationale: "Hypothesis shifting happens dynamically" },
   feature:              { label: "Feature",               desc: "Feature inventory & scope",         phase: 1.5, windowDays: 30,  rationale: "Feature scope changes with each planning cycle" },
@@ -184,6 +191,7 @@ const ROBOT_RUNS = {
     detective:            { status: "fresh", lastRun: daysAgo(8),  assetPath: "assets/2026-05-16-detective.md",            feedback: { rating: 5, count: 2 } },
     people:               { status: "stale", lastRun: daysAgo(192),assetPath: "assets/2025-11-13-people.md",               feedback: null, staleReason: "Last run 192 days ago — exceeds 180-day window. Personas may not reflect latest interviews." },
     money:                { status: "fresh", lastRun: daysAgo(35), assetPath: "assets/2026-04-19-money.md",                feedback: { rating: 4, count: 1 }, hasWorkbook: true, workbookPath: "assets/2026-04-19-money-model.xlsx" },
+    synthesizer:          { status: "fresh", lastRun: daysAgo(1),  assetPath: "assets/2026-05-23-synthesizer.md",          feedback: { rating: 5, count: 1 } },
     feature:              { status: "fresh", lastRun: daysAgo(6),  assetPath: "assets/2026-05-18-feature.md",              feedback: { rating: 5, count: 1 } },
     plan:                 { status: "fresh", lastRun: daysAgo(4),  assetPath: "assets/2026-05-20-plan.md",                 feedback: null },
     priority:             { status: "fresh", lastRun: daysAgo(2),  assetPath: "assets/2026-05-22-priority.md",             feedback: { rating: 4, count: 1 } },
@@ -212,6 +220,7 @@ const ARTIFACTS = {
     { id: "art-3",  type: "markdown",     robot: "people",                title: "People — Personas (STALE)",             filename: "2025-11-13-people.md",                      path: "products/autopm-productflow/assets/2025-11-13-people.md",                      generated: daysAgo(192),size: "9 KB" },
     { id: "art-4",  type: "markdown",     robot: "money",                 title: "Money — Financial model summary",       filename: "2026-04-19-money.md",                       path: "products/autopm-productflow/assets/2026-04-19-money.md",                       generated: daysAgo(35), size: "7 KB" },
     { id: "art-5",  type: "xlsx",         robot: "money",                 title: "Money — Editable workbook",             filename: "2026-04-19-money-model.xlsx",               path: "products/autopm-productflow/assets/2026-04-19-money-model.xlsx",               generated: daysAgo(35), size: "38 KB" },
+    { id: "art-synth", type: "markdown",  robot: "synthesizer",           title: "Synthesizer — Investment Board Verdict",filename: "2026-05-23-synthesizer.md",                 path: "products/autopm-productflow/assets/2026-05-23-synthesizer.md",                 generated: daysAgo(1),  size: "5 KB" },
     { id: "art-6",  type: "markdown",     robot: "feature",               title: "Feature — Inventory & scope",           filename: "2026-05-18-feature.md",                     path: "products/autopm-productflow/assets/2026-05-18-feature.md",                     generated: daysAgo(6),  size: "8 KB" },
     { id: "art-7",  type: "markdown",     robot: "plan",                  title: "Plan — 18-month roadmap",               filename: "2026-05-20-plan.md",                        path: "products/autopm-productflow/assets/2026-05-20-plan.md",                        generated: daysAgo(4),  size: "6 KB" },
     { id: "art-8",  type: "markdown",     robot: "priority",              title: "Priority — RICE scoring",               filename: "2026-05-22-priority.md",                    path: "products/autopm-productflow/assets/2026-05-22-priority.md",                    generated: daysAgo(2),  size: "5 KB" },

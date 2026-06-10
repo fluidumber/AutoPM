@@ -25,7 +25,8 @@ class EpicRobot {
                     "An Epic is NOT a single feature. It is a functional stream (e.g., 'Self-Serve Onboarding', 'Core Data Ingestion Engine', 'Enterprise RBAC & Security').",
                     "Do NOT break down into granular user stories or individual features — that is the job of the downstream 'feature' robot.",
                     "Epics should be mutually exclusive and collectively exhaustive (MECE) regarding the core hypothesis.",
-                    "Order the Epics logically by what needs to be validated or built first."
+                    "Order the Epics logically by what needs to be validated or built first.",
+                    "CRITICAL: The final output MUST contain a valid JSON code block (```json) with the epics array. The system will fail if this JSON block is missing."
                 ],
 
                 requiredSections: {

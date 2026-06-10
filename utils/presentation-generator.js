@@ -44,6 +44,7 @@ function buildHTML(productIdea, context, results, feedback) {
         detective: { title: "Competitive Landscape", icon: "🔎", subtitle: "Detective Robot" },
         people: { title: "User Personas", icon: "👥", subtitle: "People Robot" },
         money: { title: "Financial Projections", icon: "💰", subtitle: "Money Robot" },
+        synthesizer: { title: "Investment Board Verdict", icon: "🏛️", subtitle: "Synthesizer Robot" },
         feature: { title: "Feature Breakdown", icon: "📝", subtitle: "Feature Robot" },
         plan: { title: "Product Roadmap", icon: "🗺️", subtitle: "Plan Robot" },
         priority: { title: "Feature Prioritization", icon: "⭐", subtitle: "Priority Robot" },

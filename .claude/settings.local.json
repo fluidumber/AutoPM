@@ -43,7 +43,15 @@
       "Bash(node --check src/mcp-server.js)",
       "Bash(node --check src/workspace/pdd-composer.js)",
       "Bash(node --check utils/pdd-renderer.js)",
-      "Bash(node tests/persistence.test.js)"
+      "Bash(node tests/persistence.test.js)",
+      "Bash(awk *)",
+      "Bash(node scripts/slm-driver.mjs setup)",
+      "Bash(node scripts/slm-driver.mjs payload synthesizer)",
+      "Bash(node scripts/slm-driver.mjs pdd-payload)",
+      "Bash(node scripts/slm-driver.mjs save-pdd /tmp/pdd.json)",
+      "Bash(cd *)",
+      "Bash(git checkout *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('statusLine','MISSING'\\), indent=2\\)\\)\")"
     ]
   },
   "enableAllProjectMcpServers": true,
