@@ -157,6 +157,21 @@ function translateMarkdown(text) {
         .replace(/`(.+?)`/g, "<code>$1</code>");
 }
 
+function isValidJson(str) {
+    try {
+        JSON.parse(str);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+// Block-level tags that may span multiple lines and must never be <p>-wrapped.
+// A <script> split across <p> tags breaks its JavaScript entirely.
+const RAW_BLOCK_TAG = /^\s*<(script|style|div|table|section|article|details|figure|canvas|svg|iframe|blockquote|header|footer|aside|nav|form|video)\b/i;
+
+let vegaChartCounter = 0;
+
 function markdownToHtml(md) {
     const lines = md.split("\n");
     const out = [];
@@ -164,6 +179,32 @@ function markdownToHtml(md) {
 
     while (i < lines.length) {
         const line = lines[i];
+
+        // Raw multi-line HTML block — buffer until the opening tag closes,
+        // then pass through untouched so scripts and styled divs stay intact.
+        const rawMatch = line.match(RAW_BLOCK_TAG);
+        if (rawMatch) {
+            const tag = rawMatch[1].toLowerCase();
+            const openRe = new RegExp(`<${tag}\\b(?![^>]*/>)`, "gi");
+            const closeRe = new RegExp(`</${tag}>`, "gi");
+            const buf = [line];
+            let depth = (line.match(openRe) || []).length - (line.match(closeRe) || []).length;
+            i++;
+            while (i < lines.length && depth > 0) {
+                buf.push(lines[i]);
+                depth += (lines[i].match(openRe) || []).length - (lines[i].match(closeRe) || []).length;
+                i++;
+            }
+            out.push(buf.join("\n"));
+            continue;
+        }
+
+        // Any other line starting with an HTML tag passes through raw (single-line HTML)
+        if (/^\s*<[a-zA-Z!/]/.test(line)) {
+            out.push(line);
+            i++;
+            continue;
+        }
 
         // Code fence
         if (line.startsWith("```")) {
@@ -175,12 +216,22 @@ function markdownToHtml(md) {
                 i++;
             }
             
+            const joined = codeLines.join("\n");
             if (lang === "html") {
                 // Pass raw HTML code block through so scripts and canvases execute
-                out.push(codeLines.join("\n"));
+                out.push(joined);
             } else if (lang === "mermaid") {
                 // Wrap in mermaid div for rendering
-                out.push(`<div class="mermaid">\n${codeLines.join("\n")}\n</div>`);
+                out.push(`<div class="mermaid">\n${joined}\n</div>`);
+            } else if (lang === "json" && /vega-lite/i.test(joined) && isValidJson(joined)) {
+                // Vega-Lite spec — render as a live chart via vega-embed
+                const chartId = `vega-chart-${vegaChartCounter++}`;
+                out.push(`<div id="${chartId}" class="vega-chart"></div>
+<script>
+  if (window.vegaEmbed) {
+    vegaEmbed('#${chartId}', ${joined}, { actions: false });
+  }
+</script>`);
             } else {
                 // Standard code block, needs escaping
                 const escapedCode = codeLines.map(escapeHtml).join("\n");

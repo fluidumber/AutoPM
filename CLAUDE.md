@@ -166,6 +166,83 @@ on every non-obvious field.
 
 ---
 
+## Output Conventions — Verdict Blocks, Audience Views, Renderer Fences
+
+### 1. Machine-readable verdict block — Phase 1a robots feed the Synthesizer
+
+Every Phase 1a robot (scout, detective, people, money) mandates a `json`-fenced
+verdict block as the VERY LAST element of Claude's generated output. The Synthesizer
+parses these via `_extractVerdictBlock()` — it scans every `json` fence in the saved
+output and keeps the last valid one whose `robot` field matches — and uses them as
+the authoritative numeric inputs for its weighted two-axis (Support × Maturity)
+investment scoring.
+
+Common schema (all scores are JSON numbers 0–100, never strings):
+
+```json
+{
+  "robot": "scout",
+  "verdict": "STRONG | MODERATE | WEAK",
+  "hypothesisSupportScore": { "low": 55, "base": 68, "high": 80 },
+  "evidenceMaturityScore": { "low": 30, "base": 42, "high": 55 },
+  "confidenceStatus": "preliminary | pm-reviewed",
+  "evidenceTier": "researched-cited"
+}
+```
+
+Per-robot dimension score field and evidence tier:
+
+| Robot | Score field | evidenceTier |
+|---|---|---|
+| scout | `hypothesisSupportScore` | `researched-cited` |
+| detective | `competitivePositionScore` | `researched-cited` |
+| people | `userRelevanceScore` | `pm-interview-derived` |
+| money | `financialViabilityScore` | `modeled-with-benchmarks` |
+
+Rules:
+
+- The block must be the final element of the output — downstream parsers rely on position.
+- JSON values must match the narrative verdict exactly — no prose/JSON divergence.
+- When calling `save-robot-output`, keep the verdict block in BOTH `htmlText` and
+  `cleanMarkdown` — the Synthesizer reads the saved `cleanMarkdown`.
+- Synthesizer downgrade rule: if Scout's `confidenceStatus` is `preliminary`, or any
+  dimension's evidence maturity is below 40, the verdict is capped at CONDITIONAL GO.
+- A new robot that feeds the Synthesizer must emit this block AND be added to the
+  Synthesizer's weighting rubric — one without the other breaks the investment math.
+
+### 2. `audienceViews` — three-layer output structure
+
+Analysis robots define `outputFormat.audienceViews` with exactly these three keys,
+and the generated output is ordered accordingly:
+
+| Key | Position | Content |
+|---|---|---|
+| `executiveBriefing` | FIRST | 60-second C-suite view — verdict banner, headline numbers, one visual. No methodology. |
+| `pmWorkingLayer` | MIDDLE | The full analysis — all working detail. |
+| `analystAppendix` | LAST (before the JSON verdict block, where one exists) | Assumptions register, sources with dates, scoring rubrics, methodology notes. |
+
+New robots with long-form narrative output must follow this convention so PMs can
+consume any robot's output at the depth they need.
+
+### 3. Renderer fence rules — `utils/html-renderer.js`
+
+`renderHtml()` converts saved markdown to a styled HTML document. How fences render:
+
+| Fence language | Rendering |
+|---|---|
+| `html` | Passed through raw — scripts and canvases execute |
+| `mermaid` | Wrapped in `<div class="mermaid">` |
+| `json` containing `vega-lite` (must be valid JSON) | Rendered as a live chart via vega-embed |
+| Anything else (including plain `json` verdict blocks) | Escaped `<pre><code>` |
+
+Multi-line raw HTML that starts with a block-level tag (`<script>`, `<div>`,
+`<table>`, `<canvas>`, …) is buffered until the tag closes and passed through
+unwrapped — never `<p>`-wrapped. Robot prompts must still mandate wrapping every
+multi-line HTML/script block in an `html` fence (see `htmlRequired` in existing
+robots); the raw passthrough is a safety net, not the convention.
+
+---
+
 ## Saving Robot Output — Required for Phase 2
 
 After each robot run, Claude must call `save-robot-output` with the full markdown

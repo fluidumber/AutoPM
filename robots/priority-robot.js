@@ -94,7 +94,13 @@ class PriorityRobot {
                 style: "Full RICE table first, then narrative sections for MVP bundle, sequencing overrides, quick wins, and build recommendation. Use rich HTML with inline styles for visual elements.",
                 tables: "RICE scoring table: use a rich HTML table with styled headers (background colors), alternating row shading, and color-coded RICE score badges (high scores highlighted in soft green/blue, low scores in grey) for all columns: Rank | Feature | Reach (1-10) | Impact (1-10) | Confidence (1-10) | Effort (1-10) | RICE Score | Phase",
                 length: "Complete — this should be directly usable as a sprint planning input",
-                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) RICE score metrics highlight cards, (2) the primary RICE scoring table, (3) 'Quick Wins' list as a grid of small styled cards, (4) 'Build This Week' recommendation banner. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter."
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include HTML blocks with inline styles for: (1) RICE score metrics highlight cards, (2) the primary RICE scoring table, (3) 'Quick Wins' list as a grid of small styled cards, (4) 'Build This Week' recommendation banner. RENDERING RULE: wrap EVERY multi-line HTML block and EVERY <script> block in a ```html fence — never emit multi-line raw HTML outside a fence, or the saved HTML file will break scripts. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter.",
+                audienceViews: {
+                    instructions: "Structure the output in three audience layers, in this order. Same facts at different altitude — the layers must never contradict each other.",
+                    executiveBriefing: "FIRST: a 60-second view — the 'Build This Week' banner, the MVP bundle with its total effort, and the top-5 RICE features.",
+                    pmWorkingLayer: "MIDDLE: the full RICE table with per-dimension reasoning, sequencing overrides, quick wins.",
+                    analystAppendix: "LAST: scoring calibration notes — how Reach/Impact/Confidence/Effort were interpreted for this product and team size, so scores can be challenged and re-run."
+                }
             }
         };
 

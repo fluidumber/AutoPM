@@ -336,9 +336,15 @@ RICH OUTPUT RULE: When generating your analysis, use rich HTML with inline style
   - Persona cards with avatar circles, colored badges, styled blockquotes
   - Journey maps as horizontal card flows with colored stage headers
   - Data tables with styled headers and alternating row colors
-  - Chart.js canvas+script blocks for financial charts
+  - Chart.js canvas+script blocks for charts — ALWAYS inside a \`\`\`html fence
   - Mermaid diagrams in \`\`\`mermaid fences
+  - Vega-Lite chart specs in plain \`\`\`json fences (rendered as live charts in the saved HTML)
+  Wrap EVERY multi-line HTML block and EVERY <script> block in a \`\`\`html fence — bare multi-line HTML breaks the saved file.
   When you later call 'save-robot-output', pass this EXACT rich content — do NOT flatten to plain markdown.
+
+VERDICT BLOCK RULE: scout, detective, people, money, and synthesizer end their output with a machine-readable
+\`\`\`json verdict block. Always generate it as the robot's instructions specify, and keep it as the LAST element
+of the output — the Synthesizer and PDD composer parse it as data.
 
 IMPORTANT: After showing the user this robot's output, ask them to rate it 1-5 and suggest improvements. Then call the 'feedback' tool before running the next robot.`,
     {
@@ -1227,9 +1233,10 @@ server.tool(
 // ═════════════════════════════════════════════════════════════════════
 server.tool(
     "product-create",
-    `Create a new product in the PM's workspace. Scaffolds the directory structure (context/, assets/, product.md, freshness.json) and adds the product to the PM profile's Products Owned list. Idempotent — creating a product that already exists returns the existing one.`,
+    `Create a new product in the PM's workspace. Scaffolds the directory structure (context/, assets/, product.md, freshness.json) and adds the product to the PM profile's Products Owned list. Idempotent — creating a product that already exists returns the existing one. NOTE: The slug is automatically generated from the name, so you do not need to provide one.`,
     {
         name: z.string().describe("Human-readable product name, e.g. 'XpertIN AI'"),
+        slug: z.string().optional().describe("Ignored. The slug is auto-generated from the name."),
         overview: z.string().optional().describe("1-2 sentence product description"),
         stage: z.string().optional().describe("e.g. 'idea', 'pre-seed', 'bootstrapped'"),
         targetMarket: z.string().optional().describe("Geography + segment, e.g. 'India, B2C + B2B2C'"),
@@ -1579,7 +1586,9 @@ Call this immediately after Claude generates a robot's analysis, passing the cle
 CRITICAL FORMATTING RULE:
 You must provide TWO versions of your output:
 1. 'cleanMarkdown': Standard, plain Notion-compatible Markdown. No HTML tags, no inline CSS, no <canvas> elements. This is used by Phase 2 robots and the final PDD.
-2. 'htmlText': The EXACT rich HTML content you rendered in the chat window, including all colored badges, styled divs, and visuals. Do not use dark mode or dark backgrounds; use white or light backgrounds for the HTML files.
+2. 'htmlText': The EXACT rich HTML content you rendered in the chat window, including all colored badges, styled divs, and visuals. Do not use dark mode or dark backgrounds; use white or light backgrounds for the HTML files. Wrap every multi-line HTML block and every <script> block in a \`\`\`html fence — bare multi-line HTML breaks the saved HTML file.
+
+VERDICT BLOCK RULE: If the robot's output ends with a machine-readable \`\`\`json verdict block (scout, detective, people, money, synthesizer), that block MUST be preserved verbatim as the last element in BOTH cleanMarkdown and htmlText — the Synthesizer and PDD composer parse it. The same applies to Money's Vega-Lite \`\`\`json chart specs. \`\`\`json fences are valid plain Markdown and do not violate the no-HTML rule.
 
 File pattern:
 - assets/YYYY-MM-DD-<robotName>-output.md (stores cleanMarkdown)

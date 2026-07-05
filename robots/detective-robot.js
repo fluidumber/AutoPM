@@ -31,7 +31,11 @@ class DetectiveRobot {
                     "NEVER list generic moat factors like 'brand loyalty' without explaining how THIS product earns them",
                     "NEVER return placeholder competitor names or generic weakness lists",
                     "Profile EVERY competitor in the knownCompetitors list — if a competitor is out of scope (e.g. wrong industry), explicitly state why it was excluded rather than silently dropping it",
-                    "Conclude with a positioning recommendation — where should this product stand in the market?"
+                    "Label every competitor claim inline as [observed] (from a pricing page, review platform, funding database — with citation) or [inferred] (your deduction) — inferred claims must never masquerade as facts",
+                    "Prefer sources published within the last 24 months; flag anything older with its publication year",
+                    "Conclude with a positioning recommendation — where should this product stand in the market?",
+                    "After positioning, deliver a competitive position verdict: ADVANTAGED / CONTESTED / DISADVANTAGED with scores",
+                    "End the output with a machine-readable JSON verdict block in a ```json fence — it must be the VERY LAST element of the output"
                 ],
 
                 requiredSections: {
@@ -96,6 +100,35 @@ class DetectiveRobot {
                             "Which competitor to avoid going head-to-head with (and why)",
                             "The category narrative this product should own"
                         ]
+                    },
+                    competitivePositionVerdict: {
+                        instructions: "Conclude with Detective's verdict — how winnable is this market for this product?",
+                        mustInclude: [
+                            "Overall rating: ADVANTAGED / CONTESTED / DISADVANTAGED",
+                            "Competitive position score as a low/base/high range (0-100) with a one-line rationale per major driver",
+                            "Evidence maturity score (0-100): how much of this analysis is [observed] vs [inferred]",
+                            "The single competitor move that would most damage this product's position",
+                            "Top 3 reasons supporting the rating"
+                        ]
+                    },
+                    machineReadableVerdict: {
+                        instructions: "The VERY LAST element of your output must be a machine-readable verdict block in a ```json fence. The Synthesizer parses this block to build the investment decision — the analysis is incomplete without it.",
+                        schema: {
+                            robot: "detective",
+                            verdict: "ADVANTAGED | CONTESTED | DISADVANTAGED",
+                            competitivePositionScore: { low: "number 0-100", base: "number 0-100", high: "number 0-100" },
+                            evidenceMaturityScore: { low: "number 0-100", base: "number 0-100", high: "number 0-100" },
+                            evidenceTier: "researched-cited",
+                            moatRatings: { "<moat type>": "STRONG | EMERGING | WEAK" },
+                            positioningStatement: "string — the 1-sentence positioning statement",
+                            topReasons: ["exactly 3 strings"],
+                            biggestThreat: "string — the competitor move that most damages this position"
+                        },
+                        rules: [
+                            "All scores must be JSON numbers, not strings",
+                            "Values must match the narrative verdict exactly — no divergence between prose and JSON",
+                            "The block must be the final element of the output so downstream parsers can find it"
+                        ]
                     }
                 }
             },
@@ -118,7 +151,13 @@ class DetectiveRobot {
                 length: "Thorough — competitive intel is only useful if specific",
                 citations: "Link to pricing pages, review platforms, funding databases where possible",
                 tables: "Use an HTML comparison table for direct competitors with styled headers and colored cells: name, funding, pricing, key strength (green), key weakness (red). Moat ratings should use colored badges: STRONG=green, EMERGING=amber, WEAK=red.",
-                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) competitor profile cards with logo placeholder circles and key metrics, (2) gap analysis as a styled grid/cards, (3) moat rating badges as colored <span> tags, (4) positioning map as a Mermaid quadrant or styled HTML grid. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter."
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include HTML blocks with inline styles for: (1) competitor profile cards with logo placeholder circles and key metrics, (2) gap analysis as a styled grid/cards, (3) moat rating badges as colored <span> tags, (4) positioning map as a Mermaid quadrant or styled HTML grid. RENDERING RULE: wrap EVERY multi-line HTML block and EVERY <script> block in a ```html fence — never emit multi-line raw HTML outside a fence, or the saved HTML file will break scripts. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter (but ALWAYS keep the final ```json verdict block in BOTH parameters).",
+                audienceViews: {
+                    instructions: "Structure the output in three audience layers, in this order. Same facts at different altitude — the layers must never contradict each other.",
+                    executiveBriefing: "FIRST: a 60-second C-suite view — competitive verdict banner, positioning statement, the top gap being exploited, one comparison visual. No methodology.",
+                    pmWorkingLayer: "MIDDLE: the full analysis — competitor profiles, indirect alternatives, market gaps, differentiators, moat analysis, positioning.",
+                    analystAppendix: "LAST (before the JSON verdict block): source list with dates, [observed] vs [inferred] evidence register, excluded-competitor triage notes."
+                }
             }
         };
 
@@ -149,17 +188,21 @@ class DetectiveRobot {
             keywords = extractDomainKeywords(context.productIdea || "", brandTerms);
         }
 
-        const geo = (context.answers?.target_geo || "India").split(/[—,]/)[0].trim();
+        // Geography from context only — never inject a default market into research queries
+        const geo = (context.answers?.target_geo || "").split(/[—,]/)[0].trim();
+
+        // Years derived from the clock — hardcoded years go stale and poison recency
+        const year = new Date().getFullYear();
 
         // Competitor-specific searches — still uses actual competitor names (correct)
         competitors.slice(0, 3).forEach(c => {
-            queries.push(`${c} funding pricing product features 2024 2025`);
+            queries.push(`${c} funding pricing product features ${year - 1} ${year}`);
             queries.push(`${c} reviews complaints alternatives`);
         });
 
         // ── FIX: gap discovery now uses clean domain keywords, not raw productIdea words
-        queries.push(`${keywords} market gaps underserved segment ${geo}`);
-        queries.push(`best ${keywords} platform ${geo} comparison`);
+        queries.push(`${keywords} market gaps underserved segment ${geo}`.replace(/\s+/g, " ").trim());
+        queries.push(`best ${keywords} platform ${geo} comparison`.replace(/\s+/g, " ").trim());
 
         return queries;
     }

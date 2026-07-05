@@ -99,7 +99,13 @@ class FeatureRobot {
                 style: "Structured feature cards grouped by phase, then by segment. Use rich HTML with inline styles for visual elements.",
                 tables: "Summary table: use a rich HTML table with styled headers (background colors), alternating row shading, and complexity badges (Low=green, Medium=yellow, High=red) for: Feature | Phase | Segment | Complexity | Success Metric",
                 length: "Complete — a PM should be able to hand this directly to engineering for scoping",
-                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) feature card blocks with colored priority badges, (2) complexity and phase tag badges, (3) the summary table. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter."
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include HTML blocks with inline styles for: (1) feature card blocks with colored priority badges, (2) complexity and phase tag badges, (3) the summary table. RENDERING RULE: wrap EVERY multi-line HTML block and EVERY <script> block in a ```html fence — never emit multi-line raw HTML outside a fence, or the saved HTML file will break scripts. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter.",
+                audienceViews: {
+                    instructions: "Structure the output in three audience layers, in this order. Same facts at different altitude — the layers must never contradict each other.",
+                    executiveBriefing: "FIRST: a 60-second view — MVP feature count, the 3 wedge features that create differentiation, and total estimated MVP scope.",
+                    pmWorkingLayer: "MIDDLE: the full feature cards grouped by phase and segment, critical path, competitor gaps.",
+                    analystAppendix: "LAST: the summary table with complexity ratings and success metrics — directly usable for engineering scoping."
+                }
             }
         };
 

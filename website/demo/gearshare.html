@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GearShare — AutoPM Strategy Deck (Demo)</title>
+<meta name="description" content="Demo AutoPM Phase 1 strategy presentation for GearShare, a fictional peer-to-peer camera gear rental marketplace.">
+<link rel="icon" type="image/png" href="../productflow-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --coal:#141210;
+  --coal-2:#1c1916;
+  --card:#232019;
+  --orange:#ff7a2f;
+  --orange-soft:#ffb287;
+  --sand:#efe7da;
+  --sand-dim:#b3a894;
+  --faintline:rgba(255,122,47,.18);
+  --teal:#4fd6c2;
+  --red:#ff5d5d;
+  --disp:'Bricolage Grotesque',sans-serif;
+  --body:'IBM Plex Sans',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--coal);color:var(--sand);line-height:1.6;overflow-x:hidden}
+::selection{background:var(--orange);color:#1a0d04}
+
+.demo-banner{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--orange);color:#1a0d04;text-align:center;
+  font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.08em;
+  padding:7px 16px;
+}
+.demo-banner a{color:#1a0d04;font-weight:600;text-decoration:underline}
+
+.nav{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:100}
+.nav a{width:7px;height:7px;border-radius:50%;background:rgba(239,231,218,.22);display:block;transition:all .2s}
+.nav a:hover{background:var(--orange);transform:scale(1.4)}
+@media(max-width:800px){.nav{display:none}}
+
+.slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:90px 0 60px}
+.inner{max-width:1140px;margin:0 auto;width:100%;padding:0 56px}
+@media(max-width:800px){.inner{padding:0 24px}}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:20px;display:flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:"";width:30px;height:1px;background:var(--orange)}
+h2{font-family:var(--disp);font-weight:800;font-size:clamp(30px,4.4vw,50px);line-height:1.06;margin-bottom:16px;letter-spacing:-.01em}
+.sub{color:var(--sand-dim);max-width:640px;font-size:17px;margin-bottom:36px}
+.mono{font-family:var(--mono)}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);text-align:left;padding:10px 14px;border-bottom:1px solid var(--faintline)}
+td{padding:11px 14px;border-bottom:1px solid rgba(239,231,218,.08);color:var(--sand-dim);vertical-align:top}
+td b,td strong{color:var(--sand)}
+tr:hover td{background:rgba(255,122,47,.03)}
+
+.pillrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+.pill{font-family:var(--mono);font-size:11.5px;color:var(--sand-dim);border:1px solid var(--faintline);border-radius:99px;padding:6px 14px}
+.pill b{color:var(--orange);font-weight:500}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:linear-gradient(165deg,var(--card),var(--coal-2));border:1px solid rgba(239,231,218,.1);border-radius:12px;padding:26px 24px}
+.card h4{font-family:var(--disp);font-weight:600;font-size:17px;color:var(--sand);margin-bottom:10px}
+.card .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.card p{font-size:14px;color:var(--sand-dim)}
+.card blockquote{font-family:var(--disp);font-weight:600;font-size:16.5px;color:var(--sand);line-height:1.45;margin:12px 0}
+
+/* cover */
+#s1{background:radial-gradient(120% 90% at 78% 20%,rgba(255,122,47,.14),transparent 55%),var(--coal)}
+.cover-title{font-family:var(--disp);font-weight:800;font-size:clamp(54px,9vw,110px);line-height:.98;letter-spacing:-.02em;color:var(--sand)}
+.cover-title em{font-style:normal;color:var(--orange)}
+.cover-sub{font-size:clamp(17px,2.2vw,23px);color:var(--sand-dim);margin:22px 0 48px;max-width:640px}
+.cover-meta{display:flex;gap:44px;flex-wrap:wrap;border-top:1px solid var(--faintline);padding-top:32px}
+.cover-meta label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sand-dim);margin-bottom:6px}
+.cover-meta span{font-size:15px;color:var(--sand)}
+.aperture{
+  position:absolute;right:-140px;top:50%;transform:translateY(-50%);
+  width:560px;height:560px;border-radius:50%;
+  border:1px solid rgba(255,122,47,.25);
+  background:conic-gradient(from 0deg,transparent 0 24deg,rgba(255,122,47,.07) 24deg 60deg,transparent 60deg 84deg,rgba(255,122,47,.07) 84deg 120deg,transparent 120deg 144deg,rgba(255,122,47,.07) 144deg 180deg,transparent 180deg 204deg,rgba(255,122,47,.07) 204deg 240deg,transparent 240deg 264deg,rgba(255,122,47,.07) 264deg 300deg,transparent 300deg 324deg,rgba(255,122,47,.07) 324deg 360deg);
+  pointer-events:none;
+}
+.aperture::after{content:"";position:absolute;inset:120px;border-radius:50%;border:1px solid rgba(255,122,47,.3);background:radial-gradient(circle,rgba(255,122,47,.1),transparent 70%)}
+@media(max-width:900px){.aperture{display:none}}
+
+/* verdict slide */
+.vgrid{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:start}
+@media(max-width:860px){.vgrid{grid-template-columns:1fr}}
+.verdict-big{
+  font-family:var(--disp);font-weight:800;font-size:clamp(28px,3.6vw,42px);
+  color:var(--orange);border:1px solid rgba(255,122,47,.4);border-radius:12px;
+  padding:26px 30px;background:rgba(255,122,47,.06);line-height:1.15;margin-bottom:22px;
+}
+.verdict-big small{display:block;font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.16em;color:var(--sand-dim);margin-bottom:10px;text-transform:uppercase}
+.scorebar{margin-bottom:20px}
+.scorebar .lb{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;margin-bottom:8px}
+.scorebar .lb b{color:var(--sand);font-weight:500}
+.scorebar .lb span{color:var(--sand-dim)}
+.rail{height:8px;background:#0c0a08;border-radius:99px;overflow:hidden}
+.rail i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#8a4515,var(--orange))}
+.rail.tealr i{background:linear-gradient(90deg,#1d6b60,var(--teal))}
+.capnote{font-family:var(--mono);font-size:12px;color:var(--orange-soft);border-left:2px solid var(--orange);padding:10px 16px;background:rgba(255,122,47,.05);margin-top:8px}
+
+/* chart bars */
+.chart{display:flex;gap:26px;align-items:flex-end;height:220px;padding:16px 8px 0;border-bottom:1px solid var(--faintline);margin-bottom:10px}
+.cbar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;text-align:center}
+.cbar .bfill{border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--orange),#8a4515)}
+.cbar.cons .bfill{opacity:.45}
+.cbar.aggr .bfill{background:linear-gradient(180deg,var(--teal),#1d6b60)}
+.cbar label{font-family:var(--mono);font-size:10.5px;color:var(--sand-dim);letter-spacing:.06em}
+.cbar .val{font-family:var(--mono);font-size:12px;color:var(--sand)}
+
+.json{
+  background:#0c0a08;border:1px solid rgba(239,231,218,.1);border-radius:10px;
+  padding:22px 24px;font-family:var(--mono);font-size:12.5px;line-height:1.8;color:var(--sand-dim);overflow-x:auto;
+}
+.json .k{color:var(--orange)}
+.json .n{color:var(--teal)}
+.json .s{color:var(--sand)}
+
+.foot-cta{margin-top:44px;display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;font-family:var(--mono);font-size:13.5px;font-weight:500;letter-spacing:.04em;padding:13px 24px;border-radius:6px;text-decoration:none;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn-o{background:var(--orange);color:#1a0d04}
+.btn-g{border:1px solid var(--faintline);color:var(--sand)}
+</style>
+</head>
+<body>
+
+<div class="demo-banner">DEMO OUTPUT · GearShare is a fictional product — this deck shows AutoPM's Phase 1 presentation format · <a href="../index.html">← back to autopm</a></div>
+
+<nav class="nav" aria-label="Slides">
+  <a href="#s1" title="Cover"></a><a href="#s2" title="Verdict"></a><a href="#s3" title="Market"></a>
+  <a href="#s4" title="Competition"></a><a href="#s5" title="Personas"></a><a href="#s6" title="Financials"></a>
+  <a href="#s7" title="Features"></a><a href="#s8" title="Roadmap"></a><a href="#s9" title="Priorities"></a><a href="#s10" title="Next"></a>
+</nav>
+
+<!-- S1 COVER -->
+<section class="slide" id="s1">
+  <div class="aperture" aria-hidden="true"></div>
+  <div class="inner">
+    <div class="eyebrow">AutoPM · Phase 1 Strategic Discovery · Demo Run</div>
+    <h1 class="cover-title">Gear<em>Share</em></h1>
+    <p class="cover-sub">Peer-to-peer camera gear rental marketplace — pro glass for creators who can't justify owning it, income for owners whose kit sits idle 340 days a year.</p>
+    <div class="cover-meta">
+      <div><label>Robots run</label><span>scout · detective · people · money · feature · plan · priority</span></div>
+      <div><label>Verdict</label><span style="color:var(--orange)">CONDITIONAL GO</span></div>
+      <div><label>Generated</label><span>2026-07-05 · AutoPM demo pipeline</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- S2 EXECUTIVE VERDICT -->
+<section class="slide" id="s2">
+  <div class="inner">
+    <div class="eyebrow">Executive briefing · 60 seconds</div>
+    <h2>Real demand, real incumbents,<br>and a trust problem worth owning.</h2>
+    <div class="vgrid">
+      <div>
+        <div class="verdict-big"><small>Synthesizer verdict</small>CONDITIONAL GO — validate insurance economics first</div>
+        <div class="scorebar">
+          <div class="lb"><b>Hypothesis Support</b><span>base 68 · range 60–75</span></div>
+          <div class="rail"><i style="width:68%"></i></div>
+        </div>
+        <div class="scorebar">
+          <div class="lb"><b>Evidence Maturity</b><span>base 44 · range 36–52</span></div>
+          <div class="rail tealr"><i style="width:44%"></i></div>
+        </div>
+        <div class="capnote">⛩ Downgrade rule applied: Scout confidence is <b>preliminary</b> and evidence maturity &lt; 40 on two dimensions → verdict capped at CONDITIONAL GO regardless of support score.</div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="tag">Headline numbers</div>
+          <p><b style="color:var(--sand)">$2.4B</b> — estimated global camera &amp; lens rental spend, growing ~9%/yr with creator-economy demand.<br><br>
+          <b style="color:var(--sand)">15%</b> — modeled take rate, inside the ShareGrid/Fat Llama corridor.<br><br>
+          <b style="color:var(--sand)">1 metro</b> — the whole strategy: win one city's camera community before touching a second.<br><br>
+          <b style="color:var(--sand)">#1 risk</b> — damage/theft insurance unit economics. If per-rental coverage exceeds ~4% of GMV, margins collapse.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S3 SCOUT / MARKET -->
+<section class="slide" id="s3">
+  <div class="inner">
+    <div class="eyebrow">🔭 Scout · Market demand</div>
+    <h2>Idle supply meets priced-out demand.</h2>
+    <p class="sub">The mirrorless upgrade cycle left a generation of working camera bodies idle, while 4K/8K production raised the cost of staying current. Both sides of this marketplace already exist — they meet today in Facebook groups and rental houses.</p>
+    <div class="pillrow">
+      <span class="pill">TAM <b>$2.4B</b> global gear rental</span>
+      <span class="pill">SAM <b>$310M</b> US P2P-addressable</span>
+      <span class="pill">SOM <b>$4.2M</b> GMV · 3 metros · yr 3</span>
+      <span class="pill">Support <b>68/100</b></span>
+      <span class="pill">Maturity <b>44/100 · preliminary</b></span>
+    </div>
+    <div class="grid3">
+      <div class="card"><div class="tag">Demand signal</div><h4>Creator economy pull</h4><p>Short-form video and indie production keep expanding the pool of people who need cinema glass for a weekend, not a mortgage. Search volume for "rent camera lens near me" has grown steadily since 2022.</p></div>
+      <div class="card"><div class="tag">Supply signal</div><h4>Idle kit everywhere</h4><p>Wedding and event shooters typically use their full kit fewer than 25 days a year. Owners already lend informally in local Facebook groups — unpriced, uninsured, and on trust.</p></div>
+      <div class="card"><div class="tag">Gap in evidence</div><h4>What Scout couldn't verify</h4><p>No first-party proof yet that owners will list on a new platform at meaningful density. This is the validation gate: 50 committed listings in one metro before build.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 DETECTIVE / COMPETITION -->
+<section class="slide" id="s4">
+  <div class="inner">
+    <div class="eyebrow">🔎 Detective · Competitive intelligence</div>
+    <h2>The incumbents rent gear.<br>Nobody owns local trust.</h2>
+    <table>
+      <thead><tr><th>Player</th><th>Model</th><th>Strength</th><th>Exposed flank</th></tr></thead>
+      <tbody>
+        <tr><td><b>ShareGrid</b></td><td>P2P marketplace, US production hubs</td><td>Category pioneer; insurance flow; LA/NY density</td><td>Production-industry skew; thin outside major hubs; heavyweight onboarding for casual owners</td></tr>
+        <tr><td><b>Fat Llama</b></td><td>General P2P rental (everything)</td><td>Breadth, brand, UK/EU presence</td><td>Generalist trust model — camera owners hesitate to list $8k cinema glass beside power drills</td></tr>
+        <tr><td><b>BorrowLenses / Lensrentals</b></td><td>Centralized rental houses</td><td>Reliability, QC, deep inventory</td><td>Shipping delays and premium pricing; no local same-day pickup; no owner income side</td></tr>
+        <tr><td><b>Facebook groups / Craigslist</b></td><td>Informal peer lending</td><td>Zero fees, existing community trust</td><td>No insurance, no escrow, no dispute path — every horror story is a GearShare ad</td></tr>
+      </tbody>
+    </table>
+    <div class="grid2" style="margin-top:22px">
+      <div class="card"><div class="tag">Positioning</div><h4>The trusted local layer</h4><p>Don't out-inventory the rental houses or out-breadth Fat Llama. Own <b>same-city, same-day, insured peer rental</b> — the transaction Facebook groups do nervously and incumbents can't do locally.</p></div>
+      <div class="card"><div class="tag">Moat rating</div><h4>Weak → emerging</h4><p>No moat at launch. Density per metro plus verified-owner reputation graph compounds into one. Insurance partnership terms are the only near-term defensible asset.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S5 PEOPLE / PERSONAS -->
+<section class="slide" id="s5">
+  <div class="inner">
+    <div class="eyebrow">👥 People · Personas</div>
+    <h2>Both sides of the counter.</h2>
+    <div class="grid3">
+      <div class="card">
+        <div class="tag">Supply · primary</div>
+        <h4>The weekend wedding shooter</h4>
+        <blockquote>"My second body and three primes earn nothing 340 days a year — but I'm not handing them to a stranger without cover."</blockquote>
+        <p>Owns $12–30k of kit. Lends to friends already. Converts when insurance, deposits and renter verification are visible up front. Buying trigger: first $200 payout.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Demand · primary</div>
+        <h4>The indie filmmaker</h4>
+        <blockquote>"I need the 24–70 GM and a gimbal for one shoot. BorrowLenses wants shipping lead time I don't have."</blockquote>
+        <p>Rents 4–10×/yr, project-based, price-sensitive. Converts on same-day local pickup and transparent total cost. Retention driver: saved local owner relationships.</p>
+      </div>
+      <div class="card">
+        <div class="tag">Demand · expansion</div>
+        <h4>The production coordinator</h4>
+        <blockquote>"I book gear for three shoots a week. Give me multi-item carts, invoices, and a business account."</blockquote>
+        <p>Power renter — 10× volume of casual users. Not the wedge: needs inventory density first. Phase 2 of GTM, not MVP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S6 MONEY -->
+<section class="slide" id="s6">
+  <div class="inner">
+    <div class="eyebrow">💰 Money · Unit economics &amp; forecast</div>
+    <h2>A take-rate business that lives<br>or dies on claims frequency.</h2>
+    <div class="vgrid">
+      <div>
+        <table>
+          <thead><tr><th>Unit economics / rental</th><th>Base case</th></tr></thead>
+          <tbody>
+            <tr><td>Average order value</td><td><b>$118</b> (2.4 items · 3-day median)</td></tr>
+            <tr><td>Take rate</td><td><b>15%</b> → $17.70 revenue</td></tr>
+            <tr><td>Insurance + payment costs</td><td><b>$7.10</b> (4.2% GMV + processing)</td></tr>
+            <tr><td>Contribution / rental</td><td><b>$10.60</b> before CAC</td></tr>
+            <tr><td>Blended CAC (metro launch)</td><td><b>$28</b> — payback in ~3 rentals</td></tr>
+          </tbody>
+        </table>
+        <p class="sub" style="margin-top:18px;font-size:14px">Sensitivity: claims frequency above 1.8% of rentals, or insurance cost above ~4% of GMV, turns contribution negative. This is the number the validation phase must pin down.</p>
+      </div>
+      <div>
+        <div class="chart" aria-label="Year 3 GMV scenarios">
+          <div class="cbar cons"><span class="val">$1.6M</span><div class="bfill" style="height:28%"></div><label>CONSERVATIVE</label></div>
+          <div class="cbar"><span class="val">$4.2M</span><div class="bfill" style="height:62%"></div><label>BASE</label></div>
+          <div class="cbar aggr"><span class="val">$9.8M</span><div class="bfill" style="height:100%"></div><label>AGGRESSIVE</label></div>
+        </div>
+        <p style="font-family:var(--mono);font-size:11px;color:var(--sand-dim);text-align:center">Year-3 GMV · 3 metros · base take rate 15%</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S7 FEATURES -->
+<section class="slide" id="s7">
+  <div class="inner">
+    <div class="eyebrow">📝 Feature · MoSCoW breakdown</div>
+    <h2>Trust features are the product.<br>Everything else is a listing page.</h2>
+    <table>
+      <thead><tr><th>Tier</th><th>Feature</th><th>Why it's in this tier</th></tr></thead>
+      <tbody>
+        <tr><td><b style="color:var(--orange)">MUST</b></td><td><b>Insurance + deposit flow at checkout</b></td><td>The entire reason to leave Facebook groups. No cover, no marketplace.</td></tr>
+        <tr><td><b style="color:var(--orange)">MUST</b></td><td><b>Owner &amp; renter ID verification</b></td><td>Trust asymmetry kills supply first — owners need to see who's asking.</td></tr>
+        <tr><td><b style="color:var(--orange)">MUST</b></td><td><b>Listing with serials + condition photos</b></td><td>Claims are unresolvable without pre-rental condition evidence.</td></tr>
+        <tr><td><b style="color:var(--orange)">MUST</b></td><td><b>Local search, calendar, same-day pickup</b></td><td>The speed advantage rental houses can't match.</td></tr>
+        <tr><td><b>SHOULD</b></td><td>In-app handoff checklist &amp; damage capture</td><td>Cuts dispute rate; can launch as a lightweight web form.</td></tr>
+        <tr><td><b>SHOULD</b></td><td>Owner payout dashboard</td><td>The "first $200" retention moment — fast follow, not MVP-blocking.</td></tr>
+        <tr><td><b>COULD</b></td><td>Multi-item project carts</td><td>Production-coordinator feature; needs density first.</td></tr>
+        <tr><td><b style="color:var(--sand-dim)">WON'T (now)</b></td><td>Shipping between cities, gear sales, studio space</td><td>Each dilutes the local-trust wedge before it exists.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- S8 PLAN -->
+<section class="slide" id="s8">
+  <div class="inner">
+    <div class="eyebrow">🗺️ Plan · 18-month roadmap</div>
+    <h2>One city. Then the playbook.<br>Then two more.</h2>
+    <div class="grid3">
+      <div class="card">
+        <div class="tag">M0–M4 · Validate</div>
+        <h4>Pre-build gate</h4>
+        <p>Recruit 50 committed owner listings + insurance LOI in one metro (Austin — dense creator scene, no ShareGrid stronghold). Concierge-run 25 manual rentals. <b>Kill criteria:</b> &lt;30 listings or claims &gt;2 in 25 rentals.</p>
+      </div>
+      <div class="card">
+        <div class="tag">M5–M11 · Launch</div>
+        <h4>MVP in metro #1</h4>
+        <p>Ship the four MUST features. Target 400 rentals/month by M11, NPS &gt; 55 on both sides, claims &lt; 1.5%. Owner supply grows via payout referrals, not paid ads.</p>
+      </div>
+      <div class="card">
+        <div class="tag">M12–M18 · Repeat</div>
+        <h4>Playbook × 2 metros</h4>
+        <p>Codify the Austin launch playbook; open metros #2–3 only after metro #1 hits contribution-positive. SHOULD-tier features ship here, funded by validated unit economics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S9 PRIORITY -->
+<section class="slide" id="s9">
+  <div class="inner">
+    <div class="eyebrow">⭐ Priority · RICE scoring</div>
+    <h2>What gets built first, and why.</h2>
+    <table>
+      <thead><tr><th>#</th><th>Initiative</th><th>Reach</th><th>Impact</th><th>Confidence</th><th>Effort</th><th>RICE</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><b>Insured checkout flow (cover + deposit + escrow)</b></td><td>100%</td><td>3.0</td><td>80%</td><td>5</td><td><b class="mono" style="color:var(--orange)">48</b></td></tr>
+        <tr><td>2</td><td><b>Verified identity &amp; owner approval</b></td><td>100%</td><td>2.0</td><td>90%</td><td>4</td><td><b class="mono" style="color:var(--orange)">45</b></td></tr>
+        <tr><td>3</td><td><b>Listing flow with serials + condition photos</b></td><td>100%</td><td>2.0</td><td>85%</td><td>4</td><td><b class="mono" style="color:var(--orange)">42</b></td></tr>
+        <tr><td>4</td><td><b>Local search + availability calendar</b></td><td>90%</td><td>2.0</td><td>80%</td><td>4</td><td><b class="mono" style="color:var(--orange)">36</b></td></tr>
+        <tr><td>5</td><td><b>Handoff checklist + damage capture</b></td><td>70%</td><td>1.5</td><td>70%</td><td>2</td><td><b class="mono" style="color:var(--orange)">37</b></td></tr>
+      </tbody>
+    </table>
+    <p class="sub" style="margin-top:20px;font-size:14px">Principled note: #5 outscores #4 on raw RICE but ships after it — a handoff checklist without search volume protects nobody. RICE ranks; sequencing still obeys the dependency graph.</p>
+  </div>
+</section>
+
+<!-- S10 VERDICT BLOCK / NEXT -->
+<section class="slide" id="s10">
+  <div class="inner">
+    <div class="eyebrow">Synthesizer · Machine-readable verdict</div>
+    <h2>The pipeline's last word.</h2>
+    <div class="vgrid">
+      <div>
+        <div class="json"><pre>{
+  <span class="k">"robot"</span>: <span class="s">"synthesizer"</span>,
+  <span class="k">"verdict"</span>: <span class="s">"CONDITIONAL GO"</span>,
+  <span class="k">"hypothesisSupportScore"</span>: { <span class="k">"low"</span>: <span class="n">60</span>, <span class="k">"base"</span>: <span class="n">68</span>, <span class="k">"high"</span>: <span class="n">75</span> },
+  <span class="k">"evidenceMaturityScore"</span>:  { <span class="k">"low"</span>: <span class="n">36</span>, <span class="k">"base"</span>: <span class="n">44</span>, <span class="k">"high"</span>: <span class="n">52</span> },
+  <span class="k">"confidenceStatus"</span>: <span class="s">"preliminary"</span>,
+  <span class="k">"capApplied"</span>: <span class="s">"maturity&lt;40 on demand-density and claims-rate dimensions"</span>,
+  <span class="k">"unlockCondition"</span>: <span class="s">"50 committed listings + insurance LOI + claims&lt;2/25 concierge rentals"</span>
+}</pre></div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="tag">What happens next</div>
+          <h4>Phase gate holds until evidence matures</h4>
+          <p>In a real run, this verdict blocks Phase 2 (user stories, scope, GTM, risk registry) until the validation work raises evidence maturity past the gate. The PM gets a to-do list, not a green light — that's the point.<br><br>This demo used a fictional product. Your run uses your idea, live research, and your saved context.</p>
+        </div>
+        <div class="foot-cta">
+          <a class="btn btn-o" href="../index.html#start">Run it on your idea →</a>
+          <a class="btn btn-g" href="https://github.com/fluidumber/AutoPM" target="_blank" rel="noopener">★ GitHub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -109,7 +109,13 @@ class PlanRobot {
                 style: "Phase-by-phase narrative with structured attributes per phase. Use rich HTML with inline styles for visual elements.",
                 tables: "Gantt-style summary table: use a rich HTML table with styled headers (background colors), alternating row shading, and phase/milestone badges for: Phase | Duration | Goal | Key Features | Success Metric | Revenue Event",
                 length: "Detailed enough for an engineering lead to start sprint planning from",
-                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) phase summary cards with colored title bars (e.g., Phase 1=blue, Phase 2=green, Phase 3=purple), (2) risk mitigation callout boxes with left border matching the risk severity (e.g., High=red, Medium=orange), (3) the Gantt-style summary table. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter."
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include HTML blocks with inline styles for: (1) phase summary cards with colored title bars (e.g., Phase 1=blue, Phase 2=green, Phase 3=purple), (2) risk mitigation callout boxes with left border matching the risk severity (e.g., High=red, Medium=orange), (3) the Gantt-style summary table. RENDERING RULE: wrap EVERY multi-line HTML block and EVERY <script> block in a ```html fence — never emit multi-line raw HTML outside a fence, or the saved HTML file will break scripts. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter.",
+                audienceViews: {
+                    instructions: "Structure the output in three audience layers, in this order. Same facts at different altitude — the layers must never contradict each other.",
+                    executiveBriefing: "FIRST: a 60-second view — the Gantt-style summary table, the North Star metric, and the single highest-risk dependency.",
+                    pmWorkingLayer: "MIDDLE: full phase-by-phase detail with goals, features, success metrics, and revenue milestones.",
+                    analystAppendix: "LAST: critical path analysis, team/infrastructure requirements, and per-phase risk mitigations — the sprint-planning source of truth."
+                }
             }
         };
 

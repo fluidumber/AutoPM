@@ -31,8 +31,11 @@ class MoneyRobot {
                     "All currency in INR unless the product is explicitly targeting global markets",
                     "NEVER use placeholder values like '$X' or 'Calculate based on retention'",
                     "Call out your assumptions explicitly — a model is only as good as its assumptions",
+                    "Label EVERY number with its evidence tier: [cited] = external source with citation, [context] = from PM-provided data, [modeled] = your assumption with stated reasoning — a reader must always know which numbers are facts and which are estimates",
+                    "Benchmark citations must be from the last 24 months where possible; flag older benchmarks with their publication year",
                     "Stage-calibrate the model: a bootstrapped early-stage product has different CAC/LTV dynamics than a Series A company",
                     "End with the ONE financial metric that matters most right now given the stage",
+                    "End the output with a machine-readable JSON verdict block in a ```json fence — it must be the VERY LAST element of the output (after the chart specs)",
                     "CRITICAL: You MUST FIRST call the 'save-robot-output' tool with the complete markdown analysis. This is non-negotiable for Phase 2 progression.",
                     "AFTER saving the markdown, you MUST generate the editable Excel workbook (.xlsx) by using your Python environment to write a script with openpyxl/pandas that compiles the assumptions, scenarios, and unit economics, then call the 'save-artifact' tool with the base64-encoded content named 'YYYY-MM-DD-money-model.xlsx'."
                 ],
@@ -135,7 +138,31 @@ class MoneyRobot {
                                 requiredFields: "$schema (vega-lite v5), title, mark: bar, encoding.x (segment), encoding.y (value), encoding.color (metric: LTV or CAC), data.values with actual LTV and CAC per segment"
                             }
                         ],
-                        vegaLiteSchemaUrl: "https://vega.github.io/schema/vega-lite/v5.json"
+                        vegaLiteSchemaUrl: "https://vega.github.io/schema/vega-lite/v5.json",
+                        renderingNote: "Keep each spec in a plain ```json fence — the saved HTML renders these fences as live charts automatically. Do NOT wrap them in ```html and do NOT alter the fence type."
+                    },
+                    machineReadableVerdict: {
+                        instructions: "The VERY LAST element of your output (after the chart specs) must be a machine-readable verdict block in a ```json fence. The Synthesizer parses this block to build the investment decision — the analysis is incomplete without it.",
+                        schema: {
+                            robot: "money",
+                            verdict: "VIABLE | STRAINED | UNVIABLE",
+                            financialViabilityScore: { low: "number 0-100", base: "number 0-100", high: "number 0-100" },
+                            evidenceMaturityScore: { low: "number 0-100", base: "number 0-100", high: "number 0-100" },
+                            evidenceTier: "modeled-with-benchmarks",
+                            ltvCacBase: "number — base scenario LTV:CAC ratio",
+                            cacPaybackMonthsBase: "number",
+                            breakEvenMonthBase: "number — months to break-even in base scenario",
+                            arrYear3Base: "string — base scenario Year 3 ARR with currency",
+                            keyMetricToWatch: "string",
+                            topReasons: ["exactly 3 strings"],
+                            mostFragileAssumption: "string — the model assumption most likely to break"
+                        },
+                        rules: [
+                            "All scores must be JSON numbers, not strings",
+                            "evidenceMaturityScore must reflect the [cited]/[context]/[modeled] mix — a mostly-[modeled] analysis cannot exceed 55 base",
+                            "Values must match the tables exactly — no divergence between prose and JSON",
+                            "The block must be the final element of the output so downstream parsers can find it"
+                        ]
                     }
                 }
             },
@@ -157,9 +184,15 @@ class MoneyRobot {
                 currency: geography.toLowerCase().includes("india") ? "INR" : "USD",
                 tables: "Use rich HTML tables with styled headers (background colors for column groups), alternating row shading, and bold cells for: TAM/SAM/SOM, unit economics, SaaS health metrics, 3-scenario ARR projection, advanced projections, and feature impact",
                 assumptions: "Box or callout every assumption clearly — use a styled HTML div card with a left border color matching the scenario (e.g., green for Optimistic, amber for Base, red for Conservative) and inline CSS",
-                charts: "After all tables, produce exactly 2 Vega-Lite 5 JSON specs in ```json code blocks: (1) ARR growth line chart, (2) LTV vs CAC bar chart. Use actual numbers from the analysis — never placeholders.",
+                charts: "After all tables, produce exactly 2 Vega-Lite 5 JSON specs in plain ```json code blocks: (1) ARR growth line chart, (2) LTV vs CAC bar chart. Use actual numbers from the analysis — never placeholders. The saved HTML renders these fences as live charts — do not alter the fence type.",
                 length: "Comprehensive — financial models require depth. Do not truncate tables or omit scenarios.",
-                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) metric highlight cards at the top (ARR, LTV:CAC, payback period), (2) scenario assumption cards with colored borders, (3) all tables. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter.",
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include HTML blocks with inline styles for: (1) metric highlight cards at the top (ARR, LTV:CAC, payback period), (2) scenario assumption cards with colored borders, (3) all tables. RENDERING RULE: wrap EVERY multi-line HTML block and EVERY <script> block in a ```html fence — never emit multi-line raw HTML outside a fence, or the saved HTML file will break scripts. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter (but ALWAYS keep the Vega-Lite chart specs and the final ```json verdict block in BOTH parameters).",
+                audienceViews: {
+                    instructions: "Structure the output in three audience layers, in this order. Same facts at different altitude — the layers must never contradict each other.",
+                    executiveBriefing: "FIRST: a 60-second C-suite view — viability verdict, 3 headline metrics (base ARR Year 3, LTV:CAC, break-even month) as highlight cards, one chart. No assumptions detail.",
+                    pmWorkingLayer: "MIDDLE: the full model — revenue model analysis, unit economics, SaaS health metrics, 3 scenarios, feature impact.",
+                    analystAppendix: "LAST (before the chart specs and JSON verdict block): the complete assumptions register with [cited]/[context]/[modeled] tags, benchmark sources with dates, and the sensitivity of the model to its most fragile assumption."
+                },
                 excelRequired: "You MUST FIRST use the 'save-robot-output' tool to save the markdown analysis. Then, you MUST use your Python environment to programmatically build a real multi-tab Excel workbook named 'YYYY-MM-DD-money-model.xlsx' containing assumptions, projections, and formulas, then save it to the product's assets using the 'save-artifact' tool with base64 encoding."
             }
         };

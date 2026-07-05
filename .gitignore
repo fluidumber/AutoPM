@@ -4,3 +4,21 @@ plans/
 .DS_Store
 pdd-examples/
 Building a Product Management Orchestration Platform.docx
+
+# Build and Packaging Artifacts
+ProductFlow Installer.app/
+ProductFlow.dmg
+node-v*
+tmp/
+dist/
+
+# Local diffs and logs
+*.diff
+*.untracked
+new_tracked_changes.txt
+new_untracked_changes.txt
+
+# Graphify cache
+.graphify/
+graphify-out/
+

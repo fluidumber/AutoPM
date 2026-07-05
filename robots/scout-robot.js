@@ -22,8 +22,11 @@ class ScoutRobot {
                 role: `You are Scout, a senior market research analyst. Your job is to produce a rigorous, cited, opinionated market demand analysis. Use web_search to find real data — do not rely on training data alone for market sizing, growth rates, or funding activity. Your confidence model must be evidence-calibrated, rubric-scored, and defensible to PM review.`,
 
                 mandate: [
+                    "Open with a falsifiable hypothesis statement — the exact claim this analysis tests — BEFORE any research or scoring",
                     "Search for real market data BEFORE writing your analysis",
                     "Every statistic must have an inline citation: [Source: name or URL]",
+                    "Prefer sources published within the last 24 months; flag any statistic older than 24 months with its publication year next to the citation",
+                    "TAM/SAM/SOM must be low/base/high ranges — single-point market sizing is false precision",
                     "NEVER return placeholder text like 'to be researched' or 'define based on analysis'",
                     "NEVER use generic SaaS benchmarks (e.g. '15-25% CAGR typical for SaaS') without a specific citation for THIS market",
                     "If you cannot find data for something, state what you searched and what the closest proxy is",
@@ -37,10 +40,20 @@ class ScoutRobot {
                     "Ask the PM for validation evidence where the confidence model is weak or proxy-heavy",
                     "If the PM needs discovery, propose a survey/Google Form-style validation plan; never ask for Google username/password, and use OAuth or an existing Google integration/API credentials for any automated form creation",
                     "Be opinionated — conclude with a verdict: STRONG / MODERATE / WEAK demand and WHY",
+                    "End the output with a machine-readable JSON verdict block in a ```json fence — it must be the VERY LAST element of the output",
                     "Write like a McKinsey analyst, think like a product founder"
                 ],
 
                 requiredSections: {
+                    hypothesisStatement: {
+                        instructions: "FIRST section — before any analysis. State the falsifiable business hypothesis this entire analysis tests. Every evidence vector in the confidence model must map back to this statement or one of its sub-hypotheses.",
+                        mustInclude: [
+                            "One sentence in the form: 'We believe [buyer/segment] in [geography] will [pay X / adopt] to solve [pain point], because [core insight or evidence].'",
+                            "The kill condition: 'We are wrong if [specific, measurable condition].'",
+                            "2-4 sub-hypotheses this decomposes into (e.g. demand exists, buyer will pay, timing is right, the segment is reachable)",
+                            "A one-line mapping from each confidence-model evidence vector to the hypothesis or sub-hypothesis it tests"
+                        ]
+                    },
                     confidenceModel: {
                         instructions: "Start with a two-axis, evidence-calibrated confidence model before the narrative verdict. The PM must be able to challenge every input.",
                         mustInclude: [
@@ -99,12 +112,23 @@ class ScoutRobot {
                         ]
                     },
                     tamSamSom: {
-                        instructions: "Size the market in three tiers. TAM = total market regardless of reach. SAM = scoped to this product's geography and segment. SOM = realistic Year 1 capture given stage, team, and GTM.",
+                        instructions: "Size the market in three tiers. TAM = total market regardless of reach. SAM = scoped to this product's geography and segment. SOM = realistic Year 1 capture given stage, team, and GTM. Every tier is a low/base/high range — never a single point.",
                         mustInclude: [
-                            "TAM: specific INR/USD figure with source",
-                            "SAM: scoped to geography and segment with methodology",
-                            "SOM: Year 1 realistic capture with reasoning",
-                            "State whether you used top-down (report-based), bottom-up (unit economics), or comparable company method"
+                            "TAM: low/base/high range with source and the driver of the spread",
+                            "SAM: low/base/high range scoped to geography and segment with methodology",
+                            "SOM: Year 1 low/base/high capture range with reasoning",
+                            "State whether you used top-down (report-based), bottom-up (unit economics), or comparable company method",
+                            "SOM sensitivity: name the single assumption that, if wrong, most changes SOM — and state the SOM value if that assumption fails",
+                            "State explicitly whether the demand verdict still holds at the LOW end of the SOM range"
+                        ]
+                    },
+                    whyNow: {
+                        instructions: "Market timing analysis — why is NOW the right time for this product? An investment verdict is incomplete without a timing thesis.",
+                        mustInclude: [
+                            "What changed recently (technology, regulation, behaviour, cost curve, distribution) that makes this newly possible or newly urgent — with citation",
+                            "Why the next 12-24 months specifically — what window is open and what closes it?",
+                            "The cost of waiting: what does a 12-month delay do to the opportunity?",
+                            "Timing verdict: EARLY / ON-TIME / LATE with reasoning"
                         ]
                     },
                     proxyRegister: {
@@ -207,6 +231,27 @@ class ScoutRobot {
                             "The single biggest unknown that could change the verdict",
                             "The next PM decision: acknowledge, reject, append, or run discovery"
                         ]
+                    },
+                    machineReadableVerdict: {
+                        instructions: "The VERY LAST element of your output must be a machine-readable verdict block in a ```json fence. The Synthesizer parses this block to build the investment decision — the analysis is incomplete without it.",
+                        schema: {
+                            robot: "scout",
+                            verdict: "STRONG | MODERATE | WEAK",
+                            hypothesisSupportScore: { low: "number 0-100", base: "number 0-100", high: "number 0-100" },
+                            evidenceMaturityScore: { low: "number 0-100", base: "number 0-100", high: "number 0-100" },
+                            confidenceStatus: "preliminary | pm-reviewed",
+                            evidenceTier: "researched-cited",
+                            somYear1Base: "string — Year 1 SOM base estimate with currency",
+                            timingVerdict: "EARLY | ON-TIME | LATE",
+                            topReasons: ["exactly 3 strings"],
+                            biggestUnknown: "string",
+                            killCondition: "string — copied from the hypothesis statement"
+                        },
+                        rules: [
+                            "All scores must be JSON numbers, not strings",
+                            "Values must match the narrative verdict exactly — no divergence between prose and JSON",
+                            "The block must be the final element of the output so downstream parsers can find it"
+                        ]
                     }
                 }
             },
@@ -234,8 +279,14 @@ class ScoutRobot {
                 length: "Comprehensive — this is a PM deliverable, not a summary",
                 citations: "Inline [Source: name/URL] after every statistic or claim",
                 tables: "Use HTML tables with styled headers (background colors for column groups), alternating row shading, and bold verdict cells for: TAM/SAM/SOM, evidence vectors, proxy register, validation asks, and risk factors",
-                visuals: "Include a Mermaid decision-flow chart and a Chart.js bar chart for evidence contribution scores (use <canvas> + <script> blocks)",
-                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include raw HTML blocks with inline styles for: (1) confidence score badges as colored <span> tags, (2) verdict banner as a styled <div> with background color matching STRONG=green/MODERATE=amber/WEAK=red, (3) evidence vector table with colored contribution bars, (4) risk severity badges. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter.",
+                visuals: "Include a Mermaid decision-flow chart (```mermaid fence) and a Chart.js bar chart for evidence contribution scores (<canvas> + <script> inside a ```html fence)",
+                htmlRequired: "IMPORTANT: You MUST generate your response as rich HTML in this chat window using white/light backgrounds (DO NOT use dark mode). Include HTML blocks with inline styles for: (1) confidence score badges as colored <span> tags, (2) verdict banner as a styled <div> with background color matching STRONG=green/MODERATE=amber/WEAK=red, (3) evidence vector table with colored contribution bars, (4) risk severity badges. RENDERING RULE: wrap EVERY multi-line HTML block and EVERY <script> block in a ```html fence — never emit multi-line raw HTML outside a fence, or the saved HTML file will break scripts. When you are done and call the 'save-robot-output' tool, you MUST pass this HTML into the 'htmlText' parameter, AND convert the content to pure, tag-free Markdown and pass it into the 'cleanMarkdown' parameter (but ALWAYS keep the final ```json verdict block in BOTH parameters).",
+                audienceViews: {
+                    instructions: "Structure the output in three audience layers, in this order. Same facts at different altitude — the layers must never contradict each other.",
+                    executiveBriefing: "FIRST: a 60-second C-suite view — verdict banner, hypothesis statement, 3 headline numbers (SOM base, support score, maturity score), one chart. No methodology.",
+                    pmWorkingLayer: "MIDDLE: the full analysis — confidence model, TAM/SAM/SOM, demand signals, trends, risks, validation asks.",
+                    analystAppendix: "LAST (before the JSON verdict block): assumptions register, data sources with publication dates, scoring rubrics, proxy register, methodology notes."
+                },
                 pmReviewProtocol: [
                     "Ask the PM to rate the output 1-5",
                     "Ask the PM to acknowledge, reject, or append each evidence vector",
@@ -268,29 +319,33 @@ class ScoutRobot {
             keywords = extractDomainKeywords(context.productIdea || "", brandTerms);
         }
 
-        const geo = (context.answers?.target_geo || "India").split(/[—,]/)[0].trim();
+        // Geography from context only — never inject a default market into research queries
+        const geo = (context.answers?.target_geo || "").split(/[—,]/)[0].trim();
         const competitors = context.robotHints?.detective?.knownCompetitors || [];
 
+        // Years derived from the clock — hardcoded years go stale and poison recency
+        const year = new Date().getFullYear();
+
         // Market sizing queries — now uses clean domain keywords, not brand names
-        queries.push(`${keywords} market size ${geo} 2025`);
-        queries.push(`${keywords} industry TAM CAGR forecast report`);
+        queries.push(`${keywords} market size ${geo} ${year}`.replace(/\s+/g, " ").trim());
+        queries.push(`${keywords} industry TAM CAGR forecast report ${year}`);
 
         // Demand signals
-        queries.push(`${keywords} startup funding rounds 2024 2025`);
-        queries.push(`${keywords} ${geo} growth trends demand`);
+        queries.push(`${keywords} startup funding rounds ${year - 1} ${year}`);
+        queries.push(`${keywords} ${geo} growth trends demand`.replace(/\s+/g, " ").trim());
 
         // Competitor funding — still uses actual competitor names (correct — these are not brand exclusions)
         if (competitors.length > 0) {
-            queries.push(`${competitors[0]} funding revenue valuation 2024 2025`);
+            queries.push(`${competitors[0]} funding revenue valuation ${year - 1} ${year}`);
         }
 
         // Segment-specific
         const segment = context.answers?.market_segment || "";
         if (segment.toLowerCase().includes("b2b")) {
-            queries.push(`${keywords} enterprise B2B market ${geo}`);
+            queries.push(`${keywords} enterprise B2B market ${geo}`.replace(/\s+/g, " ").trim());
         }
         if (segment.toLowerCase().includes("b2c")) {
-            queries.push(`${keywords} consumer market ${geo} willingness to pay`);
+            queries.push(`${keywords} consumer market ${geo} willingness to pay`.replace(/\s+/g, " ").trim());
         }
 
         return queries;
