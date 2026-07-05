@@ -298,7 +298,7 @@ h1 .alt{color:var(--green);position:relative}
 .proof-copy strong{color:var(--ink)}
 
 /* ---------- showcase ---------- */
-.show-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:48px;align-items:stretch}
+.show-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:48px;align-items:stretch}
 @media(max-width:980px){.show-grid{grid-template-columns:1fr}}
 .deckcard{
   position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:340px;
@@ -307,6 +307,14 @@ h1 .alt{color:var(--green);position:relative}
   padding:36px 34px;transition:transform .2s,box-shadow .2s,border-color .2s;
 }
 .deckcard:hover{transform:translateY(-5px);box-shadow:0 22px 70px rgba(0,0,0,.55);border-color:rgba(255,150,80,.7)}
+.deckcard.metad{
+  border-color:rgba(70,242,162,.35);
+  background:radial-gradient(130% 110% at 82% -10%,rgba(70,242,162,.16),transparent 55%),linear-gradient(165deg,#101a15,#090f0c);
+}
+.deckcard.metad:hover{border-color:rgba(70,242,162,.7)}
+.deckcard.metad .dc-badge{color:var(--green);border-color:rgba(70,242,162,.4);background:rgba(70,242,162,.07)}
+.deckcard.metad .dc-title em{color:var(--green)}
+.deckcard.metad .dc-open{color:var(--green)}
 .deckcard .dc-badge{
   position:absolute;top:20px;left:34px;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
   color:#ffb287;border:1px solid rgba(255,150,80,.4);border-radius:99px;padding:5px 12px;background:rgba(255,140,60,.08);
@@ -315,7 +323,8 @@ h1 .alt{color:var(--green);position:relative}
 .deckcard .dc-title em{font-style:normal;color:#ff8c3c}
 .deckcard .dc-sub{color:#b3a894;font-size:14.5px;margin:12px 0 20px;max-width:420px}
 .deckcard .dc-open{font-family:var(--mono);font-size:13px;font-weight:600;color:#ff8c3c;letter-spacing:.06em}
-.show-side{display:flex;flex-direction:column;gap:14px}
+.show-side{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:980px){.show-side{grid-template-columns:1fr}}
 .show-side .card-mini{
   flex:1;background:linear-gradient(170deg,var(--panel-2),var(--panel));
   border:1px solid var(--line-dim);border-radius:12px;padding:24px 24px;
@@ -621,7 +630,14 @@ footer{border-top:1px solid var(--line-dim);padding:90px 0 60px;position:relativ
         <p class="dc-sub">P2P camera-gear rental marketplace — 10 slides: market, competition, personas, unit economics, MoSCoW, roadmap, RICE, and a CONDITIONAL GO verdict with the downgrade rule applied.</p>
         <span class="dc-open">Open the deck →</span>
       </a>
-      <div class="show-side rv">
+      <a class="deckcard metad rv" href="showcase-autopm.html">
+        <span class="dc-badge">REAL RUN · AUTOPM ON AUTOPM</span>
+        <div class="dc-title">Auto<em>PM</em></div>
+        <p class="dc-sub">The actual strategy deck this pipeline produced about itself — validation-gated market verdict, five personas, the monetization bridge, and the decision to build the cockpit.</p>
+        <span class="dc-open">Open the deck →</span>
+      </a>
+    </div>
+    <div class="show-side rv">
         <div class="card-mini">
           <div class="cm-h">Every run exports</div>
           <p><code>strategy-presentation.html</code> — themed pitch deck<br>
@@ -632,7 +648,6 @@ footer{border-top:1px solid var(--line-dim);padding:90px 0 60px;position:relativ
           <div class="cm-h">Note the verdict</div>
           <p>The demo ends in CONDITIONAL GO, not a rubber-stamp GO — thin evidence caps the verdict and blocks Phase 2. That gate is the product working as designed.</p>
         </div>
-      </div>
     </div>
   </div>
 </section>
