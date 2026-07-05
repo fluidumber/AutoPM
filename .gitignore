@@ -8,6 +8,7 @@ Building a Product Management Orchestration Platform.docx
 # Build and Packaging Artifacts
 ProductFlow Installer.app/
 ProductFlow.dmg
+ProductFlow-Windows.zip
 node-v*
 tmp/
 dist/
