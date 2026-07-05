@@ -297,6 +297,49 @@ h1 .alt{color:var(--green);position:relative}
 .proof-copy{color:var(--dim);font-size:17px;margin-top:26px;max-width:640px}
 .proof-copy strong{color:var(--ink)}
 
+/* ---------- showcase ---------- */
+.show-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:48px;align-items:stretch}
+@media(max-width:980px){.show-grid{grid-template-columns:1fr}}
+.deckcard{
+  position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:340px;
+  border-radius:14px;overflow:hidden;border:1px solid rgba(255,150,80,.35);
+  background:radial-gradient(130% 110% at 82% -10%,rgba(255,140,60,.22),transparent 55%),linear-gradient(165deg,#1d1712,#100c09);
+  padding:36px 34px;transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.deckcard:hover{transform:translateY(-5px);box-shadow:0 22px 70px rgba(0,0,0,.55);border-color:rgba(255,150,80,.7)}
+.deckcard .dc-badge{
+  position:absolute;top:20px;left:34px;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
+  color:#ffb287;border:1px solid rgba(255,150,80,.4);border-radius:99px;padding:5px 12px;background:rgba(255,140,60,.08);
+}
+.deckcard .dc-title{font-family:var(--display);font-weight:800;font-size:clamp(34px,4vw,52px);color:#efe7da;line-height:1;letter-spacing:-.01em}
+.deckcard .dc-title em{font-style:normal;color:#ff8c3c}
+.deckcard .dc-sub{color:#b3a894;font-size:14.5px;margin:12px 0 20px;max-width:420px}
+.deckcard .dc-open{font-family:var(--mono);font-size:13px;font-weight:600;color:#ff8c3c;letter-spacing:.06em}
+.show-side{display:flex;flex-direction:column;gap:14px}
+.show-side .card-mini{
+  flex:1;background:linear-gradient(170deg,var(--panel-2),var(--panel));
+  border:1px solid var(--line-dim);border-radius:12px;padding:24px 24px;
+}
+.show-side .card-mini .cm-h{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+.show-side .card-mini p{font-size:14px;color:var(--dim)}
+.show-side .card-mini code{font-family:var(--mono);font-size:12px;color:var(--green)}
+
+/* ---------- waitlist ---------- */
+.wl-form{display:flex;gap:10px;justify-content:center;margin:26px auto 0;max-width:460px}
+@media(max-width:600px){.wl-form{flex-direction:column}}
+.wl-input{
+  flex:1;background:#070d10;border:1px solid var(--line);border-radius:6px;
+  color:var(--ink);font-family:var(--mono);font-size:13.5px;padding:13px 16px;outline:none;min-width:0;
+}
+.wl-input:focus{border-color:var(--green)}
+.wl-input::placeholder{color:var(--faint)}
+.wl-btn{
+  background:transparent;color:var(--green);border:1px solid var(--green);border-radius:6px;
+  font-family:var(--mono);font-weight:600;font-size:13px;padding:0 20px;cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.wl-btn:hover{background:var(--green);color:#04120b}
+.wl-note{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:12px}
+
 /* ---------- personas ---------- */
 .pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
 @media(max-width:980px){.pcards{grid-template-columns:1fr}}
@@ -383,6 +426,7 @@ footer{border-top:1px solid var(--line-dim);padding:90px 0 60px;position:relativ
       <a href="#how">Method</a>
       <a href="#robots">Robots</a>
       <a href="#proof">Proof</a>
+      <a href="#showcase">Showcase</a>
       <a href="#start">Install</a>
     </div>
     <a class="nav-gh" href="https://github.com/fluidumber/AutoPM" target="_blank" rel="noopener">★ Star on GitHub</a>
@@ -563,6 +607,36 @@ footer{border-top:1px solid var(--line-dim);padding:90px 0 60px;position:relativ
   </div>
 </section>
 
+<!-- ============ SHOWCASE ============ -->
+<section id="showcase">
+  <div class="wrap">
+    <div class="klabel rv">The output</div>
+    <h2 class="rv">Don't imagine the deck.<br>Open one.</h2>
+    <p class="lede rv">Every AutoPM run ends in a pitch-ready strategy presentation and a Notion-ready PDD. Here's a full Phase 1 deck, generated in AutoPM's real output format for a fictional product.</p>
+
+    <div class="show-grid">
+      <a class="deckcard rv" href="demo/gearshare.html">
+        <span class="dc-badge">DEMO DECK · FICTIONAL PRODUCT</span>
+        <div class="dc-title">Gear<em>Share</em></div>
+        <p class="dc-sub">P2P camera-gear rental marketplace — 10 slides: market, competition, personas, unit economics, MoSCoW, roadmap, RICE, and a CONDITIONAL GO verdict with the downgrade rule applied.</p>
+        <span class="dc-open">Open the deck →</span>
+      </a>
+      <div class="show-side rv">
+        <div class="card-mini">
+          <div class="cm-h">Every run exports</div>
+          <p><code>strategy-presentation.html</code> — themed pitch deck<br>
+          <code>pdd-&lt;product&gt;-v1.0.0.md</code> — Notion-ready PDD<br>
+          <code>*-output.md</code> — every robot's full analysis, on your disk</p>
+        </div>
+        <div class="card-mini">
+          <div class="cm-h">Note the verdict</div>
+          <p>The demo ends in CONDITIONAL GO, not a rubber-stamp GO — thin evidence caps the verdict and blocks Phase 2. That gate is the product working as designed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ PERSONAS ============ -->
 <section id="for">
   <div class="wrap">
@@ -724,6 +798,12 @@ Args:    <span class="cstr">/absolute/path/to/AutoPM/src/mcp-server.js</span></p
       <a class="btn btn-solid" href="mailto:mailoanand@gmail.com?subject=AutoPM%20design%20partner">Become a design partner</a>
       <span style="display:inline-block;width:8px"></span>
       <a class="btn btn-ghost" href="https://github.com/fluidumber/AutoPM" target="_blank" rel="noopener">★ Star the repo</a>
+      <form class="wl-form" id="wlForm" action="https://formspree.io/f/REPLACE_WITH_FORMSPREE_ID" method="POST">
+        <input class="wl-input" type="email" name="email" required placeholder="you@company.com" aria-label="Email for hosted waitlist">
+        <input type="hidden" name="_subject" value="AutoPM hosted waitlist">
+        <button class="wl-btn" type="submit">Get the hosted version first</button>
+      </form>
+      <p class="wl-note" id="wlNote">Hosted team workspaces are coming — waitlist members get first access. No spam, ever.</p>
     </div>
     <div class="foot-row">
       <span>AutoPM · MIT License</span>
@@ -814,6 +894,18 @@ Args:    <span class="cstr">/absolute/path/to/AutoPM/src/mcp-server.js</span></p
       }
     });
   });
+
+  /* ---------- waitlist (mailto fallback until real Formspree ID is set) ---------- */
+  var wlForm = document.getElementById("wlForm");
+  if(wlForm && wlForm.action.indexOf("REPLACE_WITH_FORMSPREE_ID") !== -1){
+    wlForm.addEventListener("submit",function(ev){
+      ev.preventDefault();
+      var email = wlForm.querySelector(".wl-input").value;
+      document.getElementById("wlNote").textContent = "Opening your mail app to confirm — hit send and you're on the list.";
+      window.location.href = "mailto:mailoanand@gmail.com?subject=AutoPM%20hosted%20waitlist&body=" +
+        encodeURIComponent("Please add me to the AutoPM hosted waitlist: " + email);
+    });
+  }
 
   /* ---------- pipeline simulator ---------- */
   var stations = [
