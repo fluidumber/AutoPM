@@ -813,7 +813,7 @@ Args:    <span class="cstr">/absolute/path/to/AutoPM/src/mcp-server.js</span></p
       <a class="btn btn-solid" href="mailto:mailoanand@gmail.com?subject=AutoPM%20design%20partner">Become a design partner</a>
       <span style="display:inline-block;width:8px"></span>
       <a class="btn btn-ghost" href="https://github.com/fluidumber/AutoPM" target="_blank" rel="noopener">★ Star the repo</a>
-      <form class="wl-form" id="wlForm" action="https://formspree.io/f/REPLACE_WITH_FORMSPREE_ID" method="POST">
+      <form class="wl-form" id="wlForm" action="https://formspree.io/f/xvzjlgjv" method="POST">
         <input class="wl-input" type="email" name="email" required placeholder="you@company.com" aria-label="Email for hosted waitlist">
         <input type="hidden" name="_subject" value="AutoPM hosted waitlist">
         <button class="wl-btn" type="submit">Get the hosted version first</button>
@@ -910,15 +910,46 @@ Args:    <span class="cstr">/absolute/path/to/AutoPM/src/mcp-server.js</span></p
     });
   });
 
-  /* ---------- waitlist (mailto fallback until real Formspree ID is set) ---------- */
+  /* ---------- waitlist ---------- */
   var wlForm = document.getElementById("wlForm");
+  var wlNote = document.getElementById("wlNote");
+  var wlNoteDefault = wlNote ? wlNote.textContent : "";
   if(wlForm && wlForm.action.indexOf("REPLACE_WITH_FORMSPREE_ID") !== -1){
+    /* placeholder still in place — fall back to a prefilled mailto */
     wlForm.addEventListener("submit",function(ev){
       ev.preventDefault();
       var email = wlForm.querySelector(".wl-input").value;
-      document.getElementById("wlNote").textContent = "Opening your mail app to confirm — hit send and you're on the list.";
+      wlNote.textContent = "Opening your mail app to confirm — hit send and you're on the list.";
       window.location.href = "mailto:mailoanand@gmail.com?subject=AutoPM%20hosted%20waitlist&body=" +
         encodeURIComponent("Please add me to the AutoPM hosted waitlist: " + email);
+    });
+  }else if(wlForm){
+    /* real Formspree endpoint — submit via fetch so the visitor never leaves the page */
+    wlForm.addEventListener("submit",function(ev){
+      ev.preventDefault();
+      var btn = wlForm.querySelector(".wl-btn");
+      var emailInput = wlForm.querySelector(".wl-input");
+      var originalBtnText = btn.textContent;
+      btn.disabled = true; btn.textContent = "Joining…";
+      fetch(wlForm.action, {
+        method: "POST",
+        body: new FormData(wlForm),
+        headers: { "Accept": "application/json" }
+      }).then(function(res){
+        if(res.ok){
+          wlNote.textContent = "✓ You're on the list — we'll email you when hosted workspaces open up.";
+          wlNote.style.color = "var(--green)";
+          emailInput.value = "";
+          btn.textContent = originalBtnText;
+          btn.disabled = false;
+        }else{
+          throw new Error("submit failed");
+        }
+      }).catch(function(){
+        wlNote.textContent = "Couldn't reach the waitlist right now — try again, or email mailoanand@gmail.com directly.";
+        btn.textContent = originalBtnText;
+        btn.disabled = false;
+      });
     });
   }
 
