@@ -4,7 +4,7 @@
     {
       "name": "autopm-website",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4173", "--directory", "website"],
+      "runtimeArgs": ["-m", "http.server", "4173", "--directory", "/Users/anandshrivastava/autopm-website"],
       "port": 4173
     }
   ]
